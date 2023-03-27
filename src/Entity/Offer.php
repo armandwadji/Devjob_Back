@@ -25,7 +25,7 @@ class Offer
         min: 2,
         max: 50,
         minMessage: 'Le nom d\'une offre doit contenir au moins 2 caractères',
-        maxMessage: 'Le nom d\une offre doit contenir maximum 50 caractère'
+        maxMessage: 'Le nom d\'une offre doit contenir maximum 50 caractères'
     )]
     private ?string $name = null;
 

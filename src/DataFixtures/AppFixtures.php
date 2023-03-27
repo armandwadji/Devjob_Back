@@ -10,6 +10,7 @@ use App\Entity\Requirement;
 use App\Entity\RequirementItem;
 use App\Entity\Role;
 use App\Entity\RoleItem;
+use App\Entity\User;
 use Faker\Factory;
 use Faker\Generator;
 use Doctrine\Persistence\ObjectManager;
@@ -60,6 +61,19 @@ class AppFixtures extends Fixture
 
             $companies[] = $company;
             $manager->persist($company);
+        }
+
+        // USER
+        for ($i = 0; $i < 20; $i++) {
+            $user = new User();
+            $user->setFirstname($this->faker->firstName())
+                ->setLastname($this->faker->lastName())
+                ->setEmail($this->faker->email())
+                ->setRoles(['ROLE_USER'])
+                ->setPlainPassword('password')
+                ->setCompany($companies[$i]);
+
+            $manager->persist($user);
         }
 
 

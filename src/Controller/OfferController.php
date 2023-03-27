@@ -7,6 +7,7 @@ use App\Entity\Offer;
 use App\Form\CompanyType;
 use App\Form\OfferType;
 use App\Repository\OfferRepository;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,10 +28,11 @@ class OfferController extends AbstractController
      * @return Response
      */
     #[Route('/my-offers', name: 'offer.index', methods: ['GET'])]
-    public function index(OfferRepository $repository, PaginatorInterface $paginator, Request $request,  SessionInterface $session): Response
+    public function index(OfferRepository $repository, UserRepository $user, PaginatorInterface $paginator, Request $request,  SessionInterface $session): Response
     {
         $session->set('page', isset($_GET['page']) ? (int)htmlspecialchars($_GET['page'])  : 1);
 
+        dd($this->getUser());
         $offers = $paginator->paginate(
             $repository->findAll(),
             $request->query->getInt('page', 1),
@@ -101,17 +103,17 @@ class OfferController extends AbstractController
 
                 $offer =  $form->getData();
                 //$offer->setUser($this->getUser());
-                
+
                 foreach ($offer->getRequirement()->getRequirementItems() as $requirementItem) {
                     if (!$requirementItem->getRequirement())
-                    $requirementItem->setRequirement($offer->getRequirement());
+                        $requirementItem->setRequirement($offer->getRequirement());
                 }
-                
+
                 foreach ($offer->getRole()->getRoleItems() as $roleItem) {
                     if (!$roleItem->getRole())
-                    $roleItem->setRole($offer->getRole());
+                        $roleItem->setRole($offer->getRole());
                 }
-                
+
 
                 // GESTION DE LA PAGINATION:
                 $offersTotalCount = isset($_GET['count']) ? (int) htmlspecialchars($_GET['count']) + 1 : null; //Nombres de recettes sur la page courante

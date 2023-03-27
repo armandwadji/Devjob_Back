@@ -8,6 +8,7 @@ use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\ColorType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
@@ -17,7 +18,7 @@ class CompanyType extends AbstractType
     {
         $builder
             ->add('name', TextType::class)
-            ->add('color', TextType::class)
+            ->add('color', ColorType::class)
             ->add('location', EntityType::class, [
                 'class' => Location::class,
                 'choice_label' => 'name',
