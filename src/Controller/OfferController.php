@@ -2,10 +2,10 @@
 
 namespace App\Controller;
 
+use App\Entity\Company;
 use App\Entity\Offer;
-use App\Entity\Requirement;
+use App\Form\CompanyType;
 use App\Form\OfferType;
-use App\Form\RequirementType;
 use App\Repository\OfferRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
@@ -45,8 +45,8 @@ class OfferController extends AbstractController
     #[Route('/test', name: 'offer.test', methods: ['GET', 'POST'])]
     public function test(): Response
     {
-        $requirement = new Requirement();
-        $form = $this->createForm(RequirementType::class, $requirement);
+        $company = new Company();
+        $form = $this->createForm(CompanyType::class, $company);
 
         return $this->render('pages/offer/test.html.twig', [
             'form' => $form->createView(),

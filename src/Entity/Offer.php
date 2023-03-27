@@ -59,6 +59,10 @@ class Offer
     #[ORM\OneToOne(mappedBy: 'offer', cascade: ['persist', 'remove'])]
     private ?Role $role = null;
 
+    #[ORM\ManyToOne(inversedBy: 'offer')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Company $company = null;
+
     /**
      * Construteur pour l'initialisation de la date de création
      */
@@ -162,6 +166,18 @@ class Offer
         }
 
         $this->role = $role;
+
+        return $this;
+    }
+
+    public function getCompany(): ?Company
+    {
+        return $this->company;
+    }
+
+    public function setCompany(?Company $company): self
+    {
+        $this->company = $company;
 
         return $this;
     }
