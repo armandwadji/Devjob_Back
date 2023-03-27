@@ -1,0 +1,79 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Devjob - My Offers
+{% endblock %}
+
+{% block body %}
+	<div class="container mt-4">
+		<h1>Mes offres</h1>
+
+		<a href="{{path('offer.new', {'count' : offers.getTotalItemCount } )}}" class="btn btn-primary mt-4">Ajouter une offre</a>
+
+		{# flash for success message #}
+		{% for message in app.flashes('success') %}
+			<div class="alert alert-success mt-4">
+				{{ message }}
+			</div>
+		{% endfor %}
+
+        {# flash for warning message #}
+		{% for message in app.flashes('warning') %}
+			<div class="alert alert-warning mt-4">
+				{{ message }}
+			</div>
+		{% endfor %}
+
+		{% if offers.items is  same as ([]) %}
+			<h4 class='mt-4'>Vous n'avez pas encore saisi d'annonces</h4>
+		{% else %}
+
+			{# total items count #}
+			<div class="count mt-4">
+				<h5>il y'a
+					{{ offers.getTotalItemCount }}
+					offres au total</h5>
+			</div>
+
+			<table class="table table-hover">
+				<thead>
+					<tr>
+						<th scope="col">Id</th>
+						<th scope="col">Nom</th>
+						<th scope="col">url</th>
+						<th scope="col">Posté Le</th>
+						<th>Edition</th>
+						<th>Suppression</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for offer in offers %}
+						<tr class="table-primary">
+							<th scope="row">{{offer.id}}</th>
+							<td>{{offer.name}}</td>
+							<td>{{offer.url}}</td>
+							<td>{{offer.createdAt | date('d/m/Y')}}</td>
+							<td>
+								<a href="{{path('offer.edit', {id: offer.id})}}" class="btn btn-info">
+									<i class="fa-solid fa-pencil"></i>
+								</a>
+							</td>
+							<td>
+								<a href="{{path('offer.delete', { id: offer.id, 'count' : offers|length })}}" class="btn btn-danger delete-confirm" onclick="return window.confirm('Voulez vous vraiment supprimer cet ingrédient?')">
+									<i class="fa-solid fa-trash"></i>
+								</a>
+							</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+
+			{# display navigation #}
+			<div class="navigation d-flex justify-content-center mt-4">
+				{{ knp_pagination_render(offers) }}
+			</div>
+
+		{% endif %}
+
+
+	</div>
+{% endblock %}
