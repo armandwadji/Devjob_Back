@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Offer;
 use App\Entity\Contract;
+use App\Form\RequirementType;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -29,7 +30,9 @@ class OfferType extends AbstractType
                         ->orderBy('u.name', 'ASC');
                 },
             ])
-            ->add('url', UrlType::class);
+            ->add('url', UrlType::class)
+            ->add('requirement', RequirementType::class)
+            ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void

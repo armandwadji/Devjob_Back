@@ -1,0 +1,28 @@
+/* Gestion de la visibilité du passord et confirm password */
+.password-registration {
+    position: relative;
+}
+
+.fa-eye {
+    position: absolute;
+    right: 10px;
+    bottom: 15%;
+    cursor: pointer;
+}
+
+.fa-eye-slash {
+    position: absolute;
+    right: 10px;
+    bottom: 15%;
+    cursor: pointer;
+}
+
+fieldset.form-group{
+    position: relative;
+}
+
+fieldset.form-group button{
+    position: absolute;
+    top: 40%;
+    right: 0;
+}
