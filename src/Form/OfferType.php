@@ -3,6 +3,7 @@
 namespace App\Form;
 
 use App\Entity\Offer;
+use App\Form\RoleType;
 use App\Entity\Contract;
 use App\Form\RequirementType;
 use Doctrine\ORM\EntityRepository;
@@ -32,6 +33,7 @@ class OfferType extends AbstractType
             ])
             ->add('url', UrlType::class)
             ->add('requirement', RequirementType::class)
+            ->add('role', RoleType::class)
             ;
     }
 

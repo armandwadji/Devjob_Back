@@ -56,6 +56,9 @@ class Offer
     #[ORM\OneToOne(mappedBy: 'offer', cascade: ['persist', 'remove'])]
     private ?Requirement $requirement = null;
 
+    #[ORM\OneToOne(mappedBy: 'offer', cascade: ['persist', 'remove'])]
+    private ?Role $role = null;
+
     /**
      * Construteur pour l'initialisation de la date de création
      */
@@ -142,6 +145,23 @@ class Offer
         }
 
         $this->requirement = $requirement;
+
+        return $this;
+    }
+
+    public function getRole(): ?Role
+    {
+        return $this->role;
+    }
+
+    public function setRole(Role $role): self
+    {
+        // set the owning side of the relation if necessary
+        if ($role->getOffer() !== $this) {
+            $role->setOffer($this);
+        }
+
+        $this->role = $role;
 
         return $this;
     }
