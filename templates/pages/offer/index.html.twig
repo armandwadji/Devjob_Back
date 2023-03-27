@@ -9,13 +9,14 @@
 
 		<a href="{{path('offer.new', {'count' : offers.getTotalItemCount } )}}" class="btn btn-primary mt-4">Ajouter une offre</a>
 
-		{# read and display just one flash message type #}
+		{# flash for success message #}
 		{% for message in app.flashes('success') %}
 			<div class="alert alert-success mt-4">
 				{{ message }}
 			</div>
 		{% endfor %}
 
+        {# flash for warning message #}
 		{% for message in app.flashes('warning') %}
 			<div class="alert alert-warning mt-4">
 				{{ message }}

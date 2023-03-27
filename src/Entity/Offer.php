@@ -37,11 +37,16 @@ class Offer
     #[Assert\Url(
         message: 'Le lien {{ value }} n\'est pas un url valide.',
     )]
+    
     private ?string $url = null;
 
     #[ORM\Column]
     #[Assert\NotNull]
     private ?\DateTimeImmutable $createdAt = null;
+
+    #[ORM\ManyToOne(inversedBy: 'offers')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Contract $contract = null;
 
     /**
      * Construteur pour l'initialisation de la date de création
@@ -100,6 +105,18 @@ class Offer
     public function setCreatedAt(\DateTimeImmutable $createdAt): self
     {
         $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getContract(): ?Contract
+    {
+        return $this->contract;
+    }
+
+    public function setContract(?Contract $contract): self
+    {
+        $this->contract = $contract;
 
         return $this;
     }
