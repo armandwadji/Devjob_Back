@@ -2,12 +2,13 @@
 
 namespace App\Entity;
 
-use App\Repository\OfferRepository;
+use App\Entity\Contract;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use App\Repository\OfferRepository;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: OfferRepository::class)]
 #[UniqueEntity('name', message: "Ce nom d'offre existe déja en base de donnée.")]
@@ -30,6 +31,10 @@ class Offer
 
     #[ORM\Column(type: Types::TEXT)]
     #[Assert\NotBlank(message: 'Une offre doit avoir une description.')]
+    #[Assert\Length(
+        min: 10,
+        minMessage: 'La description d\'une offre doit contenir au moins 10 caractères',
+    )]
     private ?string $description = null;
 
     #[ORM\Column(length: 255)]
@@ -47,6 +52,12 @@ class Offer
     #[ORM\ManyToOne(inversedBy: 'offers')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Contract $contract = null;
+
+    #[ORM\OneToOne(mappedBy: 'offer', cascade: ['persist', 'remove'])]
+    private ?Requirement $requirement = null;
+
+    #[ORM\OneToOne(mappedBy: 'offer', cascade: ['persist', 'remove'])]
+    private ?Role $role = null;
 
     /**
      * Construteur pour l'initialisation de la date de création
@@ -117,6 +128,40 @@ class Offer
     public function setContract(?Contract $contract): self
     {
         $this->contract = $contract;
+
+        return $this;
+    }
+
+    public function getRequirement(): ?Requirement
+    {
+        return $this->requirement;
+    }
+
+    public function setRequirement(Requirement $requirement): self
+    {
+        // set the owning side of the relation if necessary
+        if ($requirement->getOffer() !== $this) {
+            $requirement->setOffer($this);
+        }
+
+        $this->requirement = $requirement;
+
+        return $this;
+    }
+
+    public function getRole(): ?Role
+    {
+        return $this->role;
+    }
+
+    public function setRole(Role $role): self
+    {
+        // set the owning side of the relation if necessary
+        if ($role->getOffer() !== $this) {
+            $role->setOffer($this);
+        }
+
+        $this->role = $role;
 
         return $this;
     }

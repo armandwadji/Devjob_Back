@@ -4,6 +4,10 @@ namespace App\DataFixtures;
 
 use App\Entity\Contract;
 use App\Entity\Offer;
+use App\Entity\Requirement;
+use App\Entity\RequirementItem;
+use App\Entity\Role;
+use App\Entity\RoleItem;
 use Faker\Factory;
 use Faker\Generator;
 use Doctrine\Persistence\ObjectManager;
@@ -24,16 +28,21 @@ class AppFixtures extends Fixture
 
     public function load(ObjectManager $manager): void
     {
+        // CONTRACT
         $contracts = [];
-        for ($i=0; $i < 5; $i++) {
+        for ($i = 0; $i < 5; $i++) {
             $contract = new Contract();
             $contract->setName($this->faker->word());
 
             $contracts[] = $contract;
             $manager->persist($contract);
         }
-        
-        for ($i = 0; $i < 50; $i++) {
+
+
+        // FIXTURE
+        $requirements = [];
+        $roles = [];
+        for ($k = 0; $k < 50; $k++) {
             $offer = new Offer();
             $offer->setName($this->faker->word())
                 ->setDescription($this->faker->text(300))
@@ -41,8 +50,42 @@ class AppFixtures extends Fixture
                 ->setContract($contracts[mt_rand(0, count($contracts) - 1)]);
 
             $manager->persist($offer);
+
+            // AJOUT DU REQUIREMENT
+            $requirement = new Requirement();
+            $requirement->setContent($this->faker->text(300))
+                        ->setOffer($offer);
+
+            // AJOUT DU ROLE
+            $role = new Role();
+            $role->setContent($this->faker->text(300))
+                ->setOffer($offer);
+
+            $requirements[] = $requirement;
+            $roles[] = $role;
+
+            $manager->persist($requirement);
+            $manager->persist($role);
         }
 
+        // Ajout des requirements items
+        for ($j = 0; $j < 50; $j++) {
+            $requirementItem = new RequirementItem();
+            $requirementItem->setName($this->faker->text(100))
+                            ->setRequirement($requirements[mt_rand(0, count($requirements) - 1)]);
+
+            $manager->persist($requirementItem);
+        }
+
+        // Ajout des roles items
+        for ($j = 0; $j < 50; $j++) {
+            $roleItem = new RoleItem();
+            $roleItem->setName($this->faker->text(100))
+                            ->setRole($roles[mt_rand(0, count($roles) - 1)]);
+
+            $manager->persist($roleItem);
+        }
+        
         $manager->flush();
     }
 }

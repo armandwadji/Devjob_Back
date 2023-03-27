@@ -3,7 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\Offer;
+use App\Entity\Requirement;
 use App\Form\OfferType;
+use App\Form\RequirementType;
 use App\Repository\OfferRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
@@ -37,6 +39,17 @@ class OfferController extends AbstractController
 
         return $this->render('pages/offer/index.html.twig', [
             'offers' => $offers,
+        ]);
+    }
+
+    #[Route('/test', name: 'offer.test', methods: ['GET', 'POST'])]
+    public function test(): Response
+    {
+        $requirement = new Requirement();
+        $form = $this->createForm(RequirementType::class, $requirement);
+
+        return $this->render('pages/offer/test.html.twig', [
+            'form' => $form->createView(),
         ]);
     }
 
@@ -88,6 +101,17 @@ class OfferController extends AbstractController
 
                 $offer =  $form->getData();
                 //$offer->setUser($this->getUser());
+                
+                foreach ($offer->getRequirement()->getRequirementItems() as $requirementItem) {
+                    if (!$requirementItem->getRequirement())
+                    $requirementItem->setRequirement($offer->getRequirement());
+                }
+                
+                foreach ($offer->getRole()->getRoleItems() as $roleItem) {
+                    if (!$roleItem->getRole())
+                    $roleItem->setRole($offer->getRole());
+                }
+                
 
                 // GESTION DE LA PAGINATION:
                 $offersTotalCount = isset($_GET['count']) ? (int) htmlspecialchars($_GET['count']) + 1 : null; //Nombres de recettes sur la page courante
