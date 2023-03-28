@@ -25,7 +25,7 @@
 						<li class="nav-item dropdown me-5">
 							<a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">{{app.user.firstname ~  " " ~  app.user.lastname}}</a>
 							<div class="dropdown-menu">
-								{# <a class="dropdown-item" href="{{path('user.edit', {id: app.user.id() })}}">Edit infos</a> #}
+								<a class="dropdown-item" href="{{path('user.edit', {id: app.user.id() })}}">Edit infos</a>
 								{# <a class="dropdown-item" href="{{path('user.edit.password', {id: app.user.id() })}}">Edit mot de passe</a> #}
 								<div class="dropdown-divider"></div>
 								<a class="dropdown-item" href="{{path("security.logout")}}">Deconnexion</a>

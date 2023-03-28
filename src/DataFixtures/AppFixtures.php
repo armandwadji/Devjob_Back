@@ -70,7 +70,7 @@ class AppFixtures extends Fixture
         for ($i = 0; $i < 20; $i++) {
             $company = new Company();
             $company->setName($this->faker->word())
-                ->setColor($this->faker->rgbColor())
+                ->setColor($this->faker->hexColor())
                 ->setUser($users[$i])
                 ->setLocation($locations[mt_rand(0, count($locations) - 1)]);
 

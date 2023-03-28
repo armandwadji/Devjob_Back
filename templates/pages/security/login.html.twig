@@ -16,25 +16,25 @@
 
         {# MESSAGE D'ERREUR #}
 		{% if error %}
-			<div class="alert alert-dismissible alert-danger mt-4">
+			<div class="alert alert-dismissible alert-danger mt-4 mx-4">
 				<div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
 			</div>
 		{% endif %}
 
 		<form action="{{path('security.login')}}" method="post">
 
-			<div class="form-group">
-				<label for="username" class="form-label mt-4">Address email</label>
+			<div class="form-group mt-4 px-4">
+				<label for="username" class="form-label">Address email</label>
 				<input type="email" class="form-control" value='{{lastUsername}}' id="username" aria-describedby="emailHelp" placeholder="blah@devjob.fr" name='_username'>
 				<small id="emailHelp" class="form-text text-muted">Nous ne partagerons jamais votre e-mail avec quelqu'un d'autre.</small>
 			</div>
-			<div class="form-group password-registration">
-				<label for="password" class="form-label mt-4">Mot de passe</label>
+			<div class="form-group password-registration mt-4 px-4">
+				<label for="password" class="form-label">Mot de passe</label>
 				<input type="password" class="form-control" id="password" placeholder="********" name='_password'>
 				<i class="fa-solid fa-eye"></i>
 			</div>
 
-			<button type='submit' class="btn btn-primary mt-4">Se connecter</button>
+			<button type='submit' class="btn btn-primary m-4">Se connecter</button>
 		</form>
 
 	</div>

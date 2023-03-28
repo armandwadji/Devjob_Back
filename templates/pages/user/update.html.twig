@@ -1,15 +1,14 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Devjob - Inscription
+{% block title %}Devjob - Edition du profil
 {% endblock %}
 
 {% block body %}
 
 	<div class="container">
-
-		<h1 class="mt-4">Formulaire d'inscription</h1>
-
-		{{form_start(form)}}
+		<h1 class="mt-4">Editon du profil entreprise</h1>
+	    
+        {{form_start(form)}}
 			{# *********** SOCIETE ************** #}
             <h3 class="mt-4 text-primary fw-bold">Société</h3>
             <hr class="my-4">
@@ -33,18 +32,19 @@
             
             </div>
 
+
             {# *********** CONTACT ************** #}
             <h3 class="mt-4 text-primary fw-bold">Contact</h3>
             <hr class="my-4">
 
 			<div class="form-group mt-4 px-4">
-				{{form_label(form.firstname, 'Nom ', {'label_attr': { 'class': 'form-label'} } )}}
-				{{ form_widget(form.firstname, {'attr': {'placeholder': "Nom", 'min': 2, 'max' : 50 }}) }}
+				{{form_label(form.firstname, 'Prenom ', {'label_attr': { 'class': 'form-label'} } )}}
+				{{ form_widget(form.firstname, {'attr': {'placeholder': "Prenom", 'min': 2, 'max' : 50 }}) }}
 			</div>
 
 			<div class="form-group mt-4 px-4">
-				{{form_label(form.lastname, 'Prenom', {'label_attr': { 'class': 'form-label'} } )}}
-				{{ form_widget(form.lastname, {'attr': {'placeholder': "Prenom", 'min': 2, 'max' : 50 }}) }}
+				{{form_label(form.lastname, 'Nom', {'label_attr': { 'class': 'form-label'} } )}}
+				{{ form_widget(form.lastname, {'attr': {'placeholder': "Nom", 'min': 2, 'max' : 50 }}) }}
 			</div>
 
 			<div class="form-group mt-4 px-4">
@@ -52,22 +52,9 @@
 				{{ form_widget(form.email, {'attr': {'placeholder': "blah@devjob.fr", 'max' : 180  }}) }}
 			</div>
 
-			<div class="form-group password-registration mt-4 px-4">
-				{{form_label(form.plainPassword.first, 'Mot de passe', {'label_attr': { 'class': 'form-label'} } )}}
-				{{ form_widget(form.plainPassword.first, {'attr': {'placeholder': "********",  }}) }}
-				<i class="fa-solid fa-eye"></i>
-			</div>
-
-			<div class="form-group password-registration mt-4 px-4">
-				{{form_label(form.plainPassword.second, 'Confirmation du mot de passe', {'label_attr': { 'class': 'form-label'} } )}}
-				{{ form_widget(form.plainPassword.second, {'attr': {'placeholder': "********",  }}) }}
-				<i class="fa-solid fa-eye"></i>
-			</div>
-
-			<button type="submit" class="btn btn-primary m-4 ">inscription</button>
+			<button type="submit" class="btn btn-primary mt-4 mx-4">Editer</button>
 		{{form_end(form)}}
-
 	</div>
 
-
+    
 {% endblock %}
