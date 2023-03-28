@@ -91,9 +91,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
-    #[ORM\OneToOne(inversedBy: 'user', cascade: ['persist', 'remove'])]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
     private ?Company $company = null;
+
 
     public function __construct()
     {
@@ -238,8 +238,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function setCompany(Company $company): self
     {
+        // set the owning side of the relation if necessary
+        if ($company->getUser() !== $this) {
+            $company->setUser($this);
+        }
+
         $this->company = $company;
 
         return $this;
     }
+
 }

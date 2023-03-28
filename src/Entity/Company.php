@@ -36,7 +36,8 @@ class Company
     #[ORM\JoinColumn(nullable: false)]
     private ?Location $location = null;
 
-    #[ORM\OneToOne(mappedBy: 'company', cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(inversedBy: 'company', cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
 
     public function __construct()
@@ -122,13 +123,9 @@ class Company
 
     public function setUser(User $user): self
     {
-        // set the owning side of the relation if necessary
-        if ($user->getCompany() !== $this) {
-            $user->setCompany($this);
-        }
-
         $this->user = $user;
 
         return $this;
     }
+
 }

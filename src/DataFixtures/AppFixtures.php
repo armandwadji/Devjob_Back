@@ -51,30 +51,33 @@ class AppFixtures extends Fixture
             $manager->persist($location);
         }
 
-        // COMPANY
-        $companies = [];
-        for ($i = 0; $i < 20; $i++) {
-            $company = new Company();
-            $company->setName($this->faker->word())
-                ->setColor($this->faker->rgbColor())
-                ->setLocation($locations[mt_rand(0, count($locations) - 1)]);
-
-            $companies[] = $company;
-            $manager->persist($company);
-        }
-
         // USER
+        $users = [];
         for ($i = 0; $i < 20; $i++) {
             $user = new User();
             $user->setFirstname($this->faker->firstName())
                 ->setLastname($this->faker->lastName())
                 ->setEmail($this->faker->email())
                 ->setRoles(['ROLE_USER'])
-                ->setPlainPassword('password')
-                ->setCompany($companies[$i]);
+                ->setPlainPassword('password');
 
+            $users[] = $user;
             $manager->persist($user);
         }
+
+        // COMPANY
+        $companies = [];
+        for ($i = 0; $i < 20; $i++) {
+            $company = new Company();
+            $company->setName($this->faker->word())
+                ->setColor($this->faker->rgbColor())
+                ->setUser($users[$i])
+                ->setLocation($locations[mt_rand(0, count($locations) - 1)]);
+
+            $companies[] = $company;
+            $manager->persist($company);
+        }
+
 
 
         // TABLEAUX REQUIREMENTS AND ROLES

@@ -12,7 +12,8 @@
 		{{form_start(form)}}
 			{# *********** SOCIETE ************** #}
             <h3 class="mt-4 text-primary fw-bold">Société</h3>
-            <hr>
+            <hr class="my-4">
+			
 			<div class="form-group mt-4">
 				{{form_label(form.company.name, 'Nom de la société', {'label_attr': { 'class': 'form-label'} } )}}
 				{{ form_widget(form.company.name, {'attr': {'placeholder': "nom de la société",   }}) }}
@@ -32,7 +33,8 @@
 
             {# *********** CONTACT ************** #}
             <h3 class="mt-4 text-primary fw-bold">Contact</h3>
-            <hr>
+            <hr class="my-4">
+
 			<div class="form-group mt-4">
 				{{form_label(form.firstname, 'Nom ', {'label_attr': { 'class': 'form-label'} } )}}
 				{{ form_widget(form.firstname, {'attr': {'placeholder': "Nom", 'min': 2, 'max' : 50 }}) }}
