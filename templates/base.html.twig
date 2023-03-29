@@ -6,7 +6,7 @@
 			{% block title %}Welcome In Devjob!
 			{% endblock %}
 		</title>
-		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1"/>
 		<link href="{{asset('assets/favicon-32x32.png')}}" rel="icon" type="image/png">
 
 		<link rel="stylesheet" href="{{asset('assets/css/bootstrap.min-united.css')}}">
@@ -27,5 +27,9 @@
 			{% include "partials/_header.html.twig" %}
 		{% endblock %}
 		{% block body %}{% endblock %}
+
+		{% block footer %}
+			{% include "partials/_footer.html.twig" %}
+		{% endblock %}
 	</body>
 </html>

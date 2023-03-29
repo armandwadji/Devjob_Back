@@ -11,6 +11,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\ColorType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Vich\UploaderBundle\Form\Type\VichImageType;
 
 class CompanyType extends AbstractType
 {
@@ -19,6 +20,7 @@ class CompanyType extends AbstractType
         $builder
             ->add('name', TextType::class)
             ->add('color', ColorType::class)
+            ->add('imageFile', VichImageType::class, [ 'required' => false ])
             ->add('location', EntityType::class, [
                 'class' => Location::class,
                 'choice_label' => 'name',

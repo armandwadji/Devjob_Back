@@ -168,4 +168,16 @@ class OfferController extends AbstractController
 
         return $this->redirectToRoute('offer.index', ['page' => $OffersCountPage >= 1 || ($OffersCountPage === 0 && $page === 1) ?  $page : $page - 1]);
     }
+
+    /**
+     * This controller show offer by id
+     * @param Offer $offer
+     * @return Response
+     */
+    #[Security("is_granted('ROLE_USER') and user=== offer.getCompany().getUser()")]
+    #[Route('/my-offers/{id}/applicants', name: 'offer.show', methods: ['GET'])]
+    public function show(Offer $offer): Response
+    {
+        return $this->render('pages/offer/show.html.twig', ['offer' => $offer]);
+    }
 }

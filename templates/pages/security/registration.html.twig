@@ -5,7 +5,7 @@
 
 {% block body %}
 
-	<div class="container">
+	<main class="container">
 
 		<h1 class="mt-4">Formulaire d'inscription</h1>
 
@@ -32,6 +32,11 @@
                 </div>
             
             </div>
+
+			<div class="form-group mt-4 px-4">
+				{{form_label(form.company.imageFile, ' Image de la société', {'label_attr': { 'class': 'form-label'} } )}}
+				{{ form_widget(form.company.imageFile, { 'attr': { 'class': 'd-flex'  } } ) }}
+			</div>
 
             {# *********** CONTACT ************** #}
             <h3 class="mt-4 text-primary fw-bold">Contact</h3>
@@ -67,7 +72,7 @@
 			<button type="submit" class="btn btn-primary m-4 ">inscription</button>
 		{{form_end(form)}}
 
-	</div>
+	</main>
 
 
 {% endblock %}

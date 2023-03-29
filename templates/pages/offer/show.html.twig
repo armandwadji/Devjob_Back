@@ -1,0 +1,66 @@
+{% extends "base.html.twig" %}
+
+
+{% block title %}devjob -
+	{{offer.name}}
+{% endblock %}
+
+{% block body %}
+	{# <pre>
+        {{ dump(offer) }}
+    </pre> #}
+	<main class="container mt-4">
+		<section class="">
+			<h2 class="blog-post-title mb-1 text-capitalize">{{offer.name}}</h2>
+			<p class="blog-post-meta">Créer le :{{offer.createdAt|date('d/m/y')}}</p>
+			<p class="blog-post-meta">Url:
+				<a href="{{offer.url}}" target='_blank' class='color-info'>
+					{{offer.url}}
+				</a>
+			</p>
+
+			<h3 class="text-capitalize">Description :</h3>
+			<p>
+				{{offer.description}}
+			</p>
+			<hr>
+
+			{# PREREQUIS #}
+			<h3 class='text-capitalize'>préréquis</h3>
+			<p>
+				{{offer.requirement.content}}
+			</p>
+			<ul>
+				{% for requirementItems in offer.requirement.requirementItems %}
+					<li class="text-text-capitalize">
+						{{requirementItems}}
+					</li>
+				{% endfor %}
+			</ul>
+
+			{# ROLES #}
+			<h3 class='text-capitalize'>Roles</h3>
+			<p>
+				{{offer.role.content}}
+			</p>
+			<ol>
+				{% for roleItem in offer.role.roleItems %}
+					<li>
+						{{roleItem}}
+					</li>
+				{% endfor %}
+			</ol>
+			<hr>
+		</section>
+
+        <section>
+            <h2 class="blog-post-title mb-1 text-capitalize">candidatures</h2>
+        </section>
+
+	</main>
+
+	{# <div class="container mt-4">
+									<h1 class='text-capitalize'>{{offer.name}}</h1>
+							
+								</div> #}
+{% endblock %}

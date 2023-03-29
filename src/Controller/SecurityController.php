@@ -31,7 +31,6 @@ class SecurityController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
 
             $user = $form->getData();
-
             $this->addFlash(type: 'success', message: 'votre compte à bien été créer.');
 
             $manager->persist($user);
