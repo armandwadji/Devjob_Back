@@ -1,17 +1,65 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-	<div class="container-fluid">
-		<a class="navbar-brand" href="#">Navbar</a>
+	<div class="container-fluid container">
+
+		<a class="navbar-brand" href="{{path('home.index')}}">Devjob</a>
 		<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
 			<span class="navbar-toggler-icon"></span>
 		</button>
 		<div class="collapse navbar-collapse" id="navbarColor01">
 			<ul class="navbar-nav me-auto">
-				<li class="nav-item">
-					<a class="nav-link active" href="#">Home
-						<span class="visually-hidden">(current)</span>
-					</a>
-				</li>
+
+				{% if app.user %}
+					<li class="nav-item">
+						<a class="nav-link active" href="{{path('offer.index')}}">Home
+							<span class="visually-hidden">(current)</span>
+						</a>
+					</li>
+				{% endif %}
+
 			</ul>
+
+			<div class="d-flex ">
+				<ul class="navbar-nav me-auto">
+
+					{% if app.user %}
+						<li class="nav-item dropdown me-5 ">
+
+							{% if app.user.company.imageName %}
+								<a class="recipe__image pe-2 nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+									<img class='rounded-circle' style="max-width: 3rem; max-height: 3rem;" src="{{ vich_uploader_asset(app.user.company, 'imageFile') }}">
+								</a>
+							{% else %}
+								<a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">{{app.user.firstname ~  " " ~  app.user.lastname}}</a>
+							{% endif %}
+							
+							<div class="dropdown-menu">
+								<a class="dropdown-item" href="{{path('user.edit', {id: app.user.id() })}}">Edit infos</a>
+								{# <a class="dropdown-item" href="{{path('user.edit.password', {id: app.user.id() })}}">Edit mot de passe</a> #}
+								<div class="dropdown-divider"></div>
+								<a class="dropdown-item" href="{{path("security.logout")}}">Deconnexion</a>
+							</div>
+						</li>
+					{% else %}
+
+						{# Connexion #}
+						<li class="nav-item">
+							<a class="nav-link" href="{{path('security.login')}}">Connexion
+								<span class="visually-hidden">(current)</span>
+							</a>
+						</li>
+
+						{# Inscription #}
+						<li class="nav-item">
+							<a class="nav-link" href="{{path('security.registration')}}">Inscription
+								<span class="visually-hidden">(current)</span>
+							</a>
+						</li>
+
+					{% endif %}
+
+				</ul>
+			</div>
+
 		</div>
 	</div>
 </nav>

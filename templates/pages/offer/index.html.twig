@@ -4,7 +4,7 @@
 {% endblock %}
 
 {% block body %}
-	<div class="container mt-4">
+	<main class="container mt-4">
 		<h1>Mes offres</h1>
 
 		<a href="{{path('offer.new', {'count' : offers.getTotalItemCount } )}}" class="btn btn-primary mt-4">Ajouter une offre</a>
@@ -37,27 +37,33 @@
 			<table class="table table-hover">
 				<thead>
 					<tr>
-						<th scope="col">Id</th>
-						<th scope="col">Nom</th>
-						<th scope="col">url</th>
-						<th scope="col">Posté Le</th>
-						<th>Edition</th>
-						<th>Suppression</th>
+						<th scope="col" class="text-center">Id</th>
+						<th scope="col" class="text-center">Nom</th>
+						<th scope="col" class="text-center">contrat</th>
+						<th scope="col" class="text-center">Posté Le</th>
+						<th scope="col" class="text-center">Detail</th>
+						<th scope="col" class="text-center">Edité</th>
+						<th scope="col" class="text-center">Supprimé</th>
 					</tr>
 				</thead>
 				<tbody>
 					{% for offer in offers %}
 						<tr class="table-primary">
-							<th scope="row">{{offer.id}}</th>
-							<td>{{offer.name}}</td>
-							<td>{{offer.url}}</td>
-							<td>{{offer.createdAt | date('d/m/Y')}}</td>
-							<td>
+							<th scope="row" class="text-center">{{offer.id}}</th>
+							<td scope="row" class="text-center">{{offer.name}}</td>
+							<td scope="row" class="text-center">{{offer.contract}}</td>
+							<td scope="row" class="text-center">{{offer.createdAt | date('d/m/Y')}}</td>
+							<td scope="row" class="text-center">
+								<a href="{{path('offer.show', {id: offer.id})}}" class="btn btn-success">
+									<i class="fa-solid fa-magnifying-glass"></i>
+								</a>
+							</td>
+							<td scope="row" class="text-center">
 								<a href="{{path('offer.edit', {id: offer.id})}}" class="btn btn-info">
 									<i class="fa-solid fa-pencil"></i>
 								</a>
 							</td>
-							<td>
+							<td scope="row" class="text-center">
 								<a href="{{path('offer.delete', { id: offer.id, 'count' : offers|length })}}" class="btn btn-danger delete-confirm" onclick="return window.confirm('Voulez vous vraiment supprimer cet ingrédient?')">
 									<i class="fa-solid fa-trash"></i>
 								</a>
@@ -75,5 +81,5 @@
 		{% endif %}
 
 
-	</div>
+	</main>
 {% endblock %}

@@ -1,3 +1,10 @@
+body {
+	margin: 0;
+	min-height: 100vh;
+	display: grid;
+	grid-template-rows: auto 1fr auto;
+}
+
 /* Gestion de la visibilité du passord et confirm password */
 .password-registration {
     position: relative;
@@ -5,24 +12,48 @@
 
 .fa-eye {
     position: absolute;
-    right: 10px;
+    right: 35px;
     bottom: 15%;
     cursor: pointer;
 }
 
 .fa-eye-slash {
     position: absolute;
-    right: 10px;
+    right: 35px;
     bottom: 15%;
     cursor: pointer;
 }
 
-fieldset.form-group{
+/* Gestion du layout du upload image*/
+fieldset.form-group {
     position: relative;
 }
 
-fieldset.form-group button{
+fieldset.form-group button {
     position: absolute;
     top: 40%;
     right: 0;
 }
+
+.vich-image {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.vich-image .custom-file{
+    display: flex;
+    align-items: center;
+}
+
+.vich-image a:last-child {
+    display: none;
+}
+
+.vich-image a img{
+    max-height: 5rem;
+    max-width: 5rem;
+    border-radius: 100%;
+    object-fit: cover;
+}
+

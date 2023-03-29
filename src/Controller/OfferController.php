@@ -3,9 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\Offer;
-use App\Entity\Requirement;
+use App\Entity\Company;
 use App\Form\OfferType;
-use App\Form\RequirementType;
+use App\Form\CompanyType;
 use App\Repository\OfferRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
@@ -14,6 +14,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 class OfferController extends AbstractController
 {
@@ -26,13 +29,14 @@ class OfferController extends AbstractController
      * @param SessionInterface $session
      * @return Response
      */
+    #[IsGranted('ROLE_USER')]
     #[Route('/my-offers', name: 'offer.index', methods: ['GET'])]
     public function index(OfferRepository $repository, PaginatorInterface $paginator, Request $request,  SessionInterface $session): Response
     {
         $session->set('page', isset($_GET['page']) ? (int)htmlspecialchars($_GET['page'])  : 1);
 
         $offers = $paginator->paginate(
-            $repository->findAll(),
+            $repository->findBy(['company' => $this->getUser()->getCompany()]),
             $request->query->getInt('page', 1),
             10
         );
@@ -45,8 +49,8 @@ class OfferController extends AbstractController
     #[Route('/test', name: 'offer.test', methods: ['GET', 'POST'])]
     public function test(): Response
     {
-        $requirement = new Requirement();
-        $form = $this->createForm(RequirementType::class, $requirement);
+        $company = new Company();
+        $form = $this->createForm(CompanyType::class, $company);
 
         return $this->render('pages/offer/test.html.twig', [
             'form' => $form->createView(),
@@ -61,6 +65,7 @@ class OfferController extends AbstractController
      * @param SessionInterface $session
      * @return Response
      */
+    #[IsGranted('ROLE_USER')]
     #[Route('/my-offers/new', name: 'offer.new', methods: ['GET', 'POST'])]
     public function new(Offer $offer = null,  Request $request, EntityManagerInterface $manager, SessionInterface $session): Response
     {
@@ -76,6 +81,7 @@ class OfferController extends AbstractController
      * @param SessionInterface $session
      * @return Response
      */
+    #[Security("is_granted('ROLE_USER') and user=== offer.getCompany().getUser()")]
     #[Route('/my-offers/{id}/update', name: 'offer.edit', methods: ['GET', 'POST'])]
     public function update(Offer $offer,  Request $request, EntityManagerInterface $manager, SessionInterface $session): Response
     {
@@ -100,18 +106,18 @@ class OfferController extends AbstractController
             if ($form->isValid()) {
 
                 $offer =  $form->getData();
-                //$offer->setUser($this->getUser());
-                
+                $offer->setCompany($this->getUser()->getCompany());
+
                 foreach ($offer->getRequirement()->getRequirementItems() as $requirementItem) {
                     if (!$requirementItem->getRequirement())
-                    $requirementItem->setRequirement($offer->getRequirement());
+                        $requirementItem->setRequirement($offer->getRequirement());
                 }
-                
+
                 foreach ($offer->getRole()->getRoleItems() as $roleItem) {
                     if (!$roleItem->getRole())
-                    $roleItem->setRole($offer->getRole());
+                        $roleItem->setRole($offer->getRole());
                 }
-                
+
 
                 // GESTION DE LA PAGINATION:
                 $offersTotalCount = isset($_GET['count']) ? (int) htmlspecialchars($_GET['count']) + 1 : null; //Nombres de recettes sur la page courante
@@ -143,6 +149,7 @@ class OfferController extends AbstractController
      * @param SessionInterface $session
      * @return Response
      */
+    #[Security("is_granted('ROLE_USER') and user=== offer.getCompany().getUser()")]
     #[Route('/my-offers/{id}/delete', name: 'offer.delete', methods: ['GET'])]
     public function delete(Offer $offer = null, EntityManagerInterface $manager, SessionInterface $session): Response
     {
@@ -159,6 +166,18 @@ class OfferController extends AbstractController
             message: $offer ? 'Votre offre à été supprimer avec succès!' : 'L\'offre demander n\'existe pas'
         );
 
-        return $this->redirectToRoute('offer.index', ['page' => $OffersCountPage >= 1 ?  $page : $page - 1]);
+        return $this->redirectToRoute('offer.index', ['page' => $OffersCountPage >= 1 || ($OffersCountPage === 0 && $page === 1) ?  $page : $page - 1]);
+    }
+
+    /**
+     * This controller show offer by id
+     * @param Offer $offer
+     * @return Response
+     */
+    #[Security("is_granted('ROLE_USER') and user=== offer.getCompany().getUser()")]
+    #[Route('/my-offers/{id}/applicants', name: 'offer.show', methods: ['GET'])]
+    public function show(Offer $offer): Response
+    {
+        return $this->render('pages/offer/show.html.twig', ['offer' => $offer]);
     }
 }

@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Devjob - login
+{% endblock %}
+
+{% block body %}
+	<main class="container">
+		<h1 class="mt-4">Formulaire de connexion</h1>
+
+		{# read and display just one flash message type #}
+		{% for message in app.flashes('success') %}
+			<div class="alert alert-success mt-4">
+				{{ message }}
+			</div>
+		{% endfor %}
+
+        {# MESSAGE D'ERREUR #}
+		{% if error %}
+			<div class="alert alert-dismissible alert-danger mt-4 mx-4">
+				<div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+			</div>
+		{% endif %}
+
+		<form action="{{path('security.login')}}" method="post">
+
+			<div class="form-group mt-4 px-4">
+				<label for="username" class="form-label">Address email</label>
+				<input type="email" class="form-control" value='{{lastUsername}}' id="username" aria-describedby="emailHelp" placeholder="blah@devjob.fr" name='_username'>
+				<small id="emailHelp" class="form-text text-muted">Nous ne partagerons jamais votre e-mail avec quelqu'un d'autre.</small>
+			</div>
+			<div class="form-group password-registration mt-4 px-4">
+				<label for="password" class="form-label">Mot de passe</label>
+				<input type="password" class="form-control" id="password" placeholder="********" name='_password'>
+				<i class="fa-solid fa-eye"></i>
+			</div>
+
+			<button type='submit' class="btn btn-primary m-4">Se connecter</button>
+		</form>
+
+	</main>
+{% endblock %}

@@ -7,7 +7,7 @@
 {% endblock %}
 
 {% block body %}
-	<div class="container">
+	<main class="container">
 
 		<h1 class="mt-4">
 			{{editMode ? "Édition" : "Création"}}
@@ -20,8 +20,6 @@
 				{{ message }}
 			</div>
 		{% endfor %}
-
-		{# {'attr': {'novalidate': 'novalidate'}} #}
 
 		{{ form_start(formOffer) }}
 
@@ -93,7 +91,7 @@
 
 		{{ form_end(formOffer) }}
 
-	</div>
+	</main>
 {% endblock %}
 
 {% block javascripts %}

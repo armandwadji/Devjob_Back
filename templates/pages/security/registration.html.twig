@@ -1,0 +1,78 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Devjob - Inscription
+{% endblock %}
+
+{% block body %}
+
+	<main class="container">
+
+		<h1 class="mt-4">Formulaire d'inscription</h1>
+
+		{{form_start(form)}}
+			{# *********** SOCIETE ************** #}
+            <h3 class="mt-4 text-primary fw-bold">Société</h3>
+            <hr class="my-4">
+			
+			<div class="form-group mt-4 px-4">
+				{{form_label(form.company.name, 'Nom de la société', {'label_attr': { 'class': 'form-label'} } )}}
+				{{ form_widget(form.company.name, {'attr': {'placeholder': "nom de la société",   }}) }}
+			</div>
+
+            <div class="d-flex justify-content-between align-items-center px-4">
+            
+                <div class="form-group mt-4 d-flex" >
+                    {{form_label(form.company.color, 'Couleur d\'arrière plan', {'label_attr': { 'class': 'form-label'} } )}}
+                    {{ form_widget(form.company.color, {'attr': {'placeholder': "Couleur de la société", 'class': 'border-0 ' , 'style': 'width: 2.5rem'  }}) }}
+                </div>
+
+                <div class="form-group mt-2" >
+                    {{form_label(form.company.location, 'Localisation', {'label_attr': { 'class': 'form-label '} } )}}
+                    {{ form_widget(form.company.location, { 'attr': { 'class': 'form-select' , 'style': 'width: 5rem'  } } ) }}
+                </div>
+            
+            </div>
+
+			<div class="form-group mt-4 px-4">
+				{{form_label(form.company.imageFile, ' Image de la société', {'label_attr': { 'class': 'form-label'} } )}}
+				{{ form_widget(form.company.imageFile, { 'attr': { 'class': 'd-flex'  } } ) }}
+			</div>
+
+            {# *********** CONTACT ************** #}
+            <h3 class="mt-4 text-primary fw-bold">Contact</h3>
+            <hr class="my-4">
+
+			<div class="form-group mt-4 px-4">
+				{{form_label(form.firstname, 'Nom ', {'label_attr': { 'class': 'form-label'} } )}}
+				{{ form_widget(form.firstname, {'attr': {'placeholder': "Nom", 'min': 2, 'max' : 50 }}) }}
+			</div>
+
+			<div class="form-group mt-4 px-4">
+				{{form_label(form.lastname, 'Prenom', {'label_attr': { 'class': 'form-label'} } )}}
+				{{ form_widget(form.lastname, {'attr': {'placeholder': "Prenom", 'min': 2, 'max' : 50 }}) }}
+			</div>
+
+			<div class="form-group mt-4 px-4">
+				{{form_label(form.email, 'Email', {'label_attr': { 'class': 'form-label'} } )}}
+				{{ form_widget(form.email, {'attr': {'placeholder': "blah@devjob.fr", 'max' : 180  }}) }}
+			</div>
+
+			<div class="form-group password-registration mt-4 px-4">
+				{{form_label(form.plainPassword.first, 'Mot de passe', {'label_attr': { 'class': 'form-label'} } )}}
+				{{ form_widget(form.plainPassword.first, {'attr': {'placeholder': "********",  }}) }}
+				<i class="fa-solid fa-eye"></i>
+			</div>
+
+			<div class="form-group password-registration mt-4 px-4">
+				{{form_label(form.plainPassword.second, 'Confirmation du mot de passe', {'label_attr': { 'class': 'form-label'} } )}}
+				{{ form_widget(form.plainPassword.second, {'attr': {'placeholder': "********",  }}) }}
+				<i class="fa-solid fa-eye"></i>
+			</div>
+
+			<button type="submit" class="btn btn-primary m-4 ">inscription</button>
+		{{form_end(form)}}
+
+	</main>
+
+
+{% endblock %}

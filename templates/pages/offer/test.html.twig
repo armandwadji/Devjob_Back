@@ -1,16 +1,18 @@
 {% extends "base.html.twig" %}
 
 {% block body %}
-	{{ form_start(form) }}
+
+{{form(form)}}
+	{# {{ form_start(form) }} #}
 
 	{# RÉSUME DES PRÉREQUIS #}
-	<div class="form-group mt-4">
+	{# <div class="form-group mt-4">
 		{{form_label(form.content, 'Prérequis', {'label_attr': { 'class': 'form-label'} } )}}
 		{{ form_widget(form.content, {'attr': {'placeholder': "Résumé  des prérequis",  }}) }}
-	</div>
+	</div> #}
 
     {# DÉTAILS DES PRÉREQUIS #}
-	<div class="form-group mt-4">
+	{# <div class="form-group mt-4">
 		<div id="ingredients" data-prototype="{{form_row(form.requirementItem.vars.prototype) | e('html_attr') }}">
 			{{form_row(form.requirementItem)}}
 			<span id='insert-form'></span>
@@ -18,9 +20,9 @@
 				<i class="fa-solid fa-plus"></i>
 			</button>
 		</div>
-	</div>
+	</div> #}
 
-	{{ form_end(form, {render_rest: false}) }}
+	{# {{ form_end(form, {render_rest: false}) }} #}
 {% endblock %}
 
 {% block javascripts %}
