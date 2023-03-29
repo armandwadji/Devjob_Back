@@ -1,14 +1,19 @@
 {% extends "base.html.twig" %}
 
-{% block title %}Devjob - Acceuil {% endblock %}
+{% block title %}Devjob - Acceuil
+{% endblock %}
 {% block body %}
 	<main class="container mt-4">
 		<div class="jumbotron">
 			<h1 class="display-4">Bienvenue sur Devjob!</h1>
 			<p class="lead">Devjob est une application qui va vous permettre de créer des offres d'emplois dans le ut de recevoir des candidatures. Vous pourrez partager vos offres à la communauté du site, ou bien les garder en privées.</p>
 			<hr class="my-4">
-			<p>Pour commencer, rendez-vous sur la page d'inscription pour utiliser l'application.</p>
-			<a class="btn btn-primary btn-lg" href="{{path('security.registration')}}" role="button">Inscription</a>
+
+			{% if not app.user %}
+				<p>Pour commencer, rendez-vous sur la page d'inscription pour utiliser l'application.</p>
+				<a class="btn btn-primary btn-lg" href="{{path('security.registration')}}" role="button">Inscription</a>
+			{% endif %}
+
 		</div>
 	</main>
 {% endblock %}

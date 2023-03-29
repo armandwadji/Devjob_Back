@@ -7,8 +7,8 @@
 
 {% block body %}
 	{# <pre>
-        {{ dump(offer) }}
-    </pre> #}
+	        {{ dump(offer.candidates) }}
+	    </pre> #}
 	<main class="container mt-4">
 		<section class="">
 			<h2 class="blog-post-title mb-1 text-capitalize">{{offer.name}}</h2>
@@ -53,14 +53,54 @@
 			<hr>
 		</section>
 
-        <section>
-            <h2 class="blog-post-title mb-1 text-capitalize">candidatures</h2>
-        </section>
+		<section>
+			<h2 class="blog-post-title mb-1 text-capitalize">candidatures</h2>
+
+			{# {% for candidate in offer.candidates %}
+				<pre>
+				{{ dump(candidate) }}
+			</pre>
+			{% endfor %} #}
+			<table class="table table-hover">
+				<thead>
+					<tr>
+						<th scope="col" class="text-center">Id</th>
+						<th scope="col" class="text-center">Nom</th>
+						<th scope="col" class="text-center">Prénom</th>
+						<th scope="col" class="text-center">email</th>
+						<th scope="col" class="text-center">Detail</th>
+						<th scope="col" class="text-center">Supprimé</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for candidate in offer.candidates  %}
+						<tr class="table-primary">
+							<th scope="row" class="text-center">{{ loop.index }}</th>
+							<td scope="row" class="text-center">{{candidate.firstname}}</td>
+							<td scope="row" class="text-center">{{candidate.lastname}}</td>
+							<td scope="row" class="text-center">{{candidate.email}}</td>
+							<td scope="row" class="text-center">
+							{# {{path('offer.show', {id: offer.id})}} #}
+								<a href="" class="btn btn-success">
+									<i class="fa-solid fa-magnifying-glass"></i>
+								</a>
+							</td>
+							<td scope="row" class="text-center">
+							{# {{path('offer.delete', { id: offer.id, 'count' : offers|length })}} #}
+								<a href="" class="btn btn-danger delete-confirm" onclick="return window.confirm('Voulez vous vraiment supprimer cet ingrédient?')">
+									<i class="fa-solid fa-trash"></i>
+								</a>
+							</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</section>
 
 	</main>
 
 	{# <div class="container mt-4">
-									<h1 class='text-capitalize'>{{offer.name}}</h1>
-							
-								</div> #}
+											<h1 class='text-capitalize'>{{offer.name}}</h1>
+									
+										</div> #}
 {% endblock %}

@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Candidate;
 use App\Entity\Company;
 use App\Entity\Contract;
 use App\Entity\Location;
@@ -83,6 +84,7 @@ class AppFixtures extends Fixture
         // TABLEAUX REQUIREMENTS AND ROLES
         $requirements = [];
         $roles = [];
+        $offers = [];
         for ($k = 0; $k < 50; $k++) {
             $offer = new Offer();
             $offer->setName($this->faker->word())
@@ -91,6 +93,7 @@ class AppFixtures extends Fixture
                 ->setContract($contracts[mt_rand(0, count($contracts) - 1)])
                 ->setCompany($companies[mt_rand(0, count($companies) - 1)]);
 
+            $offers[] = $offer;
             $manager->persist($offer);
 
             // AJOUT DU REQUIREMENT
@@ -126,6 +129,17 @@ class AppFixtures extends Fixture
                 ->setRole($roles[mt_rand(0, count($roles) - 1)]);
 
             $manager->persist($roleItem);
+        }
+
+        // TABLEAUX CANDIDATES
+        for ($j = 0; $j < 200; $j++) {
+            $candidate = new Candidate();
+            $candidate->setFirstname($this->faker->firstName())
+                        ->setLastname($this->faker->lastName())
+                        ->setEmail($this->faker->email())
+                        ->setOffer($offers[mt_rand(0, count($offers) - 1)]);
+
+            $manager->persist($candidate);
         }
 
         $manager->flush();

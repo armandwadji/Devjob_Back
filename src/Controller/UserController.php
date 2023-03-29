@@ -42,4 +42,11 @@ class UserController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
+
+    #[Route('/my-account/{id}', name: 'account.index', methods: ['GET'])]
+    #[Security("is_granted('ROLE_USER') and user === choosenUser")]
+    public function home(User $choosenUser = null): Response
+    {
+        return $this->render('pages/user/account.html.twig');
+    }
 }
