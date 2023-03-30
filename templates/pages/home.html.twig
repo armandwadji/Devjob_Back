@@ -4,14 +4,56 @@
 {% endblock %}
 {% block body %}
 	<main class="container mt-4">
-		<div class="jumbotron">
+		<div
+			class="jumbotron">
+
+			{# flash for success message #}
+			{% for message in app.flashes('success') %}
+				<div class="alert alert-success mt-4">
+					{{ message }}
+				</div>
+			{% endfor %}
+
 			<h1 class="display-4">Bienvenue sur Devjob!</h1>
 			<p class="lead">Devjob est une application qui va vous permettre de créer des offres d'emplois dans le ut de recevoir des candidatures. Vous pourrez partager vos offres à la communauté du site, ou bien les garder en privées.</p>
-			<hr class="my-4">
 
 			{% if not app.user %}
 				<p>Pour commencer, rendez-vous sur la page d'inscription pour utiliser l'application.</p>
-				<a class="btn btn-primary btn-lg" href="{{path('security.registration')}}" role="button">Inscription</a>
+
+				<div class="d-flex justify-content-start">
+					<a class="btn btn-primary btn-lg text-end" href="{{path('security.registration')}}" role="button">Inscription</a>
+				</div>
+				<hr>
+
+				{#  LIST DES OFFRES D'EMPLOIS#}
+				<div class="row mx-auto justify-content-center mt-4">
+					{% for offer in offers %}
+						<div class="card m-3 col-3 position-relative">
+							<div class="card-body">
+								<h6 class="card-subtitle mb-2 text-muted">Publié le
+									{{offer.createdAt | date('d/m/Y') }}
+									.
+									{{offer.contract}}
+								</h6>
+								<h4 class="card-title">{{offer.name}}</h4>
+								<h6 class="card-subtitle mb-2 text-muted">
+									{{offer.company.name | capitalize }}
+								</h6>
+								<img class='position-absolute top-50 start-50 rounded-circle' style="max-width: 3.5rem; max-height: 43.5em;" src=" {{ vich_uploader_asset(offer.company, 'imageFile') ? vich_uploader_asset(offer.company, 'imageFile') : 'https://picsum.photos/250/250' }} ">
+								<a href=" {{path('offer.show', {id: offer.id})}} " class="card-link">Détail</a>
+							</div>
+						</div>
+
+					{% endfor %}
+				</div>
+
+				{# display navigation #}
+				<div class="navigation d-flex justify-content-center mt-4">
+					{{ knp_pagination_render(offers) }}
+				</div>
+			{% else %}
+
+				<hr class="my-4">
 			{% endif %}
 
 		</div>

@@ -42,16 +42,6 @@ class AppFixtures extends Fixture
             $manager->persist($contract);
         }
 
-        // COUNTRY
-        $locations = [];
-        for ($i = 0; $i < 20; $i++) {
-            $location = new Location();
-            $location->setName($this->faker->countryCode());
-
-            $locations[] = $location;
-            $manager->persist($location);
-        }
-
         // USER
         $users = [];
         for ($i = 0; $i < 20; $i++) {
@@ -73,7 +63,7 @@ class AppFixtures extends Fixture
             $company->setName($this->faker->word())
                 ->setColor($this->faker->hexColor())
                 ->setUser($users[$i])
-                ->setLocation($locations[mt_rand(0, count($locations) - 1)]);
+                ->setCountry($this->faker->countryCode());
 
             $companies[] = $company;
             $manager->persist($company);
@@ -135,9 +125,11 @@ class AppFixtures extends Fixture
         for ($j = 0; $j < 200; $j++) {
             $candidate = new Candidate();
             $candidate->setFirstname($this->faker->firstName())
-                        ->setLastname($this->faker->lastName())
-                        ->setEmail($this->faker->email())
-                        ->setOffer($offers[mt_rand(0, count($offers) - 1)]);
+                ->setLastname($this->faker->lastName())
+                ->setEmail($this->faker->email())
+                ->setTelephone($this->faker->creditCardNumber())
+                ->setDescription($this->faker->text(300))
+                ->setOffer($offers[mt_rand(0, count($offers) - 1)]);
 
             $manager->persist($candidate);
         }

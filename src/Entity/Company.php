@@ -35,10 +35,6 @@ class Company
     #[ORM\OneToMany(mappedBy: 'company', targetEntity: Offer::class, orphanRemoval: true)]
     private Collection $offer;
 
-    #[ORM\ManyToOne(inversedBy: 'company')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Location $location = null;
-
     #[ORM\OneToOne(inversedBy: 'company', cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
@@ -52,6 +48,9 @@ class Company
 
     #[ORM\Column]
     private ?\DateTimeImmutable $updatedAt = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $country = null;
 
     public function __construct()
     {
@@ -117,18 +116,6 @@ class Company
         return $this;
     }
 
-    public function getLocation(): ?Location
-    {
-        return $this->location;
-    }
-
-    public function setLocation(?Location $location): self
-    {
-        $this->location = $location;
-
-        return $this;
-    }
-
     public function getUser(): ?User
     {
         return $this->user;
@@ -186,5 +173,17 @@ class Company
     public function getImageName(): ?string
     {
         return $this->imageName;
+    }
+
+    public function getCountry(): ?string
+    {
+        return $this->country;
+    }
+
+    public function setCountry(string $country): self
+    {
+        $this->country = $country;
+
+        return $this;
     }
 }

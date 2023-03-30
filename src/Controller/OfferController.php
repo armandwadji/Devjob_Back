@@ -5,18 +5,18 @@ namespace App\Controller;
 use App\Entity\Offer;
 use App\Entity\Company;
 use App\Form\OfferType;
-use App\Form\CompanyType;
+use App\Repository\CandidateRepository;
 use App\Repository\OfferRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class OfferController extends AbstractController
 {
@@ -43,17 +43,6 @@ class OfferController extends AbstractController
 
         return $this->render('pages/offer/index.html.twig', [
             'offers' => $offers,
-        ]);
-    }
-
-    #[Route('/test', name: 'offer.test', methods: ['GET', 'POST'])]
-    public function test(): Response
-    {
-        $company = new Company();
-        $form = $this->createForm(CompanyType::class, $company);
-
-        return $this->render('pages/offer/test.html.twig', [
-            'form' => $form->createView(),
         ]);
     }
 
@@ -89,7 +78,7 @@ class OfferController extends AbstractController
     }
 
     /**
-     * This method create or update offer
+     * This controller create or update offer
      * @param Offer $offer
      * @param Request $request
      * @param EntityManagerInterface $manager
@@ -170,14 +159,26 @@ class OfferController extends AbstractController
     }
 
     /**
-     * This controller show offer by id
+     * This controller show detail of offer
      * @param Offer $offer
      * @return Response
      */
-    #[Security("is_granted('ROLE_USER') and user=== offer.getCompany().getUser()")]
-    #[Route('/my-offers/{id}/applicants', name: 'offer.show', methods: ['GET'])]
+    #[Route('/offers/{id}', name: 'offer.show', methods: ['GET'])]
     public function show(Offer $offer): Response
     {
-        return $this->render('pages/offer/show.html.twig', ['offer' => $offer]);
+        return $this->render('pages/offer/show.html.twig', [
+            'offer' => $offer
+        ]);
     }
+
+    // #[Route('/test', name: 'offer.test', methods: ['GET', 'POST'])]
+    // public function test(): Response
+    // {
+    //     $company = new Company();
+    //     $form = $this->createForm(CompanyType::class, $company);
+
+    //     return $this->render('pages/offer/test.html.twig', [
+    //         'form' => $form->createView(),
+    //     ]);
+    // }
 }

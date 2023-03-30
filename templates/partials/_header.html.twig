@@ -10,12 +10,12 @@
 
 				{% if app.user %}
 					<li class="nav-item">
-						<a class="nav-link active" href="{{path('account.index', {id: app.user.id() } )}}">Acceuil
+						<a class="nav-link active" href="{{path('offer.index')}}">Offres
 							<span class="visually-hidden">(current)</span>
 						</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link active" href="{{path('offer.index')}}">Offres
+						<a class="nav-link active" href="{{path('offer.all.candidates.show', {id: app.user.company.id() } )}}">Candidats
 							<span class="visually-hidden">(current)</span>
 						</a>
 					</li>
@@ -38,6 +38,7 @@
 							{% endif %}
 							
 							<div class="dropdown-menu">
+								<a class="dropdown-item" href="{{path('account.index', {id: app.user.id() } )}}">Mes infos</a>
 								<a class="dropdown-item" href="{{path('user.edit', {id: app.user.id() })}}">Edit infos</a>
 								{# <a class="dropdown-item" href="{{path('user.edit.password', {id: app.user.id() })}}">Edit mot de passe</a> #}
 								<div class="dropdown-divider"></div>

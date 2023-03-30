@@ -39,28 +39,26 @@ class CandidateRepository extends ServiceEntityRepository
         }
     }
 
-//    /**
-//     * @return Candidate[] Returns an array of Candidate objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('c')
-//            ->andWhere('c.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('c.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    /**
+     * This function return all candidates by company
+     * @param int|null $companyId
+     * @return array
+     */
+    public function findCandidatesByUser(?int $companyId): array
+    {
+        $conn = $this->getEntityManager()->getConnection();
 
-//    public function findOneBySomeField($value): ?Candidate
-//    {
-//        return $this->createQueryBuilder('c')
-//            ->andWhere('c.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+        $sql = '
+                    SELECT * , COUNT(`candidate`.`email`) as count FROM `candidate` 
+                    INNER JOIN `offer` ON `candidate`.`offer_id` = `offer`.`id`
+                    INNER JOIN `company` ON `offer`.`company_id` = `company`.`id`
+                    WHERE `company`.id = :id
+                    GROUP BY `candidate`.`email`
+                ';
+
+        $stmt = $conn->prepare($sql);
+        $resultSet = $stmt->executeQuery(['id' => $companyId]);
+
+        return $resultSet->fetchAllAssociative();
+    }
 }

@@ -16,7 +16,7 @@
 			</div>
 		{% endfor %}
 
-        {# flash for warning message #}
+		{# flash for warning message #}
 		{% for message in app.flashes('warning') %}
 			<div class="alert alert-warning mt-4">
 				{{ message }}
@@ -37,25 +37,26 @@
 			<table class="table table-hover">
 				<thead>
 					<tr>
-						<th scope="col" class="text-center">Id</th>
+						{# <th scope="col" class="text-center">Id</th> #}
 						<th scope="col" class="text-center">Nom</th>
 						<th scope="col" class="text-center">contrat</th>
 						<th scope="col" class="text-center">Posté Le</th>
-						<th scope="col" class="text-center">Detail</th>
+						<th scope="col" class="text-center">Candidats</th>
 						<th scope="col" class="text-center">Edité</th>
 						<th scope="col" class="text-center">Supprimé</th>
 					</tr>
 				</thead>
 				<tbody>
 					{% for offer in offers %}
-						<tr class="table-primary">
-							<th scope="row" class="text-center">{{ loop.index }}</th>
+						<tr
+							class="table-primary">
+							{# <th scope="row" class="text-center">{{ loop.index }}</th> #}
 							<td scope="row" class="text-center">{{offer.name}}</td>
 							<td scope="row" class="text-center">{{offer.contract}}</td>
 							<td scope="row" class="text-center">{{offer.createdAt | date('d/m/Y')}}</td>
 							<td scope="row" class="text-center">
-								<a href="{{path('offer.show', {id: offer.id})}}" class="btn btn-success">
-									<i class="fa-solid fa-magnifying-glass"></i>
+								<a href="{{path('offer.candidates.show', {id: offer.id})}}" class="btn btn-success">
+									{{offer.candidates|length}}
 								</a>
 							</td>
 							<td scope="row" class="text-center">
