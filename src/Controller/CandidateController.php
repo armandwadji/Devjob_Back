@@ -50,7 +50,7 @@ class CandidateController extends AbstractController
      */
     #[Security("is_granted('ROLE_USER') and user=== company.getUser()")]
     #[Route('/my-applicants?{id}', name: 'offer.all.candidates.show', methods: ['GET'])]
-    public function candidatesByCompany(Company $company, OfferRepository $repository, PaginatorInterface $paginator, Request $request): Response
+    public function candidatesByCompany(Company $company, PaginatorInterface $paginator, Request $request): Response
     {
         $candidates = [];
         foreach ($company->getOffer() as $offer) {
@@ -58,8 +58,6 @@ class CandidateController extends AbstractController
                 $candidates[] = $candidat;
             }
         }
-
-        // dd($repository->findCandidateGroupByEmail($company));
 
         $candidates = $paginator->paginate(
             target: $candidates,
@@ -73,6 +71,7 @@ class CandidateController extends AbstractController
         ]);
     }
 
+    #[Security("is_granted('ROLE_USER') and user=== candidate.getOffer()[0].getCompany().getUser()")]
     #[Route('/my-applicants/{id}', name: 'candidate.show', methods: ['GET'])]
     public function candidat(Candidate $candidate, Request $request): Response
     {
@@ -84,10 +83,10 @@ class CandidateController extends AbstractController
         ]);
     }
 
+    #[Security("is_granted('ROLE_USER') and user=== candidate.getOffer()[0].getCompany().getUser()")]
     #[Route('/my-applicants/{id}/delete', name: 'candidate.delete', methods: ['GET'])]
     public function delete(Candidate $candidate = null, EntityManagerInterface $manager, Request $request): Response
     {
-
         $OffersCountPage = intval($request->query->get('count'))  - 1; //Nombres de candidats sur la page courante moins le candidat à supprimer
         $page = intval($request->query->get('page')); //numéro de la page courante
 

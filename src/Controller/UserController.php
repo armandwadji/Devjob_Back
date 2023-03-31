@@ -24,18 +24,40 @@ class UserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // if ($hasher->isPasswordValid($choosenUser, $form->getData()->getPlainPassword())) {
 
-            $user = $form->getData();
-            $manager->persist($user);
-            $manager->flush();
-            $user->getCompany()->setImageFile(null);
-            
-            $this->addFlash(type: 'success', message: 'les informations de votre compte ont bien été modifiées.');
-            return $this->redirectToRoute('offer.index', ['id' => $user->getCompany()->getId()] );
-            // } else {
-            //     $this->addFlash(type: 'warning', message: 'le mot de passe renseigné est incorrect;');
-            // }
+            // dd($form->getData()->getCompany()->getImageFile());
+
+            if ($form->getData()->getCompany()->getImageFile() && !(bool)stristr($form->getData()->getCompany()->getImageFile()->getmimeType(), "image")) {
+
+                $this->addFlash(
+                    type: 'warning',
+                    message: 'Veuillez choisir une image.'
+                );
+
+                $form->getData()->getCompany()->setImageFile(null);
+            } else {
+
+                // $file = $form->getData()->getCompany()->getImageFile()->getmimeType();
+
+                // if ($hasher->isPasswordValid($choosenUser, $form->getData()->getPlainPassword())) {
+
+                $user = $form->getData();
+                $manager->persist($user);
+                $manager->flush();
+                $user->getCompany()->setImageFile(null);
+
+                $this->addFlash(
+                    type: 'success',
+                    message: 'les informations de votre compte ont bien été modifiées.'
+                );
+
+                return $this->redirectToRoute('offer.index', ['id' => $user->getCompany()->getId()]);
+
+                // } else {
+                //     $this->addFlash(type: 'warning', message: 'le mot de passe renseigné est incorrect;');
+                // }
+
+            }
         }
 
         return $this->render('pages/user/update.html.twig', [

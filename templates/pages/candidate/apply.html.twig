@@ -42,6 +42,11 @@
 		</div>
 
 		<div class="form-group mt-4 px-4">
+			{{form_label(form.imageFile, ' CV', {'label_attr': { 'class': 'form-label'} } )}}
+			{{ form_widget(form.imageFile, { 'attr': { 'class': 'd-flex'  } } ) }}
+		</div>
+
+		<div class="form-group mt-4 px-4">
 			{{form_label(form.description, 'Motivations :', {'label_attr': { 'class': 'form-label'} } )}}
 			{{ form_widget(form.description, {'attr': {'placeholder': "Quels sont vos motivations",   }}) }}
 		</div>

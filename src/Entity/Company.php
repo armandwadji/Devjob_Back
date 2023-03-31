@@ -5,11 +5,11 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\CompanyRepository;
 use Doctrine\Common\Collections\Collection;
-use Symfony\Component\HttpFoundation\File\File;
-
 use Doctrine\Common\Collections\ArrayCollection;
-use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Symfony\Component\Validator\Constraints as Assert;
+
+use Symfony\Component\HttpFoundation\File\File;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 #[ORM\Entity(repositoryClass: CompanyRepository::class)]
 #[Vich\Uploadable]
@@ -32,23 +32,23 @@ class Company
     )]
     private ?string $color = null;
 
-    #[ORM\OneToMany(mappedBy: 'company', targetEntity: Offer::class, orphanRemoval: true)]
-    private Collection $offer;
-
-    #[ORM\OneToOne(inversedBy: 'company', cascade: ['persist', 'remove'])]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?User $user = null;
-
     // ************IMAGE ************
     #[Assert\File(
-        extensions: ['jpg', 'jpeg'],
-        extensionsMessage: 'Please upload a valid image',
+        extensions: ['jpg', 'jpeg', 'png', 'PNG'],
+        extensionsMessage: 'Veuillez choisir une image valide.',
     )]
     #[Vich\UploadableField(mapping: 'company_images', fileNameProperty: 'imageName')]
     private ?File $imageFile = null;
 
     #[ORM\Column(nullable: true)]
     private ?string $imageName = null;
+
+    #[ORM\OneToMany(mappedBy: 'company', targetEntity: Offer::class, orphanRemoval: true)]
+    private Collection $offer;
+
+    #[ORM\OneToOne(inversedBy: 'company', cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $user = null;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $updatedAt = null;

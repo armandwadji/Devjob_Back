@@ -1,7 +1,8 @@
 {% extends "base.html.twig" %}
 
 
-{% block title %}Devjob  - Candidatures {% endblock %}
+{% block title %}Devjob  - Candidatures
+{% endblock %}
 
 {% block body %}
 
@@ -14,7 +15,9 @@
 			{% else %}
 
 				<div class="count mt-4">
-					<h5>Vous avez	{{ candidates.getTotalItemCount}} candidats au total</h5>
+					<h5>Vous avez
+						{{ candidates.getTotalItemCount}}
+						candidats au total</h5>
 				</div>
 
 				<table class="table table-hover">
@@ -24,7 +27,7 @@
 							<th scope="col" class="text-center">Prénom</th>
 							<th scope="col" class="text-center">email</th>
 							<th scope="col" class="text-center">Candidatures</th>
-							{# <th scope="col" class="text-center">Supprimé</th> #}
+							<th scope="col" class="text-center">CV</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -33,17 +36,16 @@
 								<td scope="row" class="text-center">{{candidate.firstname}}</td>
 								<td scope="row" class="text-center">{{candidate.lastname}}</td>
 								<td scope="row" class="text-center">{{candidate.email}}</td>
-								<td	scope="row" class="text-center">
+								<td scope="row" class="text-center">
 									<a href="{{path('candidate.show', {id: candidate.id, offer: offer.id, candidates : 1, page: 1 })}}" class="btn btn-success">
 										{{candidate.offer|length}}
 									</a>
 								</td>
-								{# <td	scope="row" class="text-center">
-									{{path('offer.delete', { id: offer.id, 'count' : offers|length })}}
-									<a href="" class="btn btn-danger delete-confirm" onclick="return window.confirm('Voulez vous vraiment supprimer cet ingrédient?')">
-										<i class="fa-solid fa-trash"></i>
+								<td	scope="row" class="text-center">
+									<a href="{{ vich_uploader_asset(candidate, 'imageFile') }}" Download class="btn btn-info delete-confirm">
+										<i class="fa-solid fa-download"></i>
 									</a>
-								</td> #}
+								</td>
 							</tr>
 						{% endfor %}
 					</tbody>

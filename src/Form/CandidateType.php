@@ -10,6 +10,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Vich\UploaderBundle\Form\Type\VichFileType;
 
 class CandidateType extends AbstractType
 {
@@ -21,6 +22,10 @@ class CandidateType extends AbstractType
             ->add('email', EmailType::class)
             ->add('telephone', IntegerType::class)
             ->add('description', TextareaType::class)
+            ->add('imageFile', VichFileType::class, [ 
+                'required' => true,
+                'download_label' => 'Télécharger',
+                ])
             // ->add('offer')
         ;
     }
