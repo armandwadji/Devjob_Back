@@ -6,9 +6,7 @@
 {% endblock %}
 
 {% block body %}
-	{# <pre>
-        {{ dump(offer) }}
-    </pre> #}
+
 	<main class="container mt-4">
 		<section class="">
 			<h2 class="blog-post-title mb-1 text-capitalize">{{offer.name}}</h2>
@@ -50,17 +48,9 @@
 					</li>
 				{% endfor %}
 			</ol>
-			<hr>
+
+			<a class="btn btn-primary btn-lg" href="{{path('candidate.apply', {id: offer.id} )}}" role="button">Candidater</a>
 		</section>
-
-        <section>
-            <h2 class="blog-post-title mb-1 text-capitalize">candidatures</h2>
-        </section>
-
 	</main>
 
-	{# <div class="container mt-4">
-									<h1 class='text-capitalize'>{{offer.name}}</h1>
-							
-								</div> #}
 {% endblock %}

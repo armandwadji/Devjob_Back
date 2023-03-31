@@ -7,6 +7,13 @@
 
 	<main class="container">
 		<h1 class="mt-4">Editon du profil entreprise</h1>
+
+		{# flash for warning message #}
+		{% for message in app.flashes('warning') %}
+			<div class="alert alert-warning mt-4">
+				{{ message }}
+			</div>
+		{% endfor %}
 	    
         {{form_start(form)}}
 			{# *********** SOCIETE ************** #}
@@ -26,8 +33,8 @@
                 </div>
 
                 <div class="form-group mt-2" >
-                    {{form_label(form.company.location, 'Localisation', {'label_attr': { 'class': 'form-label '} } )}}
-                    {{ form_widget(form.company.location, { 'attr': { 'class': 'form-select' , 'style': 'width: 5rem'  } } ) }}
+                    {{form_label(form.company.country, 'Localisation', {'label_attr': { 'class': 'form-label '} } )}}
+                    {{ form_widget(form.company.country, { 'attr': { 'class': 'form-select' , 'style': 'width: 8rem'  } } ) }}
                 </div>
             
             </div>

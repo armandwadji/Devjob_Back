@@ -10,7 +10,12 @@
 
 				{% if app.user %}
 					<li class="nav-item">
-						<a class="nav-link active" href="{{path('offer.index')}}">Home
+						<a class="nav-link active" href="{{path('offer.index', {id: app.user.company.id } )}}">Offres
+							<span class="visually-hidden">(current)</span>
+						</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link active" href="{{path('offer.all.candidates.show', {id: app.user.company.id } )}}">Candidats
 							<span class="visually-hidden">(current)</span>
 						</a>
 					</li>
@@ -22,7 +27,7 @@
 				<ul class="navbar-nav me-auto">
 
 					{% if app.user %}
-						<li class="nav-item dropdown me-5 ">
+						<li class="nav-item dropdown ">
 
 							{% if app.user.company.imageName %}
 								<a class="recipe__image pe-2 nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
@@ -33,6 +38,7 @@
 							{% endif %}
 							
 							<div class="dropdown-menu">
+								<a class="dropdown-item" href="{{path('account.index', {id: app.user.id() } )}}">Mes infos</a>
 								<a class="dropdown-item" href="{{path('user.edit', {id: app.user.id() })}}">Edit infos</a>
 								{# <a class="dropdown-item" href="{{path('user.edit.password', {id: app.user.id() })}}">Edit mot de passe</a> #}
 								<div class="dropdown-divider"></div>

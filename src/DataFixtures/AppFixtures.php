@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Candidate;
 use App\Entity\Company;
 use App\Entity\Contract;
 use App\Entity\Location;
@@ -41,16 +42,6 @@ class AppFixtures extends Fixture
             $manager->persist($contract);
         }
 
-        // COUNTRY
-        $locations = [];
-        for ($i = 0; $i < 20; $i++) {
-            $location = new Location();
-            $location->setName($this->faker->countryCode());
-
-            $locations[] = $location;
-            $manager->persist($location);
-        }
-
         // USER
         $users = [];
         for ($i = 0; $i < 20; $i++) {
@@ -72,7 +63,7 @@ class AppFixtures extends Fixture
             $company->setName($this->faker->word())
                 ->setColor($this->faker->hexColor())
                 ->setUser($users[$i])
-                ->setLocation($locations[mt_rand(0, count($locations) - 1)]);
+                ->setCountry($this->faker->countryCode());
 
             $companies[] = $company;
             $manager->persist($company);
@@ -83,6 +74,7 @@ class AppFixtures extends Fixture
         // TABLEAUX REQUIREMENTS AND ROLES
         $requirements = [];
         $roles = [];
+        $offers = [];
         for ($k = 0; $k < 50; $k++) {
             $offer = new Offer();
             $offer->setName($this->faker->word())
@@ -91,6 +83,7 @@ class AppFixtures extends Fixture
                 ->setContract($contracts[mt_rand(0, count($contracts) - 1)])
                 ->setCompany($companies[mt_rand(0, count($companies) - 1)]);
 
+            $offers[] = $offer;
             $manager->persist($offer);
 
             // AJOUT DU REQUIREMENT
@@ -126,6 +119,20 @@ class AppFixtures extends Fixture
                 ->setRole($roles[mt_rand(0, count($roles) - 1)]);
 
             $manager->persist($roleItem);
+        }
+
+        // TABLEAUX CANDIDATES
+        for ($j = 0; $j < 200; $j++) {
+            $candidate = new Candidate();
+            $candidate->setFirstname($this->faker->firstName())
+                ->setLastname($this->faker->lastName())
+                ->setEmail($this->faker->email())
+                ->setTelephone($this->faker->creditCardNumber())
+                ->setDescription($this->faker->text(300))
+                ->addOffer($offers[mt_rand(0, count($offers) - 1)])
+                ;
+
+            $manager->persist($candidate);
         }
 
         $manager->flush();

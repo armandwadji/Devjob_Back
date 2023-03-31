@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Entity\Contract;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -63,12 +65,16 @@ class Offer
     #[ORM\JoinColumn(nullable: false)]
     private ?Company $company = null;
 
+    #[ORM\ManyToMany(targetEntity: Candidate::class, mappedBy: 'offer')]
+    private Collection $candidates;
+
     /**
      * Construteur pour l'initialisation de la date de création
      */
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
+        $this->candidates = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -181,4 +187,32 @@ class Offer
 
         return $this;
     }
+
+    /**
+     * @return Collection<int, Candidate>
+     */
+    public function getCandidates(): Collection
+    {
+        return $this->candidates;
+    }
+
+    public function addCandidate(Candidate $candidate): self
+    {
+        if (!$this->candidates->contains($candidate)) {
+            $this->candidates->add($candidate);
+            $candidate->addOffer($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCandidate(Candidate $candidate): self
+    {
+        if ($this->candidates->removeElement($candidate)) {
+            $candidate->removeOffer($this);
+        }
+
+        return $this;
+    }
+
 }

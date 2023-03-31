@@ -7,12 +7,8 @@
 {% endblock %}
 
 {% block body %}
-	<main class="container">
-
-		<h1 class="mt-4">
-			{{editMode ? "Édition" : "Création"}}
-			d'une offre
-		</h1>
+	<main
+		class="container">
 
 		{# flash for warning message #}
 		{% for message in app.flashes('warning') %}
@@ -20,6 +16,11 @@
 				{{ message }}
 			</div>
 		{% endfor %}
+
+		<h1 class="mt-4">
+			{{editMode ? "Édition" : "Création"}}
+			d'une offre
+		</h1>
 
 		{{ form_start(formOffer) }}
 
@@ -41,7 +42,8 @@
 
 
 		<p class="mt-4 text-primary-emphasis fw-bold">Prérequis</p>
-		<div class="border rounded-1 border-2 p-4">
+		<div
+			class="border rounded-1 border-2 p-4">
 
 			{# RÉSUME DES PRÉREQUIS #}
 			<div class="form-group">
@@ -62,7 +64,8 @@
 		</div>
 
 		<p class="mt-4 text-primary-emphasis fw-bold">Roles</p>
-		<div class="border rounded-1 border-2 p-4">
+		<div
+			class="border rounded-1 border-2 p-4">
 
 			{# RÉSUME DES ROLES #}
 			<div class="form-group">

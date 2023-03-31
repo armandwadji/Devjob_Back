@@ -2,6 +2,9 @@
 
 namespace App\Controller;
 
+use App\Repository\OfferRepository;
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -9,8 +12,16 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class HomeController extends AbstractController
 {
     #[Route('/', name: 'home.index', methods: ['GET'])]
-    public function index(): Response
+    public function index(OfferRepository $repository, PaginatorInterface $paginator, Request $request ): Response
     {
-        return $this->render('pages/home.html.twig', []);
+        $offers = $paginator->paginate(
+            $repository->findOfferOrderDesc(),
+            $request->query->getInt('page', 1),
+            12,
+        );
+
+        return $this->render('pages/home.html.twig', [
+            'offers' => $offers,
+        ]);
     }
 }

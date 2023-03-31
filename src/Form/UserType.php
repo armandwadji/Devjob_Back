@@ -19,7 +19,6 @@ class UserType extends AbstractType
             ->add('lastname', TextType::class)
             ->add('email', EmailType::class)
             ->add('company', CompanyType::class)
-            // ->add('roles')
             ;
     }
 

@@ -39,28 +39,25 @@ class OfferRepository extends ServiceEntityRepository
         }
     }
 
-//    /**
-//     * @return Offer[] Returns an array of Offer objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('o')
-//            ->andWhere('o.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('o.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    /**
+     * This function return offer order by desc
+     * @return array
+     */
+    public function findOfferOrderDesc(): array
+    {
+        return $this->createQueryBuilder('o')
+            ->orderBy('o.createdAt', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
 
-//    public function findOneBySomeField($value): ?Offer
-//    {
-//        return $this->createQueryBuilder('o')
-//            ->andWhere('o.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    public function findCandidateGroupByEmail($company): array
+    {
+        return $this->createQueryBuilder('o')
+            ->where('o.company = :company')
+            ->setParameter('company', $company)
+            // ->groupBy('r.candidates.email')
+            ->getQuery()
+            ->getResult();
+    }
 }
