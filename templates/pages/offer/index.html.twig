@@ -7,7 +7,7 @@
 	<main class="container mt-4">
 		<h1>Mes offres</h1>
 
-		<a href="{{path('offer.new', {'count' : offers.getTotalItemCount } )}}" class="btn btn-primary mt-4">Ajouter une offre</a>
+		<a href="{{path('offer.new', {'id': app.request.get('id') , 'count' : offers.getTotalItemCount } )}}" class="btn btn-primary mt-4">Ajouter une offre</a>
 
 		{# flash for success message #}
 		{% for message in app.flashes('success') %}
@@ -24,21 +24,19 @@
 		{% endfor %}
 
 		{% if offers.items is  same as ([]) %}
-			<h4 class='mt-4'>Vous n'avez pas encore saisi d'annonces</h4>
+			<h4 class='mt-4'>Vous n'avez pas encore saisi d'annonces.</h4>
 		{% else %}
 
 			{# total items count #}
 			<div class="count mt-4">
-				<h5>il y'a
-					{{ offers.getTotalItemCount }}
-					offres au total</h5>
+				<h5>Vous avez {{ offers.getTotalItemCount }} offres au total</h5>
 			</div>
 
 			<table class="table table-hover">
 				<thead>
 					<tr>
 						{# <th scope="col" class="text-center">Id</th> #}
-						<th scope="col" class="text-center">Nom</th>
+						<th scope="col" class="text-center">Offre</th>
 						<th scope="col" class="text-center">contrat</th>
 						<th scope="col" class="text-center">Posté Le</th>
 						<th scope="col" class="text-center">Candidats</th>
@@ -55,7 +53,7 @@
 							<td scope="row" class="text-center">{{offer.contract}}</td>
 							<td scope="row" class="text-center">{{offer.createdAt | date('d/m/Y')}}</td>
 							<td scope="row" class="text-center">
-								<a href="{{path('offer.candidates.show', {id: offer.id})}}" class="btn btn-success">
+								<a href="{{(offer.candidates|length == 0) ? "#" : path('offer.candidates.show', {id: offer.id})}}" class="btn {{offer.candidates|length == 0 ? 'btn-secondary': 'btn-success'}} ">
 									{{offer.candidates|length}}
 								</a>
 							</td>
@@ -65,7 +63,7 @@
 								</a>
 							</td>
 							<td scope="row" class="text-center">
-								<a href="{{path('offer.delete', { id: offer.id, 'count' : offers|length })}}" class="btn btn-danger delete-confirm" onclick="return window.confirm('Voulez vous vraiment supprimer cet ingrédient?')">
+								<a href="{{path('offer.delete', { id: offer.id, count: offers|length, idCompany : offer.company.id })}}" class="btn btn-danger delete-confirm" onclick="return window.confirm('Voulez vous vraiment supprimer cet ingrédient?')">
 									<i class="fa-solid fa-trash"></i>
 								</a>
 							</td>

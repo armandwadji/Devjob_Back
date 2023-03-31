@@ -3,11 +3,8 @@
 namespace App\Form;
 
 use App\Entity\Company;
-use App\Entity\Location;
-use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\ColorType;
 use Symfony\Component\Form\Extension\Core\Type\CountryType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -21,7 +18,10 @@ class CompanyType extends AbstractType
         $builder
             ->add('name', TextType::class)
             ->add('color', ColorType::class)
-            ->add('imageFile', VichImageType::class, [ 'required' => false ])
+            ->add('imageFile', VichImageType::class, [ 
+                'required' => false ,
+                'download_label' => 'Télécharger',
+                ])
             ->add('country', CountryType::class)
             ;
     }

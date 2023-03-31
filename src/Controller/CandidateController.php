@@ -7,6 +7,7 @@ use App\Entity\Company;
 use App\Entity\Candidate;
 use App\Form\CandidateType;
 use App\Repository\CandidateRepository;
+use App\Repository\OfferRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,17 +26,17 @@ class CandidateController extends AbstractController
      */
     #[Security("is_granted('ROLE_USER') and user=== offer.getCompany().getUser()")]
     #[Route('/my-offers/{id}/applicants', name: 'offer.candidates.show', methods: ['GET'])]
-    public function candidatesByOffer(Offer $offer, CandidateRepository $repository, PaginatorInterface $paginator, Request $request): Response
+    public function candidatesByOffer(Offer $offer, PaginatorInterface $paginator, Request $request): Response
     {
         $candidates = $paginator->paginate(
-            $repository->findBy(['offer' => $offer->getId()]),
-            $request->query->getInt('page', 1),
-            5
+            target: $offer->getCandidates(),
+            page: $request->query->getInt('page', 1),
+            limit: 5
         );
 
         return $this->render('pages/candidate/candidates_by_offer.html.twig', [
-            'offer' => $offer,
-            'candidates' => $candidates,
+            'offer'         => $offer,
+            'candidates'    => $candidates,
         ]);
     }
 
@@ -48,26 +49,68 @@ class CandidateController extends AbstractController
      * @return Response
      */
     #[Security("is_granted('ROLE_USER') and user=== company.getUser()")]
-    #[Route('/my-applicants/{id}', name: 'offer.all.candidates.show', methods: ['GET'])]
-    public function candidatesByCompany(Company $company, CandidateRepository $repository,  PaginatorInterface $paginator, Request $request): Response
+    #[Route('/my-applicants?{id}', name: 'offer.all.candidates.show', methods: ['GET'])]
+    public function candidatesByCompany(Company $company, OfferRepository $repository, PaginatorInterface $paginator, Request $request): Response
     {
+        $candidates = [];
+        foreach ($company->getOffer() as $offer) {
+            foreach ($offer->getCandidates() as $candidat) {
+                $candidates[] = $candidat;
+            }
+        }
+
+        // dd($repository->findCandidateGroupByEmail($company));
+
         $candidates = $paginator->paginate(
-            $repository->findCandidatesByUser($company->getId()),
-            $request->query->getInt('page', 1),
-            10
+            target: $candidates,
+            page: $request->query->getInt('page', 1),
+            limit: 5
         );
 
-        return $this->render('pages/candidate/candidates.html.twig', [
-            'candidates' => $candidates,
+        return $this->render('pages/candidate/candidates_by_company.html.twig', [
+            'candidates'    => $candidates,
+            'offer'         => $offer
         ]);
     }
 
-    #[Route('/myapplicants/{id}', name: 'candidat.show', methods: ['GET'])]
-    public function candidat(Candidate $candidat): Response
+    #[Route('/my-applicants/{id}', name: 'candidate.show', methods: ['GET'])]
+    public function candidat(Candidate $candidate, Request $request): Response
     {
-        // dd($candidat);
         return $this->render('pages/candidate/show.html.twig', [
-            'candidat' => $candidat
+            'candidate'             => $candidate,
+            'offer'                 => intval($request->query->get('offer')),
+            'candidatesForOffer'    => intval($request->query->get('candidates')),
+            'page'                  => intval($request->query->get('page'))
+        ]);
+    }
+
+    #[Route('/my-applicants/{id}/delete', name: 'candidate.delete', methods: ['GET'])]
+    public function delete(Candidate $candidate = null, EntityManagerInterface $manager, Request $request): Response
+    {
+
+        $OffersCountPage = intval($request->query->get('count'))  - 1; //Nombres de candidats sur la page courante moins le candidat à supprimer
+        $page = intval($request->query->get('page')); //numéro de la page courante
+
+        $companyId = $candidate->getOffer()[0]->getCompany()->getId();
+
+        if ($candidate) {
+            $manager->remove($candidate);
+            $manager->flush();
+        }
+
+        $this->addFlash(
+            type: $candidate ? 'success' : 'warning',
+            message: $candidate ? 'Le candidat à été supprimer avec succès!' : 'Le candidat demander n\'existe pas'
+        );
+
+
+        if ($OffersCountPage === 0 && $page === 1) {
+            return $this->redirectToRoute('offer.index', ['id' => $companyId]);
+        }
+
+        return $this->redirectToRoute('offer.candidates.show', [
+            'id'    => intval($request->query->get('idOffer')),
+            'page'  => ($OffersCountPage > 0 && $page >= 2) || $page === 1 || $page === 0 ?  $page  : $page - 1
         ]);
     }
 
@@ -83,7 +126,7 @@ class CandidateController extends AbstractController
             if ($form->isValid()) {
 
                 $candidate = $form->getData();
-                $candidate->setOffer($offer);
+                $candidate->addOffer($offer);
 
                 $this->addFlash(
                     type: 'success',
@@ -96,11 +139,14 @@ class CandidateController extends AbstractController
                 return $this->redirectToRoute('home.index');
             }
 
-            $this->addFlash(type: 'warning', message: 'Veuillez bien saisir tous les champs!');
+            $this->addFlash(
+                type: 'warning',
+                message: 'Veuillez bien saisir tous les champs!'
+            );
         }
 
         return $this->render('pages/candidate/apply.html.twig', [
-            'form' => $form->createView(),
+            'form'  => $form->createView(),
             'offer' => $offer
         ]);
     }

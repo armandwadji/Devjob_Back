@@ -45,10 +45,19 @@ class OfferRepository extends ServiceEntityRepository
      */
     public function findOfferOrderDesc(): array
     {
-        return $this->createQueryBuilder('r')
-            ->orderBy('r.createdAt', 'DESC')
+        return $this->createQueryBuilder('o')
+            ->orderBy('o.createdAt', 'DESC')
             ->getQuery()
             ->getResult();
     }
 
+    public function findCandidateGroupByEmail($company): array
+    {
+        return $this->createQueryBuilder('o')
+            ->where('o.company = :company')
+            ->setParameter('company', $company)
+            // ->groupBy('r.candidates.email')
+            ->getQuery()
+            ->getResult();
+    }
 }

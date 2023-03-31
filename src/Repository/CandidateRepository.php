@@ -44,7 +44,7 @@ class CandidateRepository extends ServiceEntityRepository
      * @param int|null $companyId
      * @return array
      */
-    public function findCandidatesByUser(?int $companyId): array
+    public function findCandidatesByCompany(?int $companyId): array
     {
         $conn = $this->getEntityManager()->getConnection();
 

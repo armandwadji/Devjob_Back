@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\CandidateRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -43,15 +45,21 @@ class Candidate
     )]
     private ?string $email = null;
 
-    #[ORM\ManyToOne(inversedBy: 'candidates')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Offer $offer = null;
-
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
     #[ORM\Column(type: Types::BIGINT)]
+    #[Assert\NotBlank(message: 'Un numéro de téléphone est requis.')]
+    #[Assert\Positive(message:'Le numéro de téléphone doit être une valeur positive.')]
     private ?string $telephone = null;
+
+    #[ORM\ManyToMany(targetEntity: Offer::class, inversedBy: 'candidates')]
+    private Collection $offer;
+
+    public function __construct()
+    {
+        $this->offer = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -94,18 +102,6 @@ class Candidate
         return $this;
     }
 
-    public function getOffer(): ?Offer
-    {
-        return $this->offer;
-    }
-
-    public function setOffer(?Offer $offer): self
-    {
-        $this->offer = $offer;
-
-        return $this;
-    }
-
     public function getDescription(): ?string
     {
         return $this->description;
@@ -126,6 +122,30 @@ class Candidate
     public function setTelephone(string $telephone): self
     {
         $this->telephone = $telephone;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Offer>
+     */
+    public function getOffer(): Collection
+    {
+        return $this->offer;
+    }
+
+    public function addOffer(Offer $offer): self
+    {
+        if (!$this->offer->contains($offer)) {
+            $this->offer->add($offer);
+        }
+
+        return $this;
+    }
+
+    public function removeOffer(Offer $offer): self
+    {
+        $this->offer->removeElement($offer);
 
         return $this;
     }

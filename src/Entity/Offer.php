@@ -65,7 +65,7 @@ class Offer
     #[ORM\JoinColumn(nullable: false)]
     private ?Company $company = null;
 
-    #[ORM\OneToMany(mappedBy: 'offer', targetEntity: Candidate::class, orphanRemoval: true)]
+    #[ORM\ManyToMany(targetEntity: Candidate::class, mappedBy: 'offer')]
     private Collection $candidates;
 
     /**
@@ -200,7 +200,7 @@ class Offer
     {
         if (!$this->candidates->contains($candidate)) {
             $this->candidates->add($candidate);
-            $candidate->setOffer($this);
+            $candidate->addOffer($this);
         }
 
         return $this;
@@ -209,12 +209,10 @@ class Offer
     public function removeCandidate(Candidate $candidate): self
     {
         if ($this->candidates->removeElement($candidate)) {
-            // set the owning side to null (unless already changed)
-            if ($candidate->getOffer() === $this) {
-                $candidate->setOffer(null);
-            }
+            $candidate->removeOffer($this);
         }
 
         return $this;
     }
+
 }

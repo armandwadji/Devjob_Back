@@ -40,6 +40,10 @@ class Company
     private ?User $user = null;
 
     // ************IMAGE ************
+    #[Assert\File(
+        extensions: ['jpg', 'jpeg'],
+        extensionsMessage: 'Please upload a valid image',
+    )]
     #[Vich\UploadableField(mapping: 'company_images', fileNameProperty: 'imageName')]
     private ?File $imageFile = null;
 

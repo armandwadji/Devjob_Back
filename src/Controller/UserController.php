@@ -32,7 +32,7 @@ class UserController extends AbstractController
             $user->getCompany()->setImageFile(null);
             
             $this->addFlash(type: 'success', message: 'les informations de votre compte ont bien été modifiées.');
-            return $this->redirectToRoute('offer.index');
+            return $this->redirectToRoute('offer.index', ['id' => $user->getCompany()->getId()] );
             // } else {
             //     $this->addFlash(type: 'warning', message: 'le mot de passe renseigné est incorrect;');
             // }

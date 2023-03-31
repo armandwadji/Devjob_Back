@@ -1,25 +1,73 @@
 {% extends "base.html.twig" %}
 
 
-{% block title %} Devjob - détail candidat {{candidat.firstname}} {% endblock %}
+{% block title %}
+	Devjob - détail candidat
+	{{candidate.firstname}}
+{% endblock %}
 
 {% block body %}
-<pre>
-    {{ dump(candidat) }}
-</pre>
+
 	<main class="container mt-5">
-        <div class="row g-0  rounded overflow-hidden flex-md-row mb-4 h-md-250 position-relative">
-            <div class="col p-4 d-flex flex-column position-static">
-                <h3 class="mb-0 text-capitalize">{{candidat.firstname}}  {{candidat.lastname}} </h3>
-                <strong class="d-inline-block mb-2 text-primary">{{candidat.email}}</strong>
-                {# <p class="card-text mb-auto">Téléphone : {{candidat.telephone}} </p> #}
-                <h4 class="card-text mb-auto"> Téléphone : {{candidat.telephone}} </h4>
-                {# <p class="ms-3">{{app.user.firstname ~  ' ' ~ app.user.lastname}}</p> #}
-                {# <a href="#" class="stretched-link ms-3 ">{{app.user.email}}</a>  #}
-            </div>
-            {# <div class="col-auto d-lg-block">
-                <img class='rounded-circle' style="width: 100%; height: 100%; max-height: 250px; max-width: 250px; object-fit: contain " src="{{ vich_uploader_asset(app.user.company, 'imageFile') ? vich_uploader_asset(app.user.company, 'imageFile') : 'https://picsum.photos/250/250' }}" alt="Logo de {{app.user.company.name}}">
-            </div> #}
-        </div>
+
+		<div class="row g-0  rounded overflow-hidden flex-md-row mb-4 h-md-250 position-relative">
+			<div class="col p-4 d-flex flex-column position-static">
+				<h3 class="mb-0 text-capitalize">{{candidate.firstname}}
+					{{candidate.lastname}}
+				</h3>
+				<strong class="d-inline-block mb-2 text-primary">{{candidate.email}}</strong>
+				<h4 class="card-text mb-auto">	Téléphone :	{{candidate.telephone}}
+				</h4>
+			</div>
+		</div>
+		<hr>
+
+		<div class="px-4">
+			<h5 class="count mt-4">Ses candidatures :
+			</h5>
+
+			<table class="table table-hover px-4">
+				<thead>
+					<tr>
+						<th scope="col" class="text-center">Id</th>
+						<th scope="col" class="text-center">Offre</th>
+						<th scope="col" class="text-center">Contrat</th>
+						<th scope="col" class="text-center">Posté Le</th>
+						{# <th scope="col" class="text-center">Candidats</th> #}
+					{# <th scope="col" class="text-center">Edité</th> #}
+						{# <th scope="col" class="text-center">Supprimé</th> #}
+					</tr>
+				</thead>
+				<tbody>
+					{% for offer in candidate.offer %}
+						<tr class="table-primary">
+							<th scope="row" class="text-center">{{ loop.index }}</th>
+							<td scope="row" class="text-center">{{offer.name}}</td>
+							<td scope="row" class="text-center">{{offer.contract}}</td>
+							<td scope="row" class="text-center">{{offer.createdAt | date('d/m/Y')}}</td>
+							{# <td scope="row" class="text-center">
+							                                                        <a href="{{path('offer.candidates.show', {id: offer.id})}}" class="btn btn-success">
+							                                                            {{offer.candidates|length}}
+							                                                        </a>
+							                                                    </td> #}
+						{# <td scope="row" class="text-center">
+						                                <a href="{{path('offer.edit', {id: offer.id})}}" class="btn btn-info">
+						                                    <i class="fa-solid fa-pencil"></i>
+						                                </a>
+						                            </td> #}
+							{# <td scope="row" class="text-center">
+							                                <a href="{{path('offer.delete', { id: offer.id, 'count' : offer|length })}}" class="btn btn-danger delete-confirm" onclick="return window.confirm('Voulez vous vraiment supprimer cet ingrédient?')">
+							                                    <i class="fa-solid fa-trash"></i>
+							                                </a>
+							                            </td> #}
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+
+		</div>
+
+		<a href="{{path('candidate.delete', { id: candidate.id, page: page, 'count' : candidatesForOffer, idOffer : offer } )}}" class="btn btn-primary btn-lg text-end m-4" role="button">Supprimer</a>
+
 	</main>
 {% endblock %}
