@@ -28,7 +28,7 @@
 				{#  LIST DES OFFRES D'EMPLOIS#}
 				<div class="row mx-auto justify-content-center mt-4">
 					{% for offer in offers %}
-						<div class="card m-3 col-3 position-relative">
+						<div class="card m-3 col-3 position-relative border-primary shadow p-3 mb-5 bg-body-tertiary rounded">
 							<div class="card-body">
 								<h6 class="card-subtitle mb-2 text-muted">Publié le
 									{{offer.createdAt | date('d/m/Y') }} . {{offer.contract}}

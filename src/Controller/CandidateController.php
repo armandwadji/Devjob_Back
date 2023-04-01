@@ -25,7 +25,7 @@ class CandidateController extends AbstractController
      * @return Response
      */
     #[Security("is_granted('ROLE_USER') and user=== offer.getCompany().getUser()")]
-    #[Route('/my-offers/{id}/applicants', name: 'offer.candidates.show', methods: ['GET'])]
+    #[Route('/offers/{id}/applicants', name: 'offer.candidates.show', methods: ['GET'])]
     public function candidatesByOffer(Offer $offer, PaginatorInterface $paginator, Request $request): Response
     {
         $candidates = $paginator->paginate(

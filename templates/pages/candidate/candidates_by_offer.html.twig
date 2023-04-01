@@ -1,14 +1,17 @@
 {% extends "base.html.twig" %}
 
 
-{% block title %}Devjob - {{offer.name}} {% endblock %}
+{% block title %}Devjob -
+	{{offer.name}}
+{% endblock %}
 
 {% block body %}
-{# <pre>
-	{{ dump(offer.company.id) }}
-</pre> #}
+	{# <pre>
+		{{ dump(offer.company.id) }}
+	</pre> #}
 
-	<main class="container mt-4">
+	<main
+		class="container mt-4">
 
 		{# flash for success message #}
 		{% for message in app.flashes('success') %}
@@ -29,9 +32,11 @@
 			{% if candidates.items is  same as ([]) %}
 				<h4 class='mt-4'>Vous n'avez pas encore reçus de candidatures Pour cette offre.</h4>
 			{% else %}
-					
+
 				<div class="count mt-4">
-					<h5>Il y'a	{{ candidates.getTotalItemCount}} candidatures au total</h5>
+					<h5>Il y'a
+						{{ candidates.getTotalItemCount}}
+						candidatures au total</h5>
 				</div>
 
 				<table class="table table-hover">
@@ -41,6 +46,7 @@
 							<th scope="col" class="text-center">Prénom</th>
 							<th scope="col" class="text-center">email</th>
 							<th scope="col" class="text-center">Detail</th>
+							<th scope="col" class="text-center">CV</th>
 							<th scope="col" class="text-center">Supprimé</th>
 						</tr>
 					</thead>
@@ -56,7 +62,12 @@
 									</a>
 								</td>
 								<td scope="row" class="text-center">
-									<a href="{{path('candidate.delete', { id: candidate.id, page: candidates.getCurrentPageNumber,  count : candidates|length, idOffer : offer.id  })}}" class="btn btn-danger delete-confirm" onclick="return window.confirm('Voulez vous vraiment supprimer cet ingrédient?')">
+									<a href="{{ vich_uploader_asset(candidate, 'imageFile') }}" download class="btn btn-info delete-confirm">
+										<i class="fa-solid fa-download"></i>
+									</a>
+								</td>
+								<td scope="row" class="text-center">
+									<a href="{{path('candidate.delete', { id: candidate.id, page: candidates.getCurrentPageNumber, count : candidates|length, idOffer : offer.id })}}" class="btn btn-danger delete-confirm" onclick="return window.confirm('Voulez vous vraiment supprimer cet ingrédient?')">
 										<i class="fa-solid fa-trash"></i>
 									</a>
 								</td>

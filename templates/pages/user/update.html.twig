@@ -27,9 +27,9 @@
 
             <div class="d-flex justify-content-between align-items-center px-4">
             
-                <div class="form-group mt-4 d-flex" >
-                    {{form_label(form.company.color, 'Couleur d\'arrière plan', {'label_attr': { 'class': 'form-label'} } )}}
-                    {{ form_widget(form.company.color, {'attr': {'placeholder': "Couleur de la société", 'class': 'border-0 ' , 'style': 'width: 2.5rem'  }}) }}
+                <div class="form-group mt-4 d-flex align-items-center" >
+                    {{form_label(form.company.color, 'Couleur d\'arrière plan', {'label_attr': { 'class': 'form-label pt-1'} } )}}
+                    {{ form_widget(form.company.color, {'attr': {'placeholder': "Couleur de la société", 'class': 'border-0 ms-2 form-control-color'  }}) }}
                 </div>
 
                 <div class="form-group mt-2" >
@@ -39,7 +39,7 @@
             
             </div>
 
-			<div class="form-group mt-4 px-4">
+			<div class="form-group mt-4 px-4 ">
 				{{form_label(form.company.imageFile, ' Image de la société', {'label_attr': { 'class': 'form-label'} } )}}
 				{{ form_widget(form.company.imageFile, { 'attr': { 'class': 'd-flex'  } } ) }}
 			</div>
