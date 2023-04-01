@@ -7,8 +7,8 @@
 /public/bundles/
 /var/
 /vendor/
-/public/files/
-/public/images/
+# /public/files/
+# /public/images/
 ###< symfony/framework-bundle ###
 
 ###> phpunit/phpunit ###
