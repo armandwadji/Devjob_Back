@@ -31,10 +31,14 @@ class SecurityController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
 
             $user = $form->getData();
-            $this->addFlash(type: 'success', message: 'votre compte à bien été créer.');
-
+            
             $manager->persist($user);
             $manager->flush();
+            
+            $this->addFlash(
+                type    : 'success', 
+                message : 'Votre compte à bien été créer.'
+            );
 
             return $this->redirectToRoute('security.login');
         }
@@ -46,7 +50,6 @@ class SecurityController extends AbstractController
 
     /**
      * This controller allow us to login
-     *
      * @param AuthenticationUtils $authenticationUtils
      * @return Response
      */
@@ -54,14 +57,13 @@ class SecurityController extends AbstractController
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
         return $this->render('pages/security/login.html.twig', [
-            'lastUsername' => $authenticationUtils->getLastUsername(),
-            'error' => $authenticationUtils->getLastAuthenticationError()
+            'error'         => $authenticationUtils->getLastAuthenticationError(),
+            'lastUsername'  => $authenticationUtils->getLastUsername(),
         ]);
     }
 
     /**
-     * this controller allow us to logout 
-     *
+     * This controller allow us to logout 
      * @return void
      */
     #[Route('/logout', name: 'security.logout', methods: ['GET'])]

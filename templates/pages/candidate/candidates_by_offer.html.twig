@@ -1,14 +1,9 @@
 {% extends "base.html.twig" %}
 
 
-{% block title %}Devjob -
-	{{offer.name}}
-{% endblock %}
+{% block title %}Devjob - Candidats pour l'offre {{offer.name}} {% endblock %}
 
 {% block body %}
-	{# <pre>
-		{{ dump(offer.company.id) }}
-	</pre> #}
 
 	<main
 		class="container mt-4">
@@ -28,15 +23,13 @@
 		{% endfor %}
 
 		<section>
-			<h2 class="blog-post-title mb-1 text-capitalize">Candidatures</h2>
+			<h2 class="blog-post-title mb-1 text-capitalize">Candidats de l'offre {{offer.name}} </h2>
 			{% if candidates.items is  same as ([]) %}
 				<h4 class='mt-4'>Vous n'avez pas encore reçus de candidatures Pour cette offre.</h4>
 			{% else %}
 
 				<div class="count mt-4">
-					<h5>Il y'a
-						{{ candidates.getTotalItemCount}}
-						candidatures au total</h5>
+					<h5>Il y'a	{{ candidates.getTotalItemCount}} candidatures au total</h5>
 				</div>
 
 				<table class="table table-hover">
@@ -76,7 +69,6 @@
 					</tbody>
 				</table>
 
-				{# display navigation #}
 				{# {{candidates.getCurrentPageNumber }} #}
 				<div class="navigation d-flex justify-content-center mt-4">
 					{{ knp_pagination_render(candidates) }}

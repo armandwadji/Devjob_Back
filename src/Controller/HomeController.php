@@ -11,8 +11,15 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class HomeController extends AbstractController
 {
+    /**
+     * This controller displays all offers
+     * @param OfferRepository $repository
+     * @param PaginatorInterface $paginator
+     * @param Request $request
+     * @return Response
+     */
     #[Route('/', name: 'home.index', methods: ['GET'])]
-    public function index(OfferRepository $repository, PaginatorInterface $paginator, Request $request ): Response
+    public function index(OfferRepository $repository, PaginatorInterface $paginator, Request $request): Response
     {
         $offers = $paginator->paginate(
             $repository->findOfferOrderDesc(),

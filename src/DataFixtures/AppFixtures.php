@@ -5,7 +5,6 @@ namespace App\DataFixtures;
 use App\Entity\Candidate;
 use App\Entity\Company;
 use App\Entity\Contract;
-use App\Entity\Location;
 use App\Entity\Offer;
 use App\Entity\Requirement;
 use App\Entity\RequirementItem;

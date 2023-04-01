@@ -25,7 +25,7 @@ class UserListener
         $this->encodePassword($user);
     }
 
-    // Encode le nouveau password lorque on va le modifier
+    // Encode le nouveau password lorsqu' on va le modifier
     public function preUpdate(User $user)
     {
         $this->encodePassword($user);
@@ -40,7 +40,6 @@ class UserListener
     {
         if ($user->getPlainPassword() === null) return;
  
-
         $user->setPassword(
             $this->hasher->hashPassword(
                 $user,

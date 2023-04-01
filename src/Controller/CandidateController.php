@@ -19,9 +19,12 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class CandidateController extends AbstractController
 {
+
     /**
      * This controller show all candidates by offer
      * @param Offer $offer
+     * @param PaginatorInterface $paginator
+     * @param Request $request
      * @return Response
      */
     #[Security("is_granted('ROLE_USER') and user=== offer.getCompany().getUser()")]
@@ -40,10 +43,10 @@ class CandidateController extends AbstractController
         ]);
     }
 
+
     /**
      * This controller show all candidates by company
      * @param Company $company
-     * @param CandidateRepository $repository
      * @param PaginatorInterface $paginator
      * @param Request $request
      * @return Response
@@ -71,6 +74,12 @@ class CandidateController extends AbstractController
         ]);
     }
 
+    /**
+     * This controller displays the details of a candidate
+     * @param Candidate $candidate
+     * @param Request $request
+     * @return Response
+     */
     #[Security("is_granted('ROLE_USER') and user=== candidate.getOffer()[0].getCompany().getUser()")]
     #[Route('/my-applicants/{id}', name: 'candidate.show', methods: ['GET'])]
     public function candidat(Candidate $candidate, Request $request): Response
@@ -83,6 +92,13 @@ class CandidateController extends AbstractController
         ]);
     }
 
+    /**
+     * This controller delete candidat
+     * @param Candidate|null $candidate
+     * @param EntityManagerInterface $manager
+     * @param Request $request
+     * @return Response
+     */
     #[Security("is_granted('ROLE_USER') and user=== candidate.getOffer()[0].getCompany().getUser()")]
     #[Route('/my-applicants/{id}/delete', name: 'candidate.delete', methods: ['GET'])]
     public function delete(Candidate $candidate = null, EntityManagerInterface $manager, Request $request): Response
@@ -113,6 +129,14 @@ class CandidateController extends AbstractController
         ]);
     }
 
+    /**
+     * This controller allows a candidate to apply for an offer
+     * @param Candidate|null $candidate
+     * @param Offer $offer
+     * @param Request $request
+     * @param EntityManagerInterface $manager
+     * @return Response
+     */
     #[Route('/offers/{id}/apply', name: 'candidate.apply', methods: ['GET', 'POST'])]
     public function apply(Candidate $candidate = null, Offer $offer, Request $request, EntityManagerInterface $manager): Response
     {

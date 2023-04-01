@@ -10,10 +10,8 @@ use Doctrine\ORM\Mapping as ORM;
 
 use App\Repository\OfferRepository;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: OfferRepository::class)]
-#[UniqueEntity('name', message: "Ce nom d'offre existe déja en base de donnée.")]
 class Offer
 {
     #[ORM\Id]
