@@ -16,6 +16,41 @@ Vous pourrez partager vos offres à la communauté du site, dans le but de recev
 - [symfony ^6][symfony]
 - [SGBD][SGBD] : [Lamp][Lamp], [Mamp][Mamp], [Xamp][Xamp]
 
+## Installation
+Une fois tous les éléments de la configuration requise installé sur votre pc,
+vous pouvez executer cette commande pour installer le projet en local sur votre machine :
+
+```
+git clone https://gitlab.cefim-formation.org/ArmandWADJI/ecf-back-end.git
+```
+
+Ensuite il faudra installer les dépendances du projet avec la commande suivante :
+
+```
+composer install
+```
+
+Une fois que le gestionnaire de dépendances auras terminé, 
+vous devez créer un fichier à la racine de votre arboresence que vous nomerez .env.dev.local
+vous y intégrerez cette Ligne où vous y insérerez les informations de connexion à votre base de donnée. 
+
+```
+DATABASE_URL="mysql://SERVER:PASSWORD@127.0.0.1:3306/devjob?serverVersion=8&charset=utf8mb4"
+```
+
+Maintenant il vous faut créer votre DATABASE en saisiant la commande suivante :
+
+```
+php bin/console doctrine/database/create
+```
+
+Ensuite vous devez faire une migration dans le but de générer les requêtes SQL nécéssaire pour créer les tables et liaisons des différentes entités du projet avec la commande suivante :
+
+```
+php bin/console make/migration
+```
+
+
 <!-- prettier-ignore-start -->
 [php]: https://www.php.net/downloads
 [composer]: https://getcomposer.org/download/
