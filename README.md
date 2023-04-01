@@ -57,6 +57,8 @@ Il vous faut maintenant créer tous le schéma de base de donné avec la command
 php bin/console doctrine/migrations/migrate
 ```
 
+## Démarrer l'application
+
 Maintenant il vous faut quelques données pour pouvoir manipulé l'application.
 Cela tombe bien, nous en avons préparer, pour les ajouter en basse de donnée, saisisez la commande suivante :
 
