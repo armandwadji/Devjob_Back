@@ -50,6 +50,33 @@ Ensuite vous devez faire une migration dans le but de générer les requêtes SQ
 php bin/console make/migration
 ```
 
+Ne vous inquiétez pas nous avons presque terminer l'installation 😊😊.
+Il vous faut maintenant créer tous le schéma de base de donné avec la commande suivante :
+
+```
+php bin/console doctrine/migrations/migrate
+```
+
+Maintenant il vous faut quelques données pour pouvoir manipulé l'application.
+Cela tombe bien, nous en avons préparer, pour les ajouter en basse de donnée, saisisez la commande suivante :
+
+```
+php bin/console doctrine/fixtures/load
+```
+
+Vous pouvez enfin lancer le projet et le tester à l'aide de la commande :
+
+```
+symfony server:start
+```
+
+<p align="right">Back to top :
+  <a href="#top">
+    ☝
+  </a>
+</p>
+
+<h1 align="center">Bon Code 🖥 💻 📱</h1>
 
 <!-- prettier-ignore-start -->
 [php]: https://www.php.net/downloads
@@ -59,5 +86,4 @@ php bin/console make/migration
 [Lamp]: https://ubuntu.com/server/docs/lamp-applications
 [Mamp]: https://www.mamp.info/en/downloads/
 [Xamp]: https://www.apachefriends.org/fr/download.html
-[xcode]: https://developer.android.com/studio
 <!-- prettier-ignore-end -->
