@@ -1,6 +1,6 @@
 <div>
   <h1 align="center" position="relative">
-    <a  href="https://github.com/armandwadji/Comfy-Store-App.git">Devjob Back-End 👩🏻‍💻🧑🏽‍💻👨🏿
+    <a  href="https://gitlab.cefim-formation.org/ArmandWADJI/ecf-back-end.git">Devjob Back-End 👩🏻‍💻🧑🏽‍💻👨🏿
     </a> 
   </h1> 
 </div> 
