@@ -1,20 +1,16 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Devjob - login
+{% block title %}Devjob - Connexion
 {% endblock %}
 
 {% block body %}
-	<main class="container">
-		<h1 class="mt-4">Formulaire de connexion</h1>
+	<main class="container d-flex flex-column justify-content-center">
+		<h1 class="mt-4 px-4">Formulaire de connexion</h1>
 
-		{# read and display just one flash message type #}
-		{% for message in app.flashes('success') %}
-			<div class="alert alert-success mt-4">
-				{{ message }}
-			</div>
-		{% endfor %}
+		{# flash messages #}	
+		{% include 'partials/_flash.html.twig' %}
 
-        {# MESSAGE D'ERREUR #}
+        {# message d'erreur #}
 		{% if error %}
 			<div class="alert alert-dismissible alert-danger mt-4 mx-4">
 				<div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>

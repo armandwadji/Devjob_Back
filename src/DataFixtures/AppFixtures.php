@@ -33,13 +33,31 @@ class AppFixtures extends Fixture
     {
         // CONTRACT
         $contracts = [];
-        for ($i = 0; $i < 5; $i++) {
-            $contract = new Contract();
-            $contract->setName($this->faker->word());
 
-            $contracts[] = $contract;
-            $manager->persist($contract);
-        }
+        $contract = new Contract();
+        $contract->setName('CDI');
+        $contracts[] = $contract;
+        $manager->persist($contract);
+
+        $contract = new Contract();
+        $contract->setName('CDD');
+        $contracts[] = $contract;
+        $manager->persist($contract);
+
+        $contract = new Contract();
+        $contract->setName('Alternance');
+        $contracts[] = $contract;
+        $manager->persist($contract);
+
+        $contract = new Contract();
+        $contract->setName('Stage');
+        $contracts[] = $contract;
+        $manager->persist($contract);
+
+        $contract = new Contract();
+        $contract->setName('Intérim');
+        $contracts[] = $contract;
+        $manager->persist($contract);
 
         // USER
         $users = [];

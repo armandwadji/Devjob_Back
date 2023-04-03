@@ -9,7 +9,7 @@
 {% block body %}
 	<main class="container mt-5">
 
-		<div class="g-0 rounded overflow-hidden flex-md-row mb-4 h-md-250 position-relative">
+		<section class="g-0 rounded overflow-hidden flex-md-row mb-4 h-md-250 position-relative">
 			<div class="col p-4 d-flex flex-column position-static">
 				<h3 class="mb-0 text-capitalize">{{candidate.firstname}}
 					{{candidate.lastname}}
@@ -24,10 +24,11 @@
 			<a href="{{ vich_uploader_asset(candidate, 'imageFile') }}" download class="mx-4 btn btn-info d-flex justify-content-center align-items-center" style="width: 4rem; height: 2rem; ">
 				<i class="fa-solid fa-download"></i>
 			</a>
-		</div>
+		</section>
 		<hr>
 
-		<div class="px-4">
+		<section class="px-4">
+
 			<h5 class="count mt-4">Ses candidatures :
 			</h5>
 
@@ -51,28 +52,27 @@
 							<td scope="row" class="text-center">{{offer.contract}}</td>
 							<td scope="row" class="text-center">{{offer.createdAt | date('d/m/Y')}}</td>
 							{# <td scope="row" class="text-center">
-																					                                                        <a href="{{path('offer.candidates.show', {id: offer.id})}}" class="btn btn-success">
-																					                                                            {{offer.candidates|length}}
-																					                                                        </a>
-																					                                                    </td> #}
-						{# <td scope="row" class="text-center">
-																		                                <a href="{{path('offer.edit', {id: offer.id})}}" class="btn btn-info">
-																		                                    <i class="fa-solid fa-pencil"></i>
-																		                                </a>
-																		                            </td> #}
+									<a href="{{path('offer.candidates.show', {id: offer.id})}}" class="btn btn-success">
+										{{offer.candidates|length}}
+									</a>
+								</td> #}
 							{# <td scope="row" class="text-center">
-																					                                <a href="{{path('offer.delete', { id: offer.id, 'count' : offer|length })}}" class="btn btn-danger delete-confirm" onclick="return window.confirm('Voulez vous vraiment supprimer cet ingrédient?')">
-																					                                    <i class="fa-solid fa-trash"></i>
-																					                                </a>
-																					                            </td> #}
+								<a href="{{path('offer.edit', {id: offer.id})}}" class="btn btn-info">
+									<i class="fa-solid fa-pencil"></i>
+								</a>
+								</td> #}
+							{# <td scope="row" class="text-center">
+									<a href="{{path('offer.delete', { id: offer.id, 'count' : offer|length })}}" class="btn btn-danger delete-confirm" onclick="return window.confirm('Voulez vous vraiment supprimer cet ingrédient?')">
+										<i class="fa-solid fa-trash"></i>
+									</a>
+								</td> #}
 						</tr>
 					{% endfor %}
 				</tbody>
 			</table>
 
-		</div>
-
-		<a href="{{path('candidate.delete', { id: candidate.id, page: page, 'count' : candidatesForOffer, idOffer : offer } )}}" class="btn btn-primary btn-lg text-end m-4" role="button">Supprimer</a>
+			<a href="{{path('candidate.delete', { id: candidate.id, page: page, 'count' : candidatesForOffer, idOffer : offer } )}}" class="btn btn-danger btn-lg text-end mt-4" role="button">Supprimer</a>
+		</section>
 
 	</main>
 {% endblock %}

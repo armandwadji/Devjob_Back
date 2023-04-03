@@ -5,22 +5,10 @@
 
 {% block body %}
 
-	<main
-		class="container mt-4">
+	<main class="container mt-4">
 
-		{# flash for success message #}
-		{% for message in app.flashes('success') %}
-			<div class="alert alert-success mt-4">
-				{{ message }}
-			</div>
-		{% endfor %}
-
-		{# flash for warning message #}
-		{% for message in app.flashes('warning') %}
-			<div class="alert alert-warning mt-4">
-				{{ message }}
-			</div>
-		{% endfor %}
+		{# flash messages #}	
+		{% include 'partials/_flash.html.twig' %}
 
 		<section>
 			<h2 class="blog-post-title mb-1 text-capitalize">Candidats de l'offre {{offer.name}} </h2>
@@ -60,7 +48,7 @@
 									</a>
 								</td>
 								<td scope="row" class="text-center">
-									<a href="{{path('candidate.delete', { id: candidate.id, page: candidates.getCurrentPageNumber, count : candidates|length, idOffer : offer.id })}}" class="btn btn-danger delete-confirm" onclick="return window.confirm('Voulez vous vraiment supprimer cet ingrédient?')">
+									<a href="{{path('candidate.delete', { id: candidate.id, page: candidates.getCurrentPageNumber, count : candidates|length, idOffer : offer.id })}}" class="btn btn-danger delete-confirm" onclick="return window.confirm('Voulez vous vraiment supprimer ce candidat ?')">
 										<i class="fa-solid fa-trash"></i>
 									</a>
 								</td>

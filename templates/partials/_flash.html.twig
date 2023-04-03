@@ -1,0 +1,10 @@
+{# flash for success message #}
+{% for label, messages in app.flashes %}
+	{% for message in messages %}
+		<div class="alert alert-{{label}} mt-4">
+			{{ message|raw }}
+		</div>
+	{% endfor %}
+{% endfor %}
+
+

@@ -9,19 +9,8 @@
 
 		<a href="{{path('offer.new', {'id': app.request.get('id') , 'count' : offers.getTotalItemCount } )}}" class="btn btn-primary mt-4">Ajouter une offre</a>
 
-		{# flash for success message #}
-		{% for message in app.flashes('success') %}
-			<div class="alert alert-success mt-4">
-				{{ message }}
-			</div>
-		{% endfor %}
-
-		{# flash for warning message #}
-		{% for message in app.flashes('warning') %}
-			<div class="alert alert-warning mt-4">
-				{{ message }}
-			</div>
-		{% endfor %}
+		{# flash messages #}
+		{% include 'partials/_flash.html.twig' %}
 
 		{% if offers.items is  same as ([]) %}
 			<h4 class='mt-4'>Vous n'avez pas encore saisi d'annonces.</h4>
@@ -63,7 +52,7 @@
 								</a>
 							</td>
 							<td scope="row" class="text-center">
-								<a href="{{path('offer.delete', { id: offer.id, count: offers|length, idCompany : offer.company.id })}}" class="btn btn-danger delete-confirm" onclick="return window.confirm('Voulez vous vraiment supprimer cet ingrédient?')">
+								<a href="{{path('offer.delete', { id: offer.id, count: offers|length, idCompany : offer.company.id })}}" class="btn btn-danger delete-confirm" onclick="return window.confirm('Voulez vous vraiment supprimer cette annonce ?')">
 									<i class="fa-solid fa-trash"></i>
 								</a>
 							</td>

@@ -1,8 +1,8 @@
 body {
-	margin: 0;
-	min-height: 100vh;
-	display: grid;
-	grid-template-rows: auto 1fr auto;
+    margin: 0;
+    min-height: 100vh;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
 }
 
 /* Gestion de la visibilité du passord et confirm password */
@@ -41,7 +41,7 @@ fieldset.form-group button {
     align-items: center;
 }
 
-.vich-image .custom-file{
+.vich-image .custom-file {
     display: flex;
     align-items: center;
 }
@@ -50,11 +50,10 @@ fieldset.form-group button {
     display: none;
 }
 
-.vich-image a img{
+.vich-image a img {
     max-height: 5rem;
     max-width: 5rem;
     /* margin-inline: 2rem; */
     border-radius: 100%;
     object-fit: cover;
 }
-

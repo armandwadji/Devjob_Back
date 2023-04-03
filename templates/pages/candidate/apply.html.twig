@@ -8,12 +8,8 @@
 	<div
 		class="container">
 
-		{# flash for warning message #}
-		{% for message in app.flashes('warning') %}
-			<div class="alert alert-warning mt-4 mx-4">
-				{{ message }}
-			</div>
-		{% endfor %}
+		{# flash messages #}	
+		{% include 'partials/_flash.html.twig' %}
 
 		<h1 class="mt-4 mx-4">Candidature pour le poste :
 			{{offer.name|capitalize}}

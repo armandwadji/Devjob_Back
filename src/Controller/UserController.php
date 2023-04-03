@@ -50,7 +50,7 @@ class UserController extends AbstractController
 
                 $this->addFlash(
                     type    : 'success',
-                    message : 'les informations de votre compte ont bien été modifiées.'
+                    message : 'Les informations de votre compte ont bien été modifiées.'
                 );
 
                 return $this->redirectToRoute('offer.index', [

@@ -7,15 +7,10 @@
 {% endblock %}
 
 {% block body %}
-	<main
-		class="container">
+	<main class="container">
 
-		{# flash for warning message #}
-		{% for message in app.flashes('warning') %}
-			<div class="alert alert-warning mt-4">
-				{{ message }}
-			</div>
-		{% endfor %}
+		{# flash messages #}	
+		{% include 'partials/_flash.html.twig' %}
 
 		<h1 class="mt-4">
 			{{editMode ? "Édition" : "Création"}}
