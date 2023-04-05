@@ -36,7 +36,7 @@ class AppFixtures extends Fixture
         $admin = new User();
         $admin->setFirstname('armand')
             ->setLastname('wadji')
-            ->setEmail('princedjiwa@yahoo.com')
+            ->setEmail('admin@devjob.com')
             ->setRoles(['ROLE_USER', 'ROLE_ADMIN'])
             ->setPlainPassword('password');
         $manager->persist($admin);
@@ -158,7 +158,6 @@ class AppFixtures extends Fixture
                 ->setTelephone($this->faker->creditCardNumber())
                 ->setDescription($this->faker->text(300))
                 ->addOffer($offers[mt_rand(0, count($offers) - 1)])
-                ->setImageName('blah1234-642c429d41d6d505182308.pdf')
                 ;
 
             $manager->persist($candidate);

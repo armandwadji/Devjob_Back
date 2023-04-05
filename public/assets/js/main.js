@@ -14,7 +14,8 @@ alerts.forEach((alert) => {
 errorIcons.forEach( ( icon ) => icon.classList.add( "bg-primary" ) );
 
 // Gestion de la visibilité des mots de passes.
-const eyes = document.querySelectorAll(".fa-solid.fa-eye");
+const eyes = document.querySelectorAll( ".fa-solid.fa-eye" );
+
 eyes.forEach((eye) => {
   eye.addEventListener("click", (e) => {
     const eyeBtn = e.target;
@@ -24,12 +25,7 @@ eyes.forEach((eye) => {
     } else {
       eyeBtn.classList.replace("fa-eye-slash", "fa-eye");
     }
-
-    e.target.previousElementSibling.setAttribute(
-      "type",
-      e.target.previousElementSibling.getAttribute("type") !== "text"
-        ? "text"
-        : "password"
-    );
+    
+    e.target.previousElementSibling.setAttribute( "type",  e.target.previousElementSibling.getAttribute("type") !== "text"  ? "text"  : "password" );
   });
 });

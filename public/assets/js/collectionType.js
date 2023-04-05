@@ -14,9 +14,8 @@ window.onload = () => {
     }
   }
 
-  newRequirementItemBtn.addEventListener("click", () =>
-    span.append(createNewIngredientForm(requirements))
-  );
+  // Evènement pour créer un nouveau requirement item
+  newRequirementItemBtn.addEventListener( "click", () => span.append( createNewItemForm( requirements ) ) );
 
    // ******** ROLES ********
   let roles = document.querySelector( '#roles-item' );
@@ -32,12 +31,12 @@ window.onload = () => {
     }
   }
 
-  newRolesItemBtn.addEventListener("click", () =>
-    spanRole.append(createNewIngredientForm(roles))
-  );
+  // Evènement pour créer un nouveau role item
+  newRolesItemBtn.addEventListener("click", () =>  spanRole.append(createNewItemForm(roles)) );
     
 };
 
+// Méthode de création du boutton supprimer d'un item
 const createDeletebtn = (index, requirements) => {
   const boutonSupp = document.createElement("button");
   boutonSupp.className = "btn btn-danger";
@@ -56,7 +55,8 @@ const createDeletebtn = (index, requirements) => {
   return boutonSupp;
 };
 
-const createNewIngredientForm = (requirements) => {
+// Méthode de création d'un nouvel item
+const createNewItemForm = (requirements) => {
   let index = requirements.dataset.index;
   let prototype = requirements.dataset.prototype.replace(/__name__/g, index);
 
