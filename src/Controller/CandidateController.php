@@ -146,7 +146,7 @@ class CandidateController extends AbstractController
 
         if ($form->isSubmitted()) {
 
-            if ($form->isValid()) {
+            if ($form->isValid() && ($form->getData()->getImageFile() || $form->getData()->getImageName()) ) {
 
                 $candidate = $form->getData();
                 $candidate->addOffer($offer);

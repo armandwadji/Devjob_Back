@@ -22,30 +22,34 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 50)]
-    #[Assert\NotBlank(message: 'Un utilisateur doit avoir un nom.')]
+    #[Assert\NotBlank(message: 'Un contact doit avoir un nom.')]
+    #[Assert\NotNull(message: 'Un contact doit avoir un nom.')]
     #[Assert\Length(
         min: 2,
         max: 50,
-        minMessage: 'Le nom d\'un utilisateur doit contenir au moins 2 caractères',
-        maxMessage: 'Le nom d\'un utilisateur doit contenir maximum 50 caractères'
+        minMessage: 'Le nom d\'un contact doit contenir au moins 2 caractères',
+        maxMessage: 'Le nom d\'un contact doit contenir maximum 50 caractères'
     )]
     private ?string $firstname = null;
 
     #[ORM\Column(length: 50)]
-    #[Assert\NotBlank(message: 'Un utilisateur doit avoir un prénom.')]
+    #[Assert\NotBlank(message: 'Un contact doit avoir un prénom.')]
+    #[Assert\NotNull(message: 'Un contact doit avoir un prénom.')]
     #[Assert\Length(
         min: 2,
         max: 50,
-        minMessage: 'Le prénom d\'un utilisateur doit contenir au moins 2 caractères',
-        maxMessage: 'Le prénom d\'un utilisateur doit contenir maximum 50 caractères'
+        minMessage: 'Le prénom d\'un contact doit contenir au moins 2 caractères',
+        maxMessage: 'Le prénom d\'un contact doit contenir maximum 50 caractères'
     )]
     private ?string $lastname = null;
 
     #[ORM\Column(length: 180, unique: true)]
     #[Assert\Email(message: 'Veuillez saisir un email valide.')]
+    #[Assert\NotBlank(message: 'Un contact doit avoir un email.')]
+    #[Assert\NotNull(message: 'Un contact doit avoir un email.')]
     #[Assert\Length(
         max: 180,
-        maxMessage: 'L\' email d\'un utilisateur doit contenir maximum 180 caractères'
+        maxMessage: 'L\' email d\'un contact doit contenir maximum 180 caractères'
     )]
     private ?string $email = null;
 
@@ -191,7 +195,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      *
      * @return ?string
      */
-    public function getPlainPassword(): ?string 
+    public function getPlainPassword(): ?string
     {
         return $this->plainPassword;
     }
@@ -247,5 +251,4 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
-
 }

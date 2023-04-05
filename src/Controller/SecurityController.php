@@ -30,17 +30,28 @@ class SecurityController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $user = $form->getData();
-            
-            $manager->persist($user);
-            $manager->flush();
-            
-            $this->addFlash(
-                type    : 'success', 
-                message : 'Votre compte à bien été créer.'
-            );
+            if ($form->getData()->getCompany()->getImageFile() && !(bool)stristr($form->getData()->getCompany()->getImageFile()->getmimeType(), "image")) {
 
-            return $this->redirectToRoute('security.login');
+                $this->addFlash(
+                    type: 'warning',
+                    message: 'Veuillez choisir une image.'
+                );
+
+                $form->getData()->getCompany()->setImageFile(null);
+            } else {
+
+                $user = $form->getData();
+                $manager->persist($user);
+                $manager->flush();
+                $user->getCompany()->setImageFile(null);
+
+                $this->addFlash(
+                    type: 'success',
+                    message: 'Votre compte à bien été créer.'
+                );
+
+                return $this->redirectToRoute('security.login');
+            }
         }
 
         return $this->render('pages/security/registration.html.twig', [

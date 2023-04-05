@@ -49,7 +49,76 @@
 				{% endfor %}
 			</ol>
 
-			<a class="btn btn-primary btn-lg" href="{{path('candidate.apply', {id: offer.id , url: offer.url} )}}" role="button">Candidater</a>
+			{% if not ( app.user )   %}
+				<a class="btn btn-primary btn-lg" href="{{path('candidate.apply', {id: offer.id , url: offer.url} )}}" role="button">Candidater</a>
+			{% endif %}
+
+			{% if (app.user and 'ROLE_ADMIN' in app.user.roles )  %}
+				<hr>
+				<h2 class="blog-post-title mb-1 text-capitalize">Candidatures</h2>
+				<section>
+					{# 'count' : offers.getTotalItemCount #}
+					{% include 'partials/_flash.html.twig' %}
+					<a href="{{path('admin.candidate.new', {'offer':offer.id , } )}}" class="btn btn-primary mt-4">Ajouter une candidat</a>
+
+					{% if offer.candidates|length == 0 %}
+						<h4 class='mt-4'>Cette offre n'a pas encore de candidatures.</h4>
+					{% else %}
+						{# total items count #}
+						<div class="count mt-4">
+							<h5>Cette offre à
+								{{ offer.candidates|length }}
+								candidatures au total</h5>
+						</div>
+
+						<table class="table table-hover">
+							<thead>
+								<tr>
+									<th scope="col" class="text-center">Nom</th>
+									<th scope="col" class="text-center">Prénom</th>
+									<th scope="col" class="text-center">email</th>
+									<th scope="col" class="text-center">CV</th>
+									<th scope="col" class="text-center">Edité</th>
+									<th scope="col" class="text-center">Supprimé</th>
+								</tr>
+							</thead>
+							<tbody>
+								{% for candidate in offer.candidates %}
+									<tr
+										class="table-primary">
+										{# <th scope="row" class="text-center">{{ loop.index }}</th> #}
+										<td scope="row" class="text-center">{{candidate.firstname}}</td>
+										<td scope="row" class="text-center">{{candidate.lastname}}</td>
+										<td scope="row" class="text-center">{{candidate.email}}</td>
+										<td	scope="row" class="text-center">
+											<a href="{{ vich_uploader_asset(candidate, 'imageFile') }}" Download class="btn btn-success delete-confirm">
+												<i class="fa-solid fa-download"></i>
+											</a>
+										</td>
+										{# <td scope="row" class="text-center">
+											<a href="{{(offer.candidates|length == 0 ) ? "#" : path('offer.show', {id: offer.id})}}" class="btn {{offer.candidates|length == 0 ? 'btn-secondary': 'btn-success'}} ">
+												{{offer.candidates|length}}
+											</a>
+										</td> #}
+										<td scope="row" class="text-center">
+											<a href="{{path('admin.candidate.edit', { candidate : candidate.id, offer: offer.id } )}}" class="btn btn-info">
+												<i class="fa-solid fa-pencil"></i>
+											</a>
+										</td>
+										<td scope="row" class="text-center">
+											<a href="{{path('admin.candidate.delete', { candidate : candidate.id, offer: offer.id, count: offer.candidates|length, idCompany : offer.company.id }) }}" class="btn btn-danger delete-confirm" onclick="return window.confirm('Voulez vous vraiment supprimer ce candidat ?')">
+												<i class="fa-solid fa-trash"></i>
+											</a>
+										</td>
+									</tr>
+								{% endfor %}
+							</tbody>
+						</table>
+					{% endif %}
+				</section>
+			
+			{% endif %}
+			
 		</section>
 	</main>
 

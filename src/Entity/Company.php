@@ -8,10 +8,15 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\HttpFoundation\File\File;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
+use Symfony\Component\Serializer\Annotation\SerializedName;
+use Symfony\Component\Serializer\Annotation\Groups;
+
 #[ORM\Entity(repositoryClass: CompanyRepository::class)]
+#[UniqueEntity('name', message: "Ce nom d'entreprise est déja pris.")]
 #[Vich\Uploadable]
 class Company
 {
@@ -22,6 +27,9 @@ class Company
 
     #[ORM\Column(length: 50)]
     #[Assert\NotBlank(message: 'Une entreprise doit avoir un nom.')]
+
+    #[SerializedName('logo')]
+    #[Groups(['offer:read'])]
     private ?string $name = null;
 
     #[ORM\Column(length: 50)]
@@ -30,6 +38,9 @@ class Company
         formats: Assert\CssColor::RGB,
         message: 'La couleur doit être en format rgb.'
     )]
+
+    #[SerializedName('logoBackground')]
+    #[Groups(['offer:read'])]
     private ?string $color = null;
 
     // ************IMAGE ************
@@ -40,6 +51,7 @@ class Company
     #[Vich\UploadableField(mapping: 'company_images', fileNameProperty: 'imageName')]
     private ?File $imageFile = null;
 
+    #[Groups(['offer:read'])]
     #[ORM\Column(nullable: true)]
     private ?string $imageName = null;
 
@@ -54,6 +66,9 @@ class Company
     private ?\DateTimeImmutable $updatedAt = null;
 
     #[ORM\Column(length: 255)]
+
+    #[SerializedName('position')]
+    #[Groups(['offer:read'])]
     private ?string $country = null;
 
     public function __construct()

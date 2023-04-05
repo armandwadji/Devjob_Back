@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Entity\Offer;
 use App\Entity\Company;
 use App\Form\OfferType;
-use App\Repository\OfferRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;

@@ -5,6 +5,8 @@ namespace App\Entity;
 use App\Repository\ContractRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Serializer\Annotation\Groups;
+
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ContractRepository::class)]
@@ -16,6 +18,7 @@ class Contract
     private ?int $id = null;
 
     #[ORM\Column(length: 50)]
+    #[Groups('offer:read')]
     private ?string $name = null;
 
     #[ORM\Column]

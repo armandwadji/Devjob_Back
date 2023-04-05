@@ -56,8 +56,37 @@ class OfferRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('o')
             ->where('o.company = :company')
             ->setParameter('company', $company)
-            // ->groupBy('r.candidates.email')
             ->getQuery()
+            ->getResult();
+    }
+
+    // ************ API REQUEST *************
+    public function offersOffsetLimit(int $offset, int $limit, ?string $location = null, ?bool $fulltime = false, ?string $text = null)
+    {
+        $query = $this->createQueryBuilder('o')
+            ->join('o.company', 'c')
+            ->join('o.contract', 'ct')
+            ->setFirstResult($offset)
+            ->setMaxResults($limit);
+
+        if ($location) {
+            $query->Where('c.country LIKE :location')
+                ->setParameter('location', '%' . $location . '%');
+        }
+
+        if ($fulltime && $fulltime != null) {
+            $query
+                ->andWhere('ct.name = :contract')
+                ->setParameter('contract', 'CDI');
+        }
+
+        if($text){
+            $query
+            ->andWhere('c.name = :name')
+            ->setParameter('name', $text);
+        }
+
+        return $query->getQuery()
             ->getResult();
     }
 }
