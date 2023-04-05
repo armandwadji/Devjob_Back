@@ -16,6 +16,14 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class CandidateCrudController extends AbstractController
 {
 
+    /**
+     * This controller add candidate
+     * @param Offer $offer
+     * @param Request $request
+     * @param EntityManagerInterface $manager
+     * @param SessionInterface $session
+     * @return Response
+     */
     #[Route('admin/applicants/new?{offer}', name: 'admin.candidate.new', methods: ['GET', 'POST'])]
     public function add(Offer $offer,  Request $request, EntityManagerInterface $manager, SessionInterface $session): Response
     {
@@ -24,12 +32,30 @@ class CandidateCrudController extends AbstractController
         return static::addOrUpdate($offer, $candidate,  $request, $manager, $session);
     }
 
+    /**
+     * This controller update candidate
+     * @param Candidate $candidate
+     * @param Offer $offer
+     * @param Request $request
+     * @param EntityManagerInterface $manager
+     * @param SessionInterface $session
+     * @return Response
+     */
     #[Route('admin/applicants/{candidate}/update?{offer}', name: 'admin.candidate.edit', methods: ['GET', 'POST'])]
     public function edit(Candidate $candidate, Offer $offer, Request $request, EntityManagerInterface $manager, SessionInterface $session): Response
     {
         return static::addOrUpdate($offer, $candidate,  $request, $manager, $session);
     }
 
+    /**
+     * This controller delete candidate
+     * @param Candidate $candidate
+     * @param Offer $offer
+     * @param Request $request
+     * @param EntityManagerInterface $manager
+     * @param SessionInterface $session
+     * @return Response
+     */
     #[Route('admin/applicants/{candidate}/delete?{offer}', name: 'admin.candidate.delete', methods: ['GET', 'POST'])]
     public function delete(Candidate $candidate, Offer $offer, Request $request, EntityManagerInterface $manager, SessionInterface $session): Response
     {
@@ -53,6 +79,27 @@ class CandidateCrudController extends AbstractController
         ]);
     }
 
+    #[Route('admin/applicant?{candidate}', name: 'admin.candidate.show', methods: ['GET', 'POST'])]
+    public function show (Candidate $candidate, Request $request): Response
+    {
+        return $this->render('pages/candidate/show.html.twig', [
+            'candidate'             => $candidate,
+            'offer'                 => intval($request->query->get('offer')),
+            'candidatesForOffer'    => intval($request->query->get('count')),
+            'page'                  => intval($request->query->get('page')),
+            'isAdmin'               => true
+        ]);
+    }
+
+    /**
+     * This controller ad or edit candidate
+     * @param Offer $offer
+     * @param Candidate $candidate
+     * @param Request $request
+     * @param EntityManagerInterface $manager
+     * @param SessionInterface $session
+     * @return Response
+     */
     private function addOrUpdate(Offer $offer, Candidate $candidate, Request $request, EntityManagerInterface $manager, SessionInterface $session): Response
     {
         $form = $this->createForm(CandidateType::class, $candidate);

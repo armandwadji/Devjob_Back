@@ -61,7 +61,7 @@ class OfferRepository extends ServiceEntityRepository
     }
 
     // ************ API REQUEST *************
-    public function offersOffsetLimit(int $offset, int $limit, ?string $location = null, ?bool $fulltime = false, ?string $text = null)
+    public function offersApi(int $offset, int $limit, ?string $location = null, ?bool $fulltime = false, ?string $text = null)
     {
         $query = $this->createQueryBuilder('o')
             ->join('o.company', 'c')
@@ -80,13 +80,14 @@ class OfferRepository extends ServiceEntityRepository
                 ->setParameter('contract', 'CDI');
         }
 
-        if($text){
+        if ($text) {
             $query
-            ->andWhere('c.name = :name')
-            ->setParameter('name', $text);
+                ->andWhere('c.name = :name')
+                ->setParameter('name', $text);
         }
 
-        return $query->getQuery()
+        return $query->orderBy('o.createdAt', 'DESC')
+            ->getQuery()
             ->getResult();
     }
 }

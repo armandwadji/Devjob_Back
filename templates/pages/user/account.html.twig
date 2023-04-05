@@ -42,7 +42,6 @@
 					<table class="table table-hover">
 						<thead>
 							<tr>
-								{# <th scope="col" class="text-center">Id</th> #}
 								<th scope="col" class="text-center">Offre</th>
 								<th scope="col" class="text-center">contrat</th>
 								<th scope="col" class="text-center">Posté Le</th>
@@ -55,7 +54,6 @@
 							{% for offer in user.company.offer %}
 								<tr
 									class="table-primary">
-									{# <th scope="row" class="text-center">{{ loop.index }}</th> #}
 									<td scope="row" class="text-center">{{offer.name}}</td>
 									<td scope="row" class="text-center">{{offer.contract}}</td>
 									<td scope="row" class="text-center">{{offer.createdAt | date('d/m/Y')}}</td>

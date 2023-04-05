@@ -19,6 +19,14 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class CompanyCrudController extends  AbstractController
 {
 
+    /**
+     * This controller show all companies
+     * @param UserRepository $userRepository
+     * @param PaginatorInterface $paginator
+     * @param Request $request
+     * @param SessionInterface $session
+     * @return Response
+     */
     #[Route('/admin', name: 'admin.index')]
     public function index(UserRepository $userRepository, PaginatorInterface $paginator, Request $request, SessionInterface $session): Response
     {
@@ -35,6 +43,13 @@ class CompanyCrudController extends  AbstractController
         ]);
     }
 
+    /**
+     * This coontroller add company
+     * @param Request $request
+     * @param EntityManagerInterface $manager
+     * @param SessionInterface $session
+     * @return Response
+     */
     #[Route('/admin/society/new', name: 'admin.society.new')]
     public function add(Request $request, EntityManagerInterface $manager, SessionInterface $session): Response
     {
@@ -42,6 +57,11 @@ class CompanyCrudController extends  AbstractController
         return static::addOrUpdate($user, $request, $manager, $session);
     }
 
+    /**
+     * This controller show company detail
+     * @param Company $company
+     * @return Response
+     */
     #[Route('/admin/society/{name}', name: 'admin.society.show', methods: ['GET'])]
     public function show(Company $company): Response
     {
@@ -49,7 +69,15 @@ class CompanyCrudController extends  AbstractController
             'user' => $company->getUser(),
         ]);
     }
-
+    
+    /**
+     * This controller edit company
+     * @param Company $company
+     * @param Request $request
+     * @param EntityManagerInterface $manager
+     * @param SessionInterface $session
+     * @return Response
+     */
     #[Route('/admin/society/{name}/update/', name: 'admin.society.edit', methods: ['GET', 'POST'])]
     public function edit(Company $company, Request $request, EntityManagerInterface $manager, SessionInterface $session): Response
     {
@@ -57,6 +85,15 @@ class CompanyCrudController extends  AbstractController
         return static::addOrUpdate($user, $request, $manager, $session);
     }
 
+    
+    /**
+     * This controller delete company
+     * @param Company $company
+     * @param Request $request
+     * @param SessionInterface $session
+     * @param EntityManagerInterface $manager
+     * @return Response
+     */
     #[Route('/admin/society/{name}/delete/', name: 'admin.society.delete', methods: ['GET'])]
     public function delete(Company $company, Request $request, SessionInterface $session, EntityManagerInterface $manager): Response
     {
@@ -80,6 +117,14 @@ class CompanyCrudController extends  AbstractController
         ]);
     }
 
+    /**
+     * This method add or update company
+     * @param User $user
+     * @param Request $request
+     * @param EntityManagerInterface $manager
+     * @param SessionInterface $session
+     * @return Response
+     */
     private function addOrUpdate(User $user, Request $request, EntityManagerInterface $manager, SessionInterface $session): Response
     {
         $form = $this->createForm(RegistrationType::class, $user);

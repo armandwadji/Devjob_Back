@@ -43,7 +43,6 @@ class CandidateController extends AbstractController
         ]);
     }
 
-
     /**
      * This controller show all candidates by company
      * @param Company $company

@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Offer;
 use App\Entity\Company;
 use App\Form\OfferType;
+use App\Repository\CandidateRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -30,7 +31,7 @@ class OfferController extends AbstractController
     #[Route('/my-offers?{id}', name: 'offer.index', methods: ['GET'])]
     public function index(Company $company, PaginatorInterface $paginator, Request $request,  SessionInterface $session): Response
     {
-        $session->set('page', isset($_GET['page']) ? (int)htmlspecialchars($_GET['page'])  : 1);
+        $session->set('page', isset($_GET['page']) ? intval($request->get('page')) : 1);
 
         $offers = $paginator->paginate(
             target: $company->getOffer(),
@@ -142,7 +143,6 @@ class OfferController extends AbstractController
      * @return Response
      */
     #[Route('/offers/{id}', name: 'offer.show', methods: ['GET'])]
-    // #[Security("is_granted('ROLE_USER') and user=== offer.getCompany().getUser()")]
     public function show(Offer $offer): Response
     {
         return $this->render('pages/offer/show.html.twig', [
@@ -169,8 +169,8 @@ class OfferController extends AbstractController
         }
 
         $this->addFlash(
-            type    : $offer ? 'success' : 'warning',
-            message : $offer ? 'Votre offre à été supprimer avec succès!' : 'L\'offre demander n\'existe pas'
+            type: $offer ? 'success' : 'warning',
+            message: $offer ? 'Votre offre à été supprimer avec succès!' : 'L\'offre demander n\'existe pas'
         );
 
         return $this->redirectToRoute('offer.index', [
@@ -180,8 +180,11 @@ class OfferController extends AbstractController
     }
 
     // #[Route('/test', name: 'offer.test', methods: ['GET', 'POST'])]
-    // public function test(): Response
+    // public function test(CandidateRepository $candidateRepository): Response
     // {
+    //     $test = $candidateRepository->findCandidatesByCompany(1665);
+    //     dd($test);
+
     //     $company = new Company();
     //     $form = $this->createForm(CompanyType::class, $company);
 

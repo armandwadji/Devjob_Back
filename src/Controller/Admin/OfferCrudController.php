@@ -17,6 +17,14 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class OfferCrudController extends AbstractController
 {
+    /**
+     * This controller show all offers
+     * @param OfferRepository $offerRepository
+     * @param PaginatorInterface $paginator
+     * @param Request $request
+     * @param SessionInterface $session
+     * @return Response
+     */
     #[Route('/admin/offers/', name: 'admin.offers', methods: ['GET'])]
     public function offers(OfferRepository $offerRepository, PaginatorInterface $paginator, Request $request, SessionInterface $session): Response
     {
@@ -33,6 +41,14 @@ class OfferCrudController extends AbstractController
         ]);
     }
 
+    /**
+     * This controller add offer
+     * @param Company $company
+     * @param Request $request
+     * @param EntityManagerInterface $manager
+     * @param SessionInterface $session
+     * @return Response
+     */
     #[Route('/admin/offers/new?{id}', name: 'admin.offer.new', methods: ['GET', 'POST'])]
     public function add(Company $company, Request $request, EntityManagerInterface $manager, SessionInterface $session): Response
     {
@@ -41,6 +57,11 @@ class OfferCrudController extends AbstractController
         return static::addOrUpdate($offer, $request, $manager, $session);
     }
 
+    /**
+     * This controller show offer
+     * @param Offer $offer
+     * @return Response
+     */
     #[Route('/admin/offers/{offer}', name: 'admin.offers.show', methods: ['GET'])]
     public function show(Offer $offer): Response
     {
@@ -49,6 +70,14 @@ class OfferCrudController extends AbstractController
         ]);
     }
 
+    /**
+     * This controller edit offer
+     * @param Offer $offer
+     * @param Request $request
+     * @param EntityManagerInterface $manager
+     * @param SessionInterface $session
+     * @return Response
+     */
     #[Route('/admin/offers/{offer}/update', name: 'admin.offer.update', methods: ['GET', 'POST'])]
     public function edit(Offer $offer, Request $request, EntityManagerInterface $manager, SessionInterface $session): Response
     {
@@ -56,6 +85,14 @@ class OfferCrudController extends AbstractController
         return static::addOrUpdate($offer, $request, $manager, $session, $isAllOffer);
     }
 
+    /**
+     * This controller delete offer
+     * @param Offer|null $offer
+     * @param Request $request
+     * @param EntityManagerInterface $manager
+     * @param SessionInterface $session
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
     #[Route('/admin/offers/{offer}/delete', name: 'admin.offer.delete', methods: ['GET', 'POST'])]
     public function delete(Offer $offer = null,  Request $request, EntityManagerInterface $manager, SessionInterface $session)
     {
@@ -88,6 +125,15 @@ class OfferCrudController extends AbstractController
         ]);
     }
 
+    /**
+     * This controller add or update offer
+     * @param Offer $offer
+     * @param Request $request
+     * @param EntityManagerInterface $manager
+     * @param SessionInterface $session
+     * @param bool|null $isAllOffer
+     * @return Response|\Symfony\Component\HttpFoundation\RedirectResponse
+     */
     private function addOrUpdate(Offer $offer, Request $request, EntityManagerInterface $manager, SessionInterface $session, ?bool $isAllOffer = false)
     {
         $form = $this->createForm(OfferType::class, $offer);

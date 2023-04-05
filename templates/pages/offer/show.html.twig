@@ -9,18 +9,23 @@
 
 	<main class="container mt-4">
 		<section class="">
-			<h2 class="blog-post-title mb-1 text-capitalize">{{offer.name}}</h2>
-			<p class="blog-post-meta">Créer le :{{offer.createdAt|date('d/m/y')}}</p>
-			<p class="blog-post-meta">Url:
-				<a href="{{offer.url}}" target='_blank' class='color-info'>
-					{{offer.url}}
-				</a>
-			</p>
+			<div class="d-flex flex-row justify-content-between align-items-center">
+				<div>
+					<h2 class="blog-post-title mb-1 text-capitalize">{{offer.name}}</h2>
+					<p class="blog-post-meta">Créer le :{{offer.createdAt|date('d/m/y')}}</p>
+					<p class="blog-post-meta">Website :
+						<a href="{{offer.url}}" target='_blank' class='' style="color : {{offer.company.color}};">
+							{{offer.url}}
+						</a>
+					</p>
+					<h3 class="text-capitalize">Description :</h3>
+					<p>
+						{{offer.description}}
+					</p>
+				</div>
 
-			<h3 class="text-capitalize">Description :</h3>
-			<p>
-				{{offer.description}}
-			</p>
+				<img class='rounded-circle mx-4' style="width: 100%; height: 100%; max-height: 200px; max-width: 200px; object-fit: contain " src="{{ vich_uploader_asset(offer.company, 'imageFile') ? vich_uploader_asset(offer.company, 'imageFile') : 'https://picsum.photos/250/250' }}" alt="Logo de {{offer.company.name}}">
+			</div>
 			<hr>
 
 			{# PREREQUIS #}
@@ -77,7 +82,7 @@
 									<th scope="col" class="text-center">Nom</th>
 									<th scope="col" class="text-center">Prénom</th>
 									<th scope="col" class="text-center">email</th>
-									<th scope="col" class="text-center">CV</th>
+									<th scope="col" class="text-center">Detail</th>
 									<th scope="col" class="text-center">Edité</th>
 									<th scope="col" class="text-center">Supprimé</th>
 								</tr>
@@ -86,27 +91,21 @@
 								{% for candidate in offer.candidates %}
 									<tr
 										class="table-primary">
-										{# <th scope="row" class="text-center">{{ loop.index }}</th> #}
 										<td scope="row" class="text-center">{{candidate.firstname}}</td>
 										<td scope="row" class="text-center">{{candidate.lastname}}</td>
 										<td scope="row" class="text-center">{{candidate.email}}</td>
-										<td	scope="row" class="text-center">
-											<a href="{{ vich_uploader_asset(candidate, 'imageFile') }}" Download class="btn btn-success delete-confirm">
-												<i class="fa-solid fa-download"></i>
+										<td scope="row" class="text-center">
+											<a href="{{ path('admin.candidate.show', {candidate: candidate.id, offer: offer.id, count: offer.candidates|length, idCompany : offer.company.id  })}}" class="btn btn-success">
+												<i class="fa-solid fa-magnifying-glass"></i>
 											</a>
 										</td>
-										{# <td scope="row" class="text-center">
-											<a href="{{(offer.candidates|length == 0 ) ? "#" : path('offer.show', {id: offer.id})}}" class="btn {{offer.candidates|length == 0 ? 'btn-secondary': 'btn-success'}} ">
-												{{offer.candidates|length}}
-											</a>
-										</td> #}
 										<td scope="row" class="text-center">
 											<a href="{{path('admin.candidate.edit', { candidate : candidate.id, offer: offer.id } )}}" class="btn btn-info">
 												<i class="fa-solid fa-pencil"></i>
 											</a>
 										</td>
 										<td scope="row" class="text-center">
-											<a href="{{path('admin.candidate.delete', { candidate : candidate.id, offer: offer.id, count: offer.candidates|length, idCompany : offer.company.id }) }}" class="btn btn-danger delete-confirm" onclick="return window.confirm('Voulez vous vraiment supprimer ce candidat ?')">
+											<a href="{{ path('admin.candidate.delete', { candidate : candidate.id, offer: offer.id, count: offer.candidates|length, idCompany : offer.company.id }) }}" class="btn btn-danger delete-confirm" onclick="return window.confirm('Voulez vous vraiment supprimer ce candidat ?')">
 												<i class="fa-solid fa-trash"></i>
 											</a>
 										</td>
@@ -116,9 +115,9 @@
 						</table>
 					{% endif %}
 				</section>
-			
+
 			{% endif %}
-			
+
 		</section>
 	</main>
 
