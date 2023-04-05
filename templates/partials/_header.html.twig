@@ -9,16 +9,44 @@
 			<ul class="navbar-nav me-auto">
 
 				{% if app.user %}
-					<li class="nav-item">
-						<a class="nav-link active" href="{{path('offer.index', {id: app.user.company.id } )}}">Offres
-							<span class="visually-hidden">(current)</span>
-						</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link active" href="{{path('offer.all.candidates.show', {id: app.user.company.id } )}}">Candidats
-							<span class="visually-hidden">(current)</span>
-						</a>
-					</li>
+
+					{% if 'ROLE_ADMIN' in app.user.roles %}
+
+						<li class="nav-item">
+							<a class="nav-link active" href="{{path('admin.index' )}}">Entreprises
+								<span class="visually-hidden">(current)</span>
+							</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link active" href="{{path('admin.offers' )}}">Offres
+								<span class="visually-hidden">(current)</span>
+							</a>
+						</li>
+						{# <li class="nav-item">
+							<a class="nav-link active" href="{{path('admin.index' )}}">Candidats
+								<span class="visually-hidden">(current)</span>
+							</a>
+						</li> #}
+
+					{% else %}
+
+						<li class="nav-item">
+							<a class="nav-link active" href="{{path('offer.index', {id: app.user.company.id } )}}">Offres
+								<span class="visually-hidden">(current)</span>
+							</a>
+						</li>
+
+						{% if app.user.company.offer|length > 0 %}
+							<li class="nav-item">
+								<a class="nav-link active" href="{{path('offer.all.candidates.show', {id: app.user.company.id } )}}">Candidats
+									<span class="visually-hidden">(current)</span>
+								</a>
+							</li>
+						{% endif %}
+
+
+					{% endif %}
+
 				{% endif %}
 
 			</ul>
@@ -29,19 +57,23 @@
 					{% if app.user %}
 						<li class="nav-item dropdown ">
 
-							{% if app.user.company.imageName %}
+							{% if 'ROLE_ADMIN' not in app.user.roles and app.user.company.imageName %}
 								<a class="recipe__image pe-2 nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
 									<img class='rounded-circle' style="max-width: 3rem; max-height: 3rem;" src="{{ vich_uploader_asset(app.user.company, 'imageFile') }}">
 								</a>
 							{% else %}
 								<a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">{{app.user.firstname ~  " " ~  app.user.lastname}}</a>
 							{% endif %}
-							
+
 							<div class="dropdown-menu">
-								<a class="dropdown-item" href="{{path('account.index', {id: app.user.id() } )}}">Mes infos</a>
-								<a class="dropdown-item" href="{{path('user.edit', {id: app.user.id() })}}">Edit infos</a>
-								{# <a class="dropdown-item" href="{{path('user.edit.password', {id: app.user.id() })}}">Edit mot de passe</a> #}
-								<div class="dropdown-divider"></div>
+
+								{% if 'ROLE_ADMIN' not in app.user.roles %}
+									<a class="dropdown-item" href="{{path('account.index', {id: app.user.id() } )}}">Mes infos</a>
+									<a class="dropdown-item" href="{{path('user.edit', {id: app.user.id() })}}">Edit infos</a>
+									{# <a class="dropdown-item" href="{{path('user.edit.password', {id: app.user.id() })}}">Edit mot de passe</a> #}
+								{% endif %}
+
+							<div class="dropdown-divider"></div>
 								<a class="dropdown-item" href="{{path("security.logout")}}">Deconnexion</a>
 							</div>
 						</li>

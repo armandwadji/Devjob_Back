@@ -6,6 +6,8 @@ use App\Entity\Role;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\RoleItemRepository;
 
+use Symfony\Component\Serializer\Annotation\Groups;
+
 #[ORM\Entity(repositoryClass: RoleItemRepository::class)]
 class RoleItem
 {
@@ -15,6 +17,7 @@ class RoleItem
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups('offer:read')]
     private ?string $name = null;
 
     #[ORM\ManyToOne(targetEntity: Role::class, inversedBy: 'roleItems')]

@@ -23,6 +23,7 @@ class Candidate
 
     #[ORM\Column(length: 50)]
     #[Assert\NotBlank(message: 'Un candidat doit avoir un nom.')]
+    #[Assert\NotNull(message: 'Un candidat doit avoir un nom.')]
     #[Assert\Length(
         min: 2,
         max: 50,
@@ -62,9 +63,11 @@ class Candidate
         extensions: ['pdf', 'PDF'],
         extensionsMessage: 'Veuillez choisir un Fichier au format valide.',
     )]
+    // #[Assert\NotBlank(message: 'Un candidat doit avoir un cv.')]
+    // #[Assert\NotNull(message: 'Un candidat doit avoir un cv.')]
     #[Vich\UploadableField(mapping: 'candidates_files', fileNameProperty: 'imageName')]
     private ?File $imageFile = null;
-
+    
     #[ORM\Column(nullable: true)]
     private ?string $imageName = null;
 

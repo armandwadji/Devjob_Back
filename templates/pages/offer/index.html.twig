@@ -5,20 +5,25 @@
 
 {% block body %}
 	<main class="container mt-4">
-		<h1>Mes offres</h1>
+		<h1> {{ 'ROLE_ADMIN' not in app.user.roles  ? 'Mes' : 'Les' }} offres</h1>
 
-		<a href="{{path('offer.new', {'id': app.request.get('id') , 'count' : offers.getTotalItemCount } )}}" class="btn btn-primary mt-4">Ajouter une offre</a>
+		{% if  'ROLE_ADMIN' not in app.user.roles %}
+			<a href="{{path('offer.new', {'id': app.request.get('id') , 'count' : offers.getTotalItemCount } )}}" class="btn btn-primary mt-4">Ajouter une offre</a>
+		{% endif %}
+
 
 		{# flash messages #}
 		{% include 'partials/_flash.html.twig' %}
 
 		{% if offers.items is  same as ([]) %}
-			<h4 class='mt-4'>Vous n'avez pas encore saisi d'annonces.</h4>
+			<h4 class='mt-4'>Aucunes offres disponibles.</h4>
 		{% else %}
 
 			{# total items count #}
 			<div class="count mt-4">
-				<h5>Vous avez {{ offers.getTotalItemCount }} offres au total</h5>
+				<h5>Vous avez
+					{{ offers.getTotalItemCount }}
+					offres au total</h5>
 			</div>
 
 			<table class="table table-hover">
@@ -28,6 +33,9 @@
 						<th scope="col" class="text-center">Offre</th>
 						<th scope="col" class="text-center">contrat</th>
 						<th scope="col" class="text-center">Posté Le</th>
+						{% if  'ROLE_ADMIN' in app.user.roles %}
+							<th scope="col" class="text-center">Société</th>
+						{% endif %}
 						<th scope="col" class="text-center">Candidats</th>
 						<th scope="col" class="text-center">Edité</th>
 						<th scope="col" class="text-center">Supprimé</th>
@@ -41,21 +49,40 @@
 							<td scope="row" class="text-center">{{offer.name}}</td>
 							<td scope="row" class="text-center">{{offer.contract}}</td>
 							<td scope="row" class="text-center">{{offer.createdAt | date('d/m/Y')}}</td>
-							<td scope="row" class="text-center">
-								<a href="{{(offer.candidates|length == 0) ? "#" : path('offer.candidates.show', {id: offer.id})}}" class="btn {{offer.candidates|length == 0 ? 'btn-secondary': 'btn-success'}} ">
-									{{offer.candidates|length}}
-								</a>
-							</td>
-							<td scope="row" class="text-center">
-								<a href="{{path('offer.edit', {id: offer.id})}}" class="btn btn-info">
-									<i class="fa-solid fa-pencil"></i>
-								</a>
-							</td>
-							<td scope="row" class="text-center">
-								<a href="{{path('offer.delete', { id: offer.id, count: offers|length, idCompany : offer.company.id })}}" class="btn btn-danger delete-confirm" onclick="return window.confirm('Voulez vous vraiment supprimer cette annonce ?')">
-									<i class="fa-solid fa-trash"></i>
-								</a>
-							</td>
+							{% if  'ROLE_ADMIN' not in app.user.roles %}
+								<td scope="row" class="text-center">
+									<a href="{{(offer.candidates|length == 0) ? "#" : path('offer.candidates.show', {id: offer.id})}}" class="btn {{offer.candidates|length == 0 ? 'btn-secondary': 'btn-success'}} ">
+										{{offer.candidates|length}}
+									</a>
+								</td>
+								<td scope="row" class="text-center">
+									<a href="{{path('offer.edit', {id: offer.id})}}" class="btn btn-info">
+										<i class="fa-solid fa-pencil"></i>
+									</a>
+								</td>
+								<td scope="row" class="text-center">
+									<a href="{{path('offer.delete', { id: offer.id, count: offers|length, idCompany : offer.company.id })}}" class="btn btn-danger delete-confirm" onclick="return window.confirm('Voulez vous vraiment supprimer cette annonce ?')">
+										<i class="fa-solid fa-trash"></i>
+									</a>
+								</td>
+							{% else %}
+								<td scope="row" class="text-center">{{offer.company.name|capitalize}}</td>
+								<td scope="row" class="text-center">
+									<a href="{{(offer.candidates|length == 0 and 'ROLE_ADMIN' not in app.user.roles ) ? "#" : path('admin.offers.show', {offer: offer.id})}}" class="btn {{offer.candidates|length == 0 ? 'btn-secondary': 'btn-success'}} ">
+										{{offer.candidates|length}}
+									</a>
+								</td>
+								<td scope="row" class="text-center">
+									<a href="{{path( 'admin.offer.update', {offer: offer.id, isAllOffer : 1} )}}" class="btn btn-info">
+										<i class="fa-solid fa-pencil"></i>
+									</a>
+								</td>
+								<td scope="row" class="text-center">
+									<a href="{{ path('admin.offer.delete', { offer: offer.id, count: offers|length, idCompany : offer.company.id, isAllOffer : 1 }) }}" class="btn btn-danger delete-confirm" onclick="return window.confirm('Voulez vous vraiment supprimer cette annonce ?')">
+										<i class="fa-solid fa-trash"></i>
+									</a>
+								</td>	
+							{% endif %}
 						</tr>
 					{% endfor %}
 				</tbody>

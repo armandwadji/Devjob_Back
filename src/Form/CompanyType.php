@@ -18,12 +18,13 @@ class CompanyType extends AbstractType
         $builder
             ->add('name', TextType::class)
             ->add('color', ColorType::class)
-            ->add('imageFile', VichImageType::class, [ 
-                'required' => false ,
+            ->add('imageFile', VichImageType::class, [
+                'required' => false,
                 'download_label' => 'Télécharger',
-                ])
-            ->add('country', CountryType::class)
-            ;
+            ])
+            ->add('country', CountryType::class, [
+                'alpha3' => true
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

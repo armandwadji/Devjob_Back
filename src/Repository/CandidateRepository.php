@@ -46,19 +46,38 @@ class CandidateRepository extends ServiceEntityRepository
      */
     public function findCandidatesByCompany(?int $companyId): array
     {
-        $conn = $this->getEntityManager()->getConnection();
+        $query = $this->createQueryBuilder('ca')
+            // ->join('ca.offer', 'o')
+            // ->join('o.company', 'co')
+            // ->Where('co.id = :id')
+            // ->setParameter('id', $companyId )
+        ;
 
-        $sql = '
-                    SELECT * , COUNT(`candidate`.`email`) as count FROM `candidate` 
-                    INNER JOIN `offer` ON `candidate`.`offer_id` = `offer`.`id`
-                    INNER JOIN `company` ON `offer`.`company_id` = `company`.`id`
-                    WHERE `company`.id = :id
-                    GROUP BY `candidate`.`email`
-                ';
+        return $query->groupBy('ca.email')
+            ->getQuery()
+            ->getResult();
 
-        $stmt = $conn->prepare($sql);
-        $resultSet = $stmt->executeQuery(['id' => $companyId]);
+        // SELECT firstname, lastname, email, company_id, COUNT(`candidate`.`email`) as count FROM `candidate`
+        //     INNER JOIN `candidate_offer` ON `candidate_offer`.`candidate_id` = `candidate`.`id`
+        //     INNER JOIN `offer` ON `offer`.`id` = `candidate_offer`.`offer_id`
+        //     WHERE `offer`.`company_id` = 748
+        //     GROUP BY `candidate`.`email`  
+        //     ORDER BY `count` DESC;
+        
+        // $conn = $this->getEntityManager()->getConnection();
 
-        return $resultSet->fetchAllAssociative();
+        // $sql = '
+        //             SELECT * , COUNT(`candidate`.`email`) as count FROM `candidate` 
+        //             INNER JOIN `offer` ON `candidate`.`offer_id` = `offer`.`id`
+        //             INNER JOIN `company` ON `offer`.`company_id` = `company`.`id`
+        //             WHERE `company`.id = :id
+        //             GROUP BY `candidate`.`email`
+        //         ';
+
+
+        // $stmt = $conn->prepare($sql);
+        // $resultSet = $stmt->executeQuery(['id' => $companyId]);
+
+        // return $resultSet->fetchAllAssociative();
     }
 }

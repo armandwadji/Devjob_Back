@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\RequirementItemRepository;
+use Symfony\Component\Serializer\Annotation\Groups;
+
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: RequirementItemRepository::class)]
@@ -14,6 +16,7 @@ class RequirementItem
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups('offer:detail')]
     private ?string $name = null;
 
     #[ORM\ManyToOne(targetEntity: Requirement::class, inversedBy: 'requirementItems')]

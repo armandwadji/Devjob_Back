@@ -12,20 +12,27 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Vich\UploaderBundle\Form\Type\VichFileType;
 
+use Symfony\Component\Validator\Constraints as Assert;
+
 class CandidateType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('firstname', TextType::class)
+            ->add('firstname', TextType::class, [
+                'required' => true,
+                'constraints' => [
+                    new Assert\NotBlank()
+                ]
+            ])
             ->add('lastname', TextType::class)
             ->add('email', EmailType::class)
             ->add('telephone', IntegerType::class)
             ->add('description', TextareaType::class)
-            ->add('imageFile', VichFileType::class, [ 
+            ->add('imageFile', VichFileType::class, [
                 'required' => true,
                 'download_label' => 'Télécharger',
-                ])
+            ])
             // ->add('offer')
         ;
     }

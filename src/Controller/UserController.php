@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\UserType;
+use Symfony\Component\Intl\Countries;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,7 +23,7 @@ class UserController extends AbstractController
      */
     #[Route('/my-account/update/{id}', name: 'user.edit', methods: ['GET', 'POST'])]
     #[Security("is_granted('ROLE_USER') and user === choosenUser")]
-    public function edit(User $choosenUser = null, Request $request, EntityManagerInterface $manager,): Response
+    public function edit(User $choosenUser = null, Request $request, EntityManagerInterface $manager): Response
     {
         // Si nous n'avons pas d'utilsateur connecter on redirige vers la page de login.
         if (!$this->getUser()) return $this->redirectToRoute('security.login');
@@ -35,22 +36,23 @@ class UserController extends AbstractController
             if ($form->getData()->getCompany()->getImageFile() && !(bool)stristr($form->getData()->getCompany()->getImageFile()->getmimeType(), "image")) {
 
                 $this->addFlash(
-                    type    : 'warning',
-                    message : 'Veuillez choisir une image.'
+                    type: 'warning',
+                    message: 'Veuillez choisir une image.'
                 );
 
                 $form->getData()->getCompany()->setImageFile(null);
-
             } else {
 
                 $user = $form->getData();
+                $user->getCompany()->setCountry(Countries::getAlpha3Name($user->getCompany()->getCountry()) ); //Convertis les initiales du pays en son nom complet.
+
                 $manager->persist($user);
                 $manager->flush();
                 $user->getCompany()->setImageFile(null);
 
                 $this->addFlash(
-                    type    : 'success',
-                    message : 'Les informations de votre compte ont bien été modifiées.'
+                    type: 'success',
+                    message: 'Les informations de votre compte ont bien été modifiées.'
                 );
 
                 return $this->redirectToRoute('offer.index', [
@@ -73,6 +75,8 @@ class UserController extends AbstractController
     #[Security("is_granted('ROLE_USER') and user === choosenUser")]
     public function home(User $choosenUser): Response
     {
-        return $this->render('pages/user/account.html.twig');
+        return $this->render('pages/user/account.html.twig', [
+            'user' => $choosenUser,
+        ]);
     }
 }

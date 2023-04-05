@@ -2,17 +2,18 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\Candidate;
+use Faker\Factory;
+use App\Entity\Role;
+use App\Entity\User;
+use Faker\Generator;
+use App\Entity\Offer;
 use App\Entity\Company;
 use App\Entity\Contract;
-use App\Entity\Offer;
+use App\Entity\RoleItem;
+use App\Entity\Candidate;
 use App\Entity\Requirement;
 use App\Entity\RequirementItem;
-use App\Entity\Role;
-use App\Entity\RoleItem;
-use App\Entity\User;
-use Faker\Factory;
-use Faker\Generator;
+use Symfony\Component\Intl\Countries;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 
@@ -31,6 +32,16 @@ class AppFixtures extends Fixture
 
     public function load(ObjectManager $manager): void
     {
+        // ADMINISTRATEUR
+        $admin = new User();
+        $admin->setFirstname('armand')
+            ->setLastname('wadji')
+            ->setEmail('princedjiwa@yahoo.com')
+            ->setRoles(['ROLE_USER', 'ROLE_ADMIN'])
+            ->setPlainPassword('password');
+        $manager->persist($admin);
+
+
         // CONTRACT
         $contracts = [];
 
@@ -80,7 +91,7 @@ class AppFixtures extends Fixture
             $company->setName($this->faker->word())
                 ->setColor($this->faker->hexColor())
                 ->setUser($users[$i])
-                ->setCountry($this->faker->countryCode());
+                ->setCountry( Countries::getAlpha3Name($this->faker->countryISOAlpha3())); //Conversion des initials des pays en nom complet
 
             $companies[] = $company;
             $manager->persist($company);
@@ -147,6 +158,7 @@ class AppFixtures extends Fixture
                 ->setTelephone($this->faker->creditCardNumber())
                 ->setDescription($this->faker->text(300))
                 ->addOffer($offers[mt_rand(0, count($offers) - 1)])
+                ->setImageName('blah1234-642c429d41d6d505182308.pdf')
                 ;
 
             $manager->persist($candidate);
