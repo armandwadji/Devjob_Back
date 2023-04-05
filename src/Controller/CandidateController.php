@@ -87,7 +87,9 @@ class CandidateController extends AbstractController
             'candidate'             => $candidate,
             'offer'                 => intval($request->query->get('offer')),
             'candidatesForOffer'    => intval($request->query->get('candidates')),
-            'page'                  => intval($request->query->get('page'))
+            'page'                  => intval($request->query->get('page')),
+            'isAdmin'               => false
+
         ]);
     }
 
