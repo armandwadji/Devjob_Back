@@ -74,6 +74,21 @@ Vous pouvez enfin lancer le projet et le tester à l'aide de la commande :
 symfony server:start
 ```
 
+## Connexion
+
+Pour vous connecter en tant qu'administrateur voici les parmètres de login.
+
+
+email :
+```
+admin@devjob.com
+```
+
+password :
+```
+Php1234#
+```
+
 <p align="right">Back to top :
   <a href="#top">
     ☝
