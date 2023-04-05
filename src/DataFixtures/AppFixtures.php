@@ -34,11 +34,11 @@ class AppFixtures extends Fixture
     {
         // ADMINISTRATEUR
         $admin = new User();
-        $admin->setFirstname('armand')
-            ->setLastname('wadji')
+        $admin->setFirstname('Mickaël')
+            ->setLastname('AUGER')
             ->setEmail('admin@devjob.com')
             ->setRoles(['ROLE_USER', 'ROLE_ADMIN'])
-            ->setPlainPassword('password');
+            ->setPlainPassword('Php1234#');
         $manager->persist($admin);
 
 
