@@ -74,9 +74,9 @@ Vous pouvez enfin lancer le projet et le tester à l'aide de la commande :
 symfony server:start
 ```
 
-## Connexion
+## Connexion en tant qu' administrateur
 
-Pour vous connecter en tant qu'administrateur voici les parmètres de login.
+Pour vous connecter en tant qu'administrateur voici les paramètres de login.
 
 
 email :
