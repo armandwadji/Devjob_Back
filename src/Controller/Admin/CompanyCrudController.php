@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Intl\Intl;
 
 class CompanyCrudController extends  AbstractController
 {
@@ -69,7 +70,7 @@ class CompanyCrudController extends  AbstractController
             'user' => $company->getUser(),
         ]);
     }
-    
+
     /**
      * This controller edit company
      * @param Company $company
@@ -85,7 +86,7 @@ class CompanyCrudController extends  AbstractController
         return static::addOrUpdate($user, $request, $manager, $session);
     }
 
-    
+
     /**
      * This controller delete company
      * @param Company $company
@@ -127,6 +128,11 @@ class CompanyCrudController extends  AbstractController
      */
     private function addOrUpdate(User $user, Request $request, EntityManagerInterface $manager, SessionInterface $session): Response
     {
+        // GESTION DES CODES ISO POUR LA CONFOMITE DU FORMULAIRE
+        $isoCode2 = array_search($user->getCompany()->getCountry(), Countries::getNames(), true);
+        $isoCode3 = Countries::getAlpha3Code($isoCode2);
+        $user->getCompany()->setCountry($isoCode3);
+
         $form = $this->createForm(RegistrationType::class, $user);
         $form->handleRequest($request);
 
@@ -143,7 +149,7 @@ class CompanyCrudController extends  AbstractController
             } else {
 
                 $user = $form->getData();
-                $user->getCompany()->setCountry(Countries::getAlpha3Name($user->getCompany()->getCountry()) ); //Convertis les initiales du pays en son nom complet.
+                // $user->getCompany()->setCountry(Countries::getAlpha3Name($user->getCompany()->getCountry())); //Convertis les initiales du pays en son nom complet.
                 $manager->persist($user);
                 $manager->flush();
                 $user->getCompany()->setImageFile(null);

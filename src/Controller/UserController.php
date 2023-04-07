@@ -28,6 +28,11 @@ class UserController extends AbstractController
         // Si nous n'avons pas d'utilsateur connecter on redirige vers la page de login.
         if (!$this->getUser()) return $this->redirectToRoute('security.login');
 
+        // GESTION DES CODES ISO POUR LA CONFOMITE DU FORMULAIRE
+        $isoCode2 = array_search($choosenUser->getCompany()->getCountry(), Countries::getNames(), true);
+        $isoCode3 = Countries::getAlpha3Code($isoCode2);
+        $choosenUser->getCompany()->setCountry($isoCode3);
+
         $form = $this->createForm(UserType::class, $choosenUser);
         $form->handleRequest($request);
 
