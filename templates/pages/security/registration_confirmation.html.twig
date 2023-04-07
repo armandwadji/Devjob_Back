@@ -1,0 +1,9 @@
+<h1>Confirmation de votre compte utilisateur</h1>
+<p>
+    Bonjour {{ user.firstname ~  " " ~  user.lastname }} et bienvenue sur Devjob.<br><br>
+    Veuillez confirmer votre compte, dès maintenant en cliquant sur le lien ci dessous.<br><br>
+    A savoir ce lien est valable jusqu'au <strong> {{lifeTimetoken}} </strong> après cette date il ne sera plus valable.<br><br>
+    <a href="{{ absolute_url( path('security.verify', {token:token, id: user.id} )) }}"> Vérifiez mon compte</a><br><br>
+    <strong>Ceci est un mail automatique, merci de ne pas y repondre.</strong><br><br>
+    A bientôt sur Debjob.
+</p>
