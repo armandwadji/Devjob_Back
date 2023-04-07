@@ -37,6 +37,7 @@ class AppFixtures extends Fixture
         $admin->setFirstname('Mickaël')
             ->setLastname('AUGER')
             ->setEmail('admin@devjob.com')
+            ->setIsVerified(true)
             ->setRoles(['ROLE_USER', 'ROLE_ADMIN'])
             ->setPlainPassword('Php1234#');
         $manager->persist($admin);
@@ -78,6 +79,8 @@ class AppFixtures extends Fixture
                 ->setLastname($this->faker->lastName())
                 ->setEmail($this->faker->email())
                 ->setRoles(['ROLE_USER'])
+                ->setIsVerified(true)
+                ->setTokenRegistrationLifeTime(new \DateTimeImmutable())
                 ->setPlainPassword('password');
 
             $users[] = $user;
