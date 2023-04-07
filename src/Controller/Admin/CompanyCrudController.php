@@ -149,7 +149,7 @@ class CompanyCrudController extends  AbstractController
             } else {
 
                 $user = $form->getData();
-                // $user->getCompany()->setCountry(Countries::getAlpha3Name($user->getCompany()->getCountry())); //Convertis les initiales du pays en son nom complet.
+                $user->getCompany()->setCountry(Countries::getAlpha3Name($user->getCompany()->getCountry())); //Convertis les initiales du pays en son nom complet.
                 $manager->persist($user);
                 $manager->flush();
                 $user->getCompany()->setImageFile(null);
