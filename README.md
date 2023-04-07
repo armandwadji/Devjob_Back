@@ -32,12 +32,25 @@ Ensuite il faudra installer les dépendances du projet avec la commande suivante
 composer install
 ```
 
-Une fois que le gestionnaire de dépendances auras terminé, 
+De plus l'aplication utilise un système d'envoie de mail, donc pour simuler un serveur SMTP en local sur votre machine pour devez en installer un. Pour ce projet nous utiliserons MailDev écrit en NodeJs. Saisisez dans votre terminal la commande suivante:
+
+```
+npm install -g maildev
+```
+
+lancer le server SMPT tous simplement avec la commande suivante: 
+
+```
+maildev
+```
+
+Une fois que les gestionnaires de dépendances auront terminés, 
 vous devez créer un fichier à la racine de votre arboresence que vous nomerez .env.dev.local
-vous y intégrerez cette Ligne où vous y insérerez les informations de connexion à votre base de donnée. 
+vous y intégrerez ces lignes où vous y insérerez les informations de connexion à votre base de donnée. 
 
 ```
 DATABASE_URL="mysql://SERVER:PASSWORD@127.0.0.1:3306/devjob?serverVersion=8&charset=utf8mb4"
+MAILER_DSN=smtp://localhost:PORTDUSERVEURSMTP
 ```
 
 Maintenant il vous faut créer votre DATABASE en saisiant la commande suivante :
