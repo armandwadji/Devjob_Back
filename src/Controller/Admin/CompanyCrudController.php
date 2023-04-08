@@ -3,19 +3,19 @@
 namespace App\Controller\Admin;
 
 use App\Entity\User;
-
 use App\Entity\Company;
+
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+
 use App\Form\RegistrationType;
 use App\Repository\UserRepository;
 use Symfony\Component\Intl\Countries;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Intl\Intl;
 
 class CompanyCrudController extends  AbstractController
 {
@@ -128,7 +128,7 @@ class CompanyCrudController extends  AbstractController
      */
     private function addOrUpdate(User $user, Request $request, EntityManagerInterface $manager, SessionInterface $session): Response
     {
-        // GESTION DES CODES ISO POUR LA CONFOMITE DU FORMULAIRE
+        // GESTION DES CODES ISO POUR LA CONFORMITE DU FORMULAIRE
         $isoCode2 = array_search($user->getCompany()->getCountry(), Countries::getNames(), true);
         $isoCode3 = Countries::getAlpha3Code($isoCode2);
         $user->getCompany()->setCountry($isoCode3);

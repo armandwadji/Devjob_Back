@@ -1,23 +1,31 @@
 {% extends "base.html.twig" %}
 
+{% set offer = app.request.get('offer') %}
 
-{% block title %}Devjob - Candidats pour l'offre {{offer.name}} {% endblock %}
+{% block title %}Devjob - Candidats pour l'offre
+	{{offer.name}}
+{% endblock %}
 
 {% block body %}
 
-	<main class="container mt-4">
+	<main
+		class="container mt-4">
 
-		{# flash messages #}	
+		{# flash messages #}
 		{% include 'partials/_flash.html.twig' %}
 
 		<section>
-			<h2 class="blog-post-title mb-1 text-capitalize">Candidats de l'offre {{offer.name}} </h2>
+			<h2 class="blog-post-title mb-1 text-capitalize">Candidats de l'offre
+				{{offer.name}}
+			</h2>
 			{% if candidates.items is  same as ([]) %}
 				<h4 class='mt-4'>Vous n'avez pas encore reçus de candidatures Pour cette offre.</h4>
 			{% else %}
 
 				<div class="count mt-4">
-					<h5>Il y'a	{{ candidates.getTotalItemCount}} candidatures au total</h5>
+					<h5>Il y'a
+						{{ candidates.getTotalItemCount}}
+						candidatures au total</h5>
 				</div>
 
 				<table class="table table-hover">
@@ -38,7 +46,7 @@
 								<td scope="row" class="text-center">{{candidate.lastname}}</td>
 								<td scope="row" class="text-center">{{candidate.email}}</td>
 								<td scope="row" class="text-center">
-									<a href="{{path('candidate.show', {id: candidate.id, offer: offer.id, candidates : candidates|length, page: candidates.getCurrentPageNumber } )}}" class="btn btn-success">
+									<a href="{{path('candidate.show', {candidate: candidate.id, offer: offer.id, candidates : candidates|length, page: candidates.getCurrentPageNumber } )}}" class="btn btn-success">
 										<i class="fa-solid fa-magnifying-glass"></i>
 									</a>
 								</td>
@@ -48,7 +56,7 @@
 									</a>
 								</td>
 								<td scope="row" class="text-center">
-									<a href="{{path('candidate.delete', { id: candidate.id, page: candidates.getCurrentPageNumber, count : candidates|length, idOffer : offer.id })}}" class="btn btn-danger delete-confirm" onclick="return window.confirm('Voulez vous vraiment supprimer ce candidat ?')">
+									<a href="{{path('candidate.delete', { candidate: candidate.id, page: candidates.getCurrentPageNumber, count : candidates|length, idOffer : app.request.get('offer').id })}}" class="btn btn-danger delete-confirm" onclick="return window.confirm('Voulez vous vraiment supprimer ce candidat ?')">
 										<i class="fa-solid fa-trash"></i>
 									</a>
 								</td>

@@ -22,23 +22,18 @@
 								<span class="visually-hidden">(current)</span>
 							</a>
 						</li>
-						{# <li class="nav-item">
-							<a class="nav-link active" href="{{path('admin.index' )}}">Candidats
-								<span class="visually-hidden">(current)</span>
-							</a>
-						</li> #}
 
 					{% else %}
 
 						<li class="nav-item">
-							<a class="nav-link active" href="{{path('offer.index', {id: app.user.company.id } )}}">Offres
+							<a class="nav-link active" href="{{path('offer.index', {company: app.user.company.id } )}}">Offres
 								<span class="visually-hidden">(current)</span>
 							</a>
 						</li>
 
 						{% if app.user.company.offer|length > 0 %}
 							<li class="nav-item">
-								<a class="nav-link active" href="{{path('offer.all.candidates.show', {id: app.user.company.id } )}}">Candidats
+								<a class="nav-link active" href="{{path('offer.all.candidates.show', {company: app.user.company.id } )}}">Candidats
 									<span class="visually-hidden">(current)</span>
 								</a>
 							</li>
@@ -58,7 +53,7 @@
 						<li class="nav-item dropdown ">
 
 							{% if 'ROLE_ADMIN' not in app.user.roles and app.user.company.imageName %}
-								<a class="recipe__image pe-2 nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+								<a class="pe-2 nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
 									<img class='rounded-circle' style="max-width: 3rem; max-height: 3rem;" src="{{ vich_uploader_asset(app.user.company, 'imageFile') }}">
 								</a>
 							{% else %}
@@ -70,7 +65,6 @@
 								{% if 'ROLE_ADMIN' not in app.user.roles %}
 									<a class="dropdown-item" href="{{path('account.index', {id: app.user.id() } )}}">Mes infos</a>
 									<a class="dropdown-item" href="{{path('user.edit', {id: app.user.id() })}}">Edit infos</a>
-									{# <a class="dropdown-item" href="{{path('user.edit.password', {id: app.user.id() })}}">Edit mot de passe</a> #}
 								{% endif %}
 
 							<div class="dropdown-divider"></div>

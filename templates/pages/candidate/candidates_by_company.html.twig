@@ -37,12 +37,12 @@
 								<td scope="row" class="text-center">{{candidate.lastname}}</td>
 								<td scope="row" class="text-center">{{candidate.email}}</td>
 								<td scope="row" class="text-center">
-									<a href="{{path('candidate.show', {id: candidate.id, offer: offer.id, candidates : 1, page: 1 })}}" class="btn btn-success">
+									<a href="{{path('candidate.show', {candidate: candidate.id, offer: offer.id, candidates : 1, page: 1 })}}" class="btn btn-success">
 										{{candidate.offer|length}}
 									</a>
 								</td>
-								<td	scope="row" class="text-center">
-									<a href="{{ vich_uploader_asset(candidate, 'imageFile') }}" Download class="btn btn-info delete-confirm">
+								<td scope="row" class="text-center">
+									<a href="{{ vich_uploader_asset(candidate, 'imageFile') }}" download class="btn btn-info delete-confirm">
 										<i class="fa-solid fa-download"></i>
 									</a>
 								</td>

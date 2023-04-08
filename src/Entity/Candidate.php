@@ -63,19 +63,17 @@ class Candidate
         extensions: ['pdf', 'PDF'],
         extensionsMessage: 'Veuillez choisir un Fichier au format valide.',
     )]
-    // #[Assert\NotBlank(message: 'Un candidat doit avoir un cv.')]
-    // #[Assert\NotNull(message: 'Un candidat doit avoir un cv.')]
     #[Vich\UploadableField(mapping: 'candidates_files', fileNameProperty: 'imageName')]
     private ?File $imageFile = null;
     
     #[ORM\Column(nullable: true)]
     private ?string $imageName = null;
 
-    #[ORM\ManyToMany(targetEntity: Offer::class, inversedBy: 'candidates')]
-    private Collection $offer;
-
     #[ORM\Column]
     private ?\DateTimeImmutable $updatedAt = null;
+
+    #[ORM\ManyToMany(targetEntity: Offer::class, inversedBy: 'candidates')]
+    private Collection $offer;
 
     public function __construct()
     {
@@ -148,18 +146,6 @@ class Candidate
         return $this;
     }
 
-    public function getUpdatedAt(): ?\DateTimeImmutable
-    {
-        return $this->updatedAt;
-    }
-
-    public function setUpdatedAt(\DateTimeImmutable $updatedAt): self
-    {
-        $this->updatedAt = $updatedAt;
-
-        return $this;
-    }
-
     /**
      * If manually uploading a file (i.e. not using Symfony Form) ensure an instance
      * of 'UploadedFile' is injected into this setter to trigger the update. If this
@@ -193,6 +179,18 @@ class Candidate
     public function getImageName(): ?string
     {
         return $this->imageName;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(\DateTimeImmutable $updatedAt): self
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
     }
 
     /**

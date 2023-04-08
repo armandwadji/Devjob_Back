@@ -134,7 +134,7 @@ class OfferApiController extends AbstractController
         }
 
         $offerFormat = [
-            'apply' => $offer->getUrl(),
+            'apply' => 'http://127.0.0.1:8000/offers/'. $offer->getId() .'/apply?url='. $offer->getUrl(),
             'company' => $offer->getCompany()->getName(),
             'contract' => $offer->getContract()->getName(),
             'description' => $offer->getDescription(),

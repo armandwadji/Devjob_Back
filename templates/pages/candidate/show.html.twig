@@ -60,7 +60,7 @@
 			{% if isAdmin %}
 				<a href="{{path('admin.candidate.delete', { candidate: candidate.id, offer: offer, page: page, 'count' : candidatesForOffer, idOffer : offer } ) }}" class="btn btn-danger btn-lg text-end mt-4" role="button">Supprimer</a>
 			{% else %}
-				<a href="{{path('candidate.delete', { id: candidate.id, page: page, 'count' : candidatesForOffer, idOffer : offer } )}}" class="btn btn-danger btn-lg text-end mt-4" role="button">Supprimer</a>
+				<a href="{{path('candidate.delete', { candidate: candidate.id, page: page, 'count' : candidatesForOffer, idOffer : offer } )}}" class="btn btn-danger btn-lg text-end mt-4" role="button">Supprimer</a>
 			{% endif %}
 			
 

@@ -55,15 +55,17 @@
 			</ol>
 
 			{% if not ( app.user )   %}
-				<a class="btn btn-primary btn-lg" href="{{path('candidate.apply', {id: offer.id , url: offer.url} )}}" role="button">Candidater</a>
+				<a class="btn btn-primary btn-lg" href="{{path('candidate.apply', {offer: offer.id , url: offer.url} )}}" role="button">Candidater</a>
 			{% endif %}
 
 			{% if (app.user and 'ROLE_ADMIN' in app.user.roles )  %}
 				<hr>
 				<h2 class="blog-post-title mb-1 text-capitalize">Candidatures</h2>
 				<section>
-					{# 'count' : offers.getTotalItemCount #}
+				
+					{# MESSAGE FLASH #}
 					{% include 'partials/_flash.html.twig' %}
+
 					<a href="{{path('admin.candidate.new', {'offer':offer.id , } )}}" class="btn btn-primary mt-4">Ajouter une candidat</a>
 
 					{% if offer.candidates|length == 0 %}

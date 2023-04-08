@@ -6,8 +6,6 @@ use App\Entity\Offer;
 use App\Entity\Company;
 use App\Entity\Candidate;
 use App\Form\CandidateType;
-use App\Repository\CandidateRepository;
-use App\Repository\OfferRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,7 +26,7 @@ class CandidateController extends AbstractController
      * @return Response
      */
     #[Security("is_granted('ROLE_USER') and user=== offer.getCompany().getUser()")]
-    #[Route('/offers/{id}/applicants', name: 'offer.candidates.show', methods: ['GET'])]
+    #[Route('/offers/{offer}/applicants', name: 'offer.candidates.show', methods: ['GET'])]
     public function candidatesByOffer(Offer $offer, PaginatorInterface $paginator, Request $request): Response
     {
         $candidates = $paginator->paginate(
@@ -38,7 +36,6 @@ class CandidateController extends AbstractController
         );
 
         return $this->render('pages/candidate/candidates_by_offer.html.twig', [
-            'offer'         => $offer,
             'candidates'    => $candidates,
         ]);
     }
@@ -51,7 +48,7 @@ class CandidateController extends AbstractController
      * @return Response
      */
     #[Security("is_granted('ROLE_USER') and user=== company.getUser()")]
-    #[Route('/my-applicants?{id}', name: 'offer.all.candidates.show', methods: ['GET'])]
+    #[Route('/my-applicants?{company}', name: 'offer.all.candidates.show', methods: ['GET'])]
     public function candidatesByCompany(Company $company, PaginatorInterface $paginator, Request $request): Response
     {
         $candidates = [];
@@ -80,7 +77,7 @@ class CandidateController extends AbstractController
      * @return Response
      */
     #[Security("is_granted('ROLE_USER') and user=== candidate.getOffer()[0].getCompany().getUser()")]
-    #[Route('/my-applicants/{id}', name: 'candidate.show', methods: ['GET'])]
+    #[Route('/my-applicants/{candidate}', name: 'candidate.show', methods: ['GET'])]
     public function candidat(Candidate $candidate, Request $request): Response
     {
         return $this->render('pages/candidate/show.html.twig', [
@@ -101,7 +98,7 @@ class CandidateController extends AbstractController
      * @return Response
      */
     #[Security("is_granted('ROLE_USER') and user=== candidate.getOffer()[0].getCompany().getUser()")]
-    #[Route('/my-applicants/{id}/delete', name: 'candidate.delete', methods: ['GET'])]
+    #[Route('/my-applicants/{candidate}/delete', name: 'candidate.delete', methods: ['GET'])]
     public function delete(Candidate $candidate = null, EntityManagerInterface $manager, Request $request): Response
     {
         $OffersCountPage = intval($request->query->get('count'))  - 1; //Nombres de candidats sur la page courante moins le candidat à supprimer
@@ -121,11 +118,11 @@ class CandidateController extends AbstractController
 
 
         if ($OffersCountPage === 0 && $page === 1) {
-            return $this->redirectToRoute('offer.index', ['id' => $companyId]);
+            return $this->redirectToRoute('offer.index', ['company' => $companyId]);
         }
 
         return $this->redirectToRoute('offer.candidates.show', [
-            'id'    => intval($request->query->get('idOffer')),
+            'offer'    => intval($request->query->get('idOffer')),
             'page'  => ($OffersCountPage > 0 && $page >= 2) || $page === 1 || $page === 0 ?  $page  : $page - 1
         ]);
     }
@@ -138,8 +135,8 @@ class CandidateController extends AbstractController
      * @param EntityManagerInterface $manager
      * @return Response
      */
-    #[Route('/offers/{id}/apply', name: 'candidate.apply', methods: ['GET', 'POST'])]
-    public function apply(Candidate $candidate = null, Offer $offer, Request $request, EntityManagerInterface $manager): Response
+    #[Route('/offers/{offer}/apply', name: 'candidate.apply', methods: ['GET', 'POST'])]
+    public function apply( Offer $offer, Request $request, EntityManagerInterface $manager): Response
     {
         $candidate = new Candidate();
         $form = $this->createForm(CandidateType::class, $candidate);
@@ -147,9 +144,8 @@ class CandidateController extends AbstractController
 
         if ($form->isSubmitted()) {
 
-            if ($form->isValid() && ($form->getData()->getImageFile() || $form->getData()->getImageName()) ) {
+            if ($form->isValid() && $candidate->getImageFile()) {
 
-                $candidate = $form->getData();
                 $candidate->addOffer($offer);
 
                 $this->addFlash(

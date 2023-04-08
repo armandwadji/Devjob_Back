@@ -36,7 +36,7 @@
 									{{offer.company.name | capitalize }}
 								</h6>
 								<img class='position-absolute top-50 start-50 rounded-circle' style="max-width: 3.5rem; max-height: 43.5em;" src=" {{ vich_uploader_asset(offer.company, 'imageFile') ? vich_uploader_asset(offer.company, 'imageFile') : 'https://picsum.photos/250/250' }} ">
-								<a href=" {{path('offer.show', {id: offer.id})}} " class="card-link">Détail</a>
+								<a href=" {{path('offer.show', {offer: offer.id})}} " class="card-link">Détail</a>
 							</div>
 						</div>
 
