@@ -148,11 +148,14 @@ class OfferController extends AbstractController
         ]);
     }
 
+    
     /**
      * This controller delete offer
      * @param Offer|null $offer
+     * @param Request $request
      * @param EntityManagerInterface $manager
      * @param SessionInterface $session
+     * @param UserPasswordHasherInterface $hasher
      * @return Response
      */
     #[Security("is_granted('ROLE_USER') and user=== offer.getCompany().getUser()")]
@@ -191,11 +194,10 @@ class OfferController extends AbstractController
         ]);
     }
 
-    #[Route('/test', name: 'offer.test', methods: ['GET', 'POST'])]
-    public function test(Request $request,): Response
-    {
-        dd($request);
+    // #[Route('/test', name: 'offer.test', methods: ['GET', 'POST'])]
+    // public function test(Request $request,): Response
+    // {
 
-        return $this->render('pages/offer/test.html.twig', []);
-    }
+    //     return $this->render('pages/offer/test.html.twig', []);
+    // }
 }

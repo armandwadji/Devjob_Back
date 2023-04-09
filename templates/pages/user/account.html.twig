@@ -58,7 +58,7 @@
 									<td scope="row" class="text-center">{{offer.contract}}</td>
 									<td scope="row" class="text-center">{{offer.createdAt | date('d/m/Y')}}</td>
 									<td scope="row" class="text-center">
-										<a href="{{ path('offer.show', {id: offer.id})}}" class="btn {{offer.candidates|length == 0 ? 'btn-secondary': 'btn-success'}} ">
+										<a href="{{ path('offer.show', {offer: offer.id})}}" class="btn {{offer.candidates|length == 0 ? 'btn-secondary': 'btn-success'}} ">
 											{{offer.candidates|length}}
 										</a>
 									</td>

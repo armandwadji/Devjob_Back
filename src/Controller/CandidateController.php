@@ -91,11 +91,13 @@ class CandidateController extends AbstractController
         ]);
     }
 
+
     /**
      * This controller delete candidat
      * @param Candidate|null $candidate
      * @param EntityManagerInterface $manager
      * @param Request $request
+     * @param UserPasswordHasherInterface $hasher
      * @return Response
      */
     #[Security("is_granted('ROLE_USER') and user=== candidate.getOffer()[0].getCompany().getUser()")]
@@ -105,7 +107,6 @@ class CandidateController extends AbstractController
         $plainPassword = $request->cookies->get('password');
         $OffersCountPage = intval($request->query->get('count')); //Nombres de candidats sur la page courante
         $page = intval($request->query->get('page')); //numéro de la page courante
-        $candidates = intval($request->query->get('candidates')); //numéro de la page courante
 
         if ($hasher->isPasswordValid($candidate->getOffer()[0]->getCompany()->getUser(), $plainPassword)) {
 
