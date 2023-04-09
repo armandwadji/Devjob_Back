@@ -7,20 +7,23 @@
 
 {% block body %}
 	<main class="container mt-4">
-		<h1> {{ 'ROLE_ADMIN' not in app.user.roles  ? 'Mes' : 'Les' }} offres</h1>
-		{# <pre>
-			{{ dump(app.request.get('offer')) }}
-		</pre> #}
+		<h1>
+			{{ 'ROLE_ADMIN' not in app.user.roles  ? 'Mes' : 'Les' }}
+			offres</h1>
+
 		{% if  'ROLE_ADMIN' not in app.user.roles %}
 			<a href="{{path('offer.new', {'company': company.id , 'count' : offers.getTotalItemCount } )}}" class="btn btn-primary mt-4">Ajouter une offre</a>
 		{% endif %}
 
-
 		{# flash messages #}
 		{% include 'partials/_flash.html.twig' %}
 
+		{# Modal deleta confirmation #}
+		{% include 'partials/_modal.html.twig'  %}
+
 		{% if offers.items is  same as ([]) %}
-			<h4 class='mt-4'>Aucunes offres disponibles.</h4>
+			<h4 class='mt-4'>
+				Aucunes offres disponibles.</h4>
 		{% else %}
 
 			{# total items count #}
@@ -65,7 +68,7 @@
 									</a>
 								</td>
 								<td scope="row" class="text-center">
-									<a href="{{path('offer.delete', { offer: offer.id, count: offers|length, idCompany : company.id })}}" class="btn btn-danger delete-confirm" onclick="return window.confirm('Voulez vous vraiment supprimer cette annonce ?')">
+									<a href="{{path('offer.delete', { offer: offer.id, count: offers|length, idCompany : company.id })}}" class="btn btn-danger delete-confirm" data-bs-toggle="modal" data-bs-target="#modalWindow">
 										<i class="fa-solid fa-trash"></i>
 									</a>
 								</td>
@@ -85,7 +88,7 @@
 									<a href="{{ path('admin.offer.delete', { offer: offer.id, count: offers|length, idCompany : offer.company.id, isAllOffer : 1 }) }}" class="btn btn-danger delete-confirm" onclick="return window.confirm('Voulez vous vraiment supprimer cette annonce ?')">
 										<i class="fa-solid fa-trash"></i>
 									</a>
-								</td>	
+								</td>
 							{% endif %}
 						</tr>
 					{% endfor %}

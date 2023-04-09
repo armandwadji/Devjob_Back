@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class OfferController extends AbstractController
 {
@@ -27,7 +28,7 @@ class OfferController extends AbstractController
      * @return Response
      */
     #[Security("is_granted('ROLE_USER') and user=== company.getUser()")]
-    #[Route('/my-offers?{company}', name: 'offer.index', methods: ['GET'])]
+    #[Route('/my-offers?{company}', name: 'offer.index', methods: ['GET', 'POST'])]
     public function index(Company $company, PaginatorInterface $paginator, Request $request,  SessionInterface $session): Response
     {
         $session->set('page', isset($_GET['page']) ? intval($request->get('page')) : 1);
@@ -147,29 +148,45 @@ class OfferController extends AbstractController
         ]);
     }
 
+    
     /**
      * This controller delete offer
      * @param Offer|null $offer
+     * @param Request $request
      * @param EntityManagerInterface $manager
      * @param SessionInterface $session
+     * @param UserPasswordHasherInterface $hasher
      * @return Response
      */
     #[Security("is_granted('ROLE_USER') and user=== offer.getCompany().getUser()")]
     #[Route('/my-offers/{offer}/delete', name: 'offer.delete', methods: ['GET'])]
-    public function delete(Offer $offer = null,  Request $request, EntityManagerInterface $manager, SessionInterface $session): Response
+    public function delete(Offer $offer = null,  Request $request, EntityManagerInterface $manager, SessionInterface $session,  UserPasswordHasherInterface $hasher): Response
     {
-        $OffersCountPage = intval($request->query->get('count')) - 1; //Nombres d'offres sur la page courante moins l'offre à supprimer
-        $page = intval(htmlspecialchars($session->get('page'))); //numéro de la page courante
+        $plainPassword = $request->cookies->get('password');
+        $OffersCountPage = intval($request->query->get('count')); //Nombres d'offres sur la page courante 
+        $page = intval(htmlspecialchars($session->get('page'))); //Numéro de la page courante
 
-        if ($offer) {
-            $manager->remove($offer);
-            $manager->flush();
+
+        if ($hasher->isPasswordValid($offer->getCompany()->getUser(), $plainPassword)) {
+
+            if ($offer) {
+                $manager->remove($offer);
+                $manager->flush();
+            }
+
+            $OffersCountPage -= 1; //Nombres d'offres sur la page courante moins l'offre à supprimer
+
+            $this->addFlash(
+                type: $offer ? 'success' : 'warning',
+                message: $offer ? 'Votre offre à été supprimer avec succès!' : 'L\'offre demander n\'existe pas'
+            );
+        } else {
+
+            $this->addFlash(
+                type: 'warning',
+                message: 'Le mots de passe n\'est pas valide.'
+            );
         }
-
-        $this->addFlash(
-            type: $offer ? 'success' : 'warning',
-            message: $offer ? 'Votre offre à été supprimer avec succès!' : 'L\'offre demander n\'existe pas'
-        );
 
         return $this->redirectToRoute('offer.index', [
             'company'   => intval($request->query->get('idCompany')),
@@ -178,16 +195,9 @@ class OfferController extends AbstractController
     }
 
     // #[Route('/test', name: 'offer.test', methods: ['GET', 'POST'])]
-    // public function test(CandidateRepository $candidateRepository): Response
+    // public function test(Request $request,): Response
     // {
-    //     $test = $candidateRepository->findCandidatesByCompany(1665);
-    //     dd($test);
 
-    //     $company = new Company();
-    //     $form = $this->createForm(CompanyType::class, $company);
-
-    //     return $this->render('pages/offer/test.html.twig', [
-    //         'form' => $form->createView(),
-    //     ]);
+    //     return $this->render('pages/offer/test.html.twig', []);
     // }
 }

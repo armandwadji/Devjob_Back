@@ -14,6 +14,9 @@
 		{# flash messages #}
 		{% include 'partials/_flash.html.twig' %}
 
+		{# Modal deleta confirmation #}
+		{% include 'partials/_modal.html.twig'  %}
+
 		<section>
 			<h2 class="blog-post-title mb-1 text-capitalize">Candidats de l'offre
 				{{offer.name}}
@@ -36,7 +39,7 @@
 							<th scope="col" class="text-center">email</th>
 							<th scope="col" class="text-center">Detail</th>
 							<th scope="col" class="text-center">CV</th>
-							<th scope="col" class="text-center">Supprimé</th>
+							{# <th scope="col" class="text-center">Supprimé</th> #}
 						</tr>
 					</thead>
 					<tbody>
@@ -51,15 +54,15 @@
 									</a>
 								</td>
 								<td scope="row" class="text-center">
-									<a href="{{ vich_uploader_asset(candidate, 'imageFile') }}" download class="btn btn-info delete-confirm">
+									<a href="{{ vich_uploader_asset(candidate, 'imageFile') }}" download class="btn btn-info">
 										<i class="fa-solid fa-download"></i>
 									</a>
 								</td>
-								<td scope="row" class="text-center">
-									<a href="{{path('candidate.delete', { candidate: candidate.id, page: candidates.getCurrentPageNumber, count : candidates|length, idOffer : app.request.get('offer').id })}}" class="btn btn-danger delete-confirm" onclick="return window.confirm('Voulez vous vraiment supprimer ce candidat ?')">
+								{# <td scope="row" class="text-center">
+									<a href="{{path('candidate.delete', { candidate: candidate.id, page: candidates.getCurrentPageNumber, count : candidates|length, idOffer : app.request.get('offer').id })}}" class="btn btn-danger delete-confirm" data-bs-toggle="modal" data-bs-target="#modalWindow" >
 										<i class="fa-solid fa-trash"></i>
 									</a>
-								</td>
+								</td> #}
 							</tr>
 						{% endfor %}
 					</tbody>

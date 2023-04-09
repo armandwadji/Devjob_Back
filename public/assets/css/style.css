@@ -5,6 +5,10 @@ body {
     grid-template-rows: auto 1fr auto;
 }
 
+.fa-trash{
+    pointer-events: none;
+}
+
 /* Gestion de la visibilité du passord et confirm password */
 .password-registration {
     position: relative;
