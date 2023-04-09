@@ -1,0 +1,28 @@
+{# <button type="button" class="btn btn-primary m-5" data-bs-toggle="modal" data-bs-target="#modalWindow">
+	Découvrir le modal
+</button> #}
+
+<div class="modal fade" id="modalWindow" aria-labelledby="modal exemple" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h3 class="modal-title">Mots de passe pour confirmation !</h3>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="close"></button>
+			</div>
+            <form action="" method='GET'>
+                <div class="modal-body">
+                        <div class="form-group password-registration mt-4 px-4">
+                            <label for="password" class="form-label">Mot de passe</label>
+                            <input type="password" class="form-control" id="password" placeholder="********" name='password'>
+                            <i class="fa-solid fa-eye"></i>
+                        </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success" data-bs-dismiss="modal" aria-label="close">
+                        Valider
+                    </button>
+                </div>
+            </form>
+		</div>
+	</div>
+</div>

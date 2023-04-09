@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class CandidateController extends AbstractController
 {
@@ -99,26 +100,45 @@ class CandidateController extends AbstractController
      */
     #[Security("is_granted('ROLE_USER') and user=== candidate.getOffer()[0].getCompany().getUser()")]
     #[Route('/my-applicants/{candidate}/delete', name: 'candidate.delete', methods: ['GET'])]
-    public function delete(Candidate $candidate = null, EntityManagerInterface $manager, Request $request): Response
+    public function delete(Candidate $candidate = null, EntityManagerInterface $manager, Request $request, UserPasswordHasherInterface $hasher): Response
     {
-        $OffersCountPage = intval($request->query->get('count'))  - 1; //Nombres de candidats sur la page courante moins le candidat à supprimer
+        $plainPassword = $request->cookies->get('password');
+        $OffersCountPage = intval($request->query->get('count')); //Nombres de candidats sur la page courante
         $page = intval($request->query->get('page')); //numéro de la page courante
+        $candidates = intval($request->query->get('candidates')); //numéro de la page courante
 
-        $companyId = $candidate->getOffer()[0]->getCompany()->getId();
+        if ($hasher->isPasswordValid($candidate->getOffer()[0]->getCompany()->getUser(), $plainPassword)) {
 
-        if ($candidate) {
-            $manager->remove($candidate);
-            $manager->flush();
-        }
+            $companyId = $candidate->getOffer()[0]->getCompany()->getId();
 
-        $this->addFlash(
-            type: $candidate ? 'success' : 'warning',
-            message: $candidate ? 'Le candidat à été supprimer avec succès!' : 'Le candidat demander n\'existe pas'
-        );
+            if ($candidate) {
+                $manager->remove($candidate);
+                $manager->flush();
+            }
 
+            $OffersCountPage -= 1; //Nombres de candidats sur la page courante moins le candidat supprimer
 
-        if ($OffersCountPage === 0 && $page === 1) {
-            return $this->redirectToRoute('offer.index', ['company' => $companyId]);
+            $this->addFlash(
+                type: $candidate ? 'success' : 'warning',
+                message: $candidate ? 'Le candidat à été supprimer avec succès!' : 'Le candidat demander n\'existe pas'
+            );
+
+            if ($OffersCountPage === 0 && $page === 1) {
+                return $this->redirectToRoute('offer.index', ['company' => $companyId]);
+            }
+        } else {
+
+            $this->addFlash(
+                type: 'warning',
+                message: 'Le mots de passe n\'est pas valide.'
+            );
+
+            return $this->redirectToRoute('candidate.show', [
+                'candidate'     => $candidate->getId(),
+                'offer'         => intval($request->query->get('idOffer')),
+                'candidates'    => $OffersCountPage,
+                'page'          => $page,
+            ]);
         }
 
         return $this->redirectToRoute('offer.candidates.show', [
@@ -136,7 +156,7 @@ class CandidateController extends AbstractController
      * @return Response
      */
     #[Route('/offers/{offer}/apply', name: 'candidate.apply', methods: ['GET', 'POST'])]
-    public function apply( Offer $offer, Request $request, EntityManagerInterface $manager): Response
+    public function apply(Offer $offer, Request $request, EntityManagerInterface $manager): Response
     {
         $candidate = new Candidate();
         $form = $this->createForm(CandidateType::class, $candidate);

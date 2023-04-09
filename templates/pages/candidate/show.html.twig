@@ -9,6 +9,12 @@
 {% block body %}
 	<main class="container mt-5">
 
+		{# flash messages #}
+		{% include 'partials/_flash.html.twig' %}
+		
+		{# Modal deleta confirmation #}
+		{% include 'partials/_modal.html.twig'  %}
+
 		{# Détail du candidat #}
 		<section class="g-0 rounded overflow-hidden flex-md-row mb-4 h-md-250 position-relative">
 			<div class="col p-4 d-flex flex-column position-static">
@@ -60,7 +66,7 @@
 			{% if isAdmin %}
 				<a href="{{path('admin.candidate.delete', { candidate: candidate.id, offer: offer, page: page, 'count' : candidatesForOffer, idOffer : offer } ) }}" class="btn btn-danger btn-lg text-end mt-4" role="button">Supprimer</a>
 			{% else %}
-				<a href="{{path('candidate.delete', { candidate: candidate.id, page: page, 'count' : candidatesForOffer, idOffer : offer } )}}" class="btn btn-danger btn-lg text-end mt-4" role="button">Supprimer</a>
+				<a href="{{path('candidate.delete', { candidate: candidate.id, page: page, 'count' : candidatesForOffer, idOffer : offer } )}}" class="btn btn-danger btn-lg text-end mt-4 delete-confirm" role="button" data-bs-toggle="modal" data-bs-target="#modalWindow" >Supprimer</a>
 			{% endif %}
 			
 
