@@ -1,9 +1,7 @@
-const alerts = document.querySelectorAll(".alert");
-const errorIcons = document.querySelectorAll(".form-error-icon");
-const rangeBtn = document.querySelector("#recipe_difficulty");
-const difficultyValue = document.querySelector(".difficulty-value");
 
 // Méthode de visibility hidden des méssages d'alertes au bout de 3s
+const alerts = document.querySelectorAll( ".alert" );
+
 alerts.forEach((alert) => {
   setTimeout(() => {
     alert.classList.add("visually-hidden");
@@ -11,6 +9,8 @@ alerts.forEach((alert) => {
 });
 
 // Méthode d'ajout d'une couleur aux icons d'erreurs pour une meilleur visibilité
+const errorIcons = document.querySelectorAll( ".form-error-icon" );
+
 errorIcons.forEach((icon) => icon.classList.add("bg-primary"));
 
 // Gestion de la visibilité des mots de passes.
@@ -26,32 +26,22 @@ eyes.forEach((eye) => {
       eyeBtn.classList.replace("fa-eye-slash", "fa-eye");
     }
 
-    e.target.previousElementSibling.setAttribute(
-      "type",
-      e.target.previousElementSibling.getAttribute("type") !== "text"
-        ? "text"
-        : "password"
-    );
+    e.target.previousElementSibling.setAttribute( "type", e.target.previousElementSibling.getAttribute( "type" ) !== "text" ? "text" : "password" );
   });
 });
 
-// Modal
+// Modal pour confirmation de suppression
 const deletes = document.querySelectorAll(".delete-confirm");
-
-const modal = document.querySelector("#modalWindow");
-const body = document.querySelector("body");
 
 deletes.forEach((deleteBtn) => {
   deleteBtn.addEventListener("click", (e) => {
     const url = e.target.href;
-    console.log(url);
-    const form = modal.querySelector("form");
+    const form = document.querySelector( "#modalWindow form" );
 
     form.addEventListener("submit", (e) => {
       e.preventDefault();
 
-      const value = form.password.value;
-      document.cookie = `password=${value}; expires= "${new Date(Date.now() + 1000).toUTCString()}"`;
+      document.cookie = `password=${form.password.value}; expires= "${new Date(Date.now() + 1000).toUTCString()}"`;
 
       window.location.href = url;
     });
