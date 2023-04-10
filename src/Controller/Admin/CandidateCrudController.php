@@ -4,7 +4,7 @@ namespace App\Controller\Admin;
 
 use App\Entity\Offer;
 use App\Entity\Candidate;
-
+use App\Form\CandidateAdminType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -104,7 +104,7 @@ class CandidateCrudController extends AbstractController
      */
     private function addOrUpdate(Offer $offer, Candidate $candidate, Request $request, EntityManagerInterface $manager, SessionInterface $session): Response
     {
-        $form = $this->createForm(CandidateType::class, $candidate);
+        $form = $this->createForm(CandidateAdminType::class, $candidate);
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {

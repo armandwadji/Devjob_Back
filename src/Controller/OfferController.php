@@ -5,14 +5,15 @@ namespace App\Controller;
 use App\Entity\Offer;
 use App\Entity\Company;
 use App\Form\OfferType;
+use App\Service\MailerService;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -148,7 +149,7 @@ class OfferController extends AbstractController
         ]);
     }
 
-    
+
     /**
      * This controller delete offer
      * @param Offer|null $offer
@@ -160,7 +161,7 @@ class OfferController extends AbstractController
      */
     #[Security("is_granted('ROLE_USER') and user=== offer.getCompany().getUser()")]
     #[Route('/my-offers/{offer}/delete', name: 'offer.delete', methods: ['GET'])]
-    public function delete(Offer $offer = null,  Request $request, EntityManagerInterface $manager, SessionInterface $session,  UserPasswordHasherInterface $hasher): Response
+    public function delete(Offer $offer = null,  Request $request, EntityManagerInterface $manager, SessionInterface $session,  UserPasswordHasherInterface $hasher, MailerService $mailerService): Response
     {
         $plainPassword = $request->cookies->get('password');
         $OffersCountPage = intval($request->query->get('count')); //Nombres d'offres sur la page courante 
@@ -170,6 +171,22 @@ class OfferController extends AbstractController
         if ($hasher->isPasswordValid($offer->getCompany()->getUser(), $plainPassword)) {
 
             if ($offer) {
+
+                // EMAIL DE NOTIFICATION
+                foreach ($offer->getCandidates() as $candidate) {
+                    $mailerService->send(
+                        $candidate->getEmail(),
+                        'Réponse candidature pour le poste :' . $offer->getName(),
+                        'candidate_email.html.twig',
+                        [
+                            'candidate' => $candidate,
+                            'offer' => $offer,
+                            'company' => $offer->getCompany(),
+                            'contact' => $offer->getCompany()->getUser()
+                        ]
+                    );
+                }
+
                 $manager->remove($offer);
                 $manager->flush();
             }
