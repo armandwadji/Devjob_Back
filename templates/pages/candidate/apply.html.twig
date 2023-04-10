@@ -49,6 +49,19 @@
 			{{ form_widget(form.description, {'attr': {'placeholder': "Quels sont vos motivations",   }}) }}
 		</div>
 
+		{% if app.user and 'ROLE_ADMIN' in app.user.roles %}
+			<div class="form-group mt-4 mx-4">
+				{{form_label(form.offer, 'Offres', {'label_attr': { 'class': 'form-label '} } )}}
+				<div class="border d-flex flex-wrap p-2">
+					{% for field in form.offer %}
+						<div style="min-width: 10%;">
+							{{ form_widget(field ) }}
+						</div>
+					{% endfor %}
+				</div>
+			</div>
+		{% endif %}
+
 		<button type="submit" class="btn btn-primary m-4 ">Postuler</button>
 
 		{# Jeton CSRF #}

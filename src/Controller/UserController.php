@@ -61,7 +61,7 @@ class UserController extends AbstractController
                 );
 
                 return $this->redirectToRoute('offer.index', [
-                    'id' => $user->getCompany()->getId(),
+                    'company' => $user->getCompany()->getId(),
                 ]);
             }
         }
