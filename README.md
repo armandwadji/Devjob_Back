@@ -56,20 +56,20 @@ MAILER_DSN=smtp://localhost:PORTDUSERVEURSMTP
 Maintenant il vous faut créer votre DATABASE en saisiant la commande suivante :
 
 ```
-php bin/console doctrine/database/create
+php bin/console doctrine:database:create
 ```
 
 Ensuite vous devez faire une migration dans le but de générer les requêtes SQL nécéssaire pour créer les tables et liaisons des différentes entités du projet avec la commande suivante :
 
 ```
-php bin/console make/migration
+php bin/console make:migration
 ```
 
 Ne vous inquiétez pas nous avons presque terminer l'installation 😊😊.
 Il vous faut maintenant créer tous le schéma de base de donné avec la commande suivante :
 
 ```
-php bin/console doctrine/migrations/migrate
+php bin/console doctrine:migrations:migrate
 ```
 
 ## Démarrer l'application
@@ -78,7 +78,7 @@ Maintenant il vous faut quelques données pour pouvoir manipulé l'application.
 Cela tombe bien, nous en avons préparer, pour les ajouter en basse de donnée, saisisez la commande suivante :
 
 ```
-php bin/console doctrine/fixtures/load
+php bin/console doctrine:fixtures:load
 ```
 
 Vous pouvez enfin lancer le projet et le tester à l'aide de la commande :
