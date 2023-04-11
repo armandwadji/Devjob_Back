@@ -77,7 +77,7 @@ class CandidateController extends AbstractController
      * @param Request $request
      * @return Response
      */
-    #[Security("is_granted('ROLE_USER') and user=== candidate.getOffer()[0].getCompany().getUser()")]
+    #[Security("is_granted('ROLE_USER') and user=== candidate.getOffer().getCompany().getUser()")]
     #[Route('/my-applicants/{candidate}', name: 'candidate.show', methods: ['GET'])]
     public function candidat(Candidate $candidate, Request $request): Response
     {
@@ -100,7 +100,7 @@ class CandidateController extends AbstractController
      * @param UserPasswordHasherInterface $hasher
      * @return Response
      */
-    #[Security("is_granted('ROLE_USER') and user=== candidate.getOffer()[0].getCompany().getUser()")]
+    #[Security("is_granted('ROLE_USER') and user=== candidate.getOffer().getCompany().getUser()")]
     #[Route('/my-applicants/{candidate}/delete', name: 'candidate.delete', methods: ['GET'])]
     public function delete(Candidate $candidate = null, EntityManagerInterface $manager, Request $request, UserPasswordHasherInterface $hasher): Response
     {
@@ -108,9 +108,9 @@ class CandidateController extends AbstractController
         $OffersCountPage = intval($request->query->get('count')); //Nombres de candidats sur la page courante
         $page = intval($request->query->get('page')); //numéro de la page courante
 
-        if ($hasher->isPasswordValid($candidate->getOffer()[0]->getCompany()->getUser(), $plainPassword)) {
+        if ($hasher->isPasswordValid($candidate->getOffer()->getCompany()->getUser(), $plainPassword)) {
 
-            $companyId = $candidate->getOffer()[0]->getCompany()->getId();
+            $companyId = $candidate->getOffer()->getCompany()->getId();
 
             if ($candidate) {
                 $manager->remove($candidate);
@@ -167,7 +167,7 @@ class CandidateController extends AbstractController
 
             if ($form->isValid() && $candidate->getImageFile()) {
 
-                $candidate->addOffer($offer);
+                $candidate->setOffer($offer);
 
                 $this->addFlash(
                     type: 'success',

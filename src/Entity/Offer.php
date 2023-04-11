@@ -82,8 +82,9 @@ class Offer
     #[Groups(['offer:read'])]
     private ?Company $company = null;
 
-    #[ORM\ManyToMany(targetEntity: Candidate::class, mappedBy: 'offer')]
+    #[ORM\OneToMany(mappedBy: 'offer', targetEntity: Candidate::class, orphanRemoval: true)]
     private Collection $candidates;
+
 
     /**
      * Construteur pour l'initialisation de la date de création
@@ -217,7 +218,7 @@ class Offer
     {
         if (!$this->candidates->contains($candidate)) {
             $this->candidates->add($candidate);
-            $candidate->addOffer($this);
+            $candidate->setOffer($this);
         }
 
         return $this;
@@ -226,9 +227,18 @@ class Offer
     public function removeCandidate(Candidate $candidate): self
     {
         if ($this->candidates->removeElement($candidate)) {
-            $candidate->removeOffer($this);
+            // set the owning side to null (unless already changed)
+            if ($candidate->getOffer() === $this) {
+                $candidate->setOffer(null);
+            }
         }
 
         return $this;
     }
+
+    public function __toString()
+    {
+        return $this->name;
+    }
+
 }

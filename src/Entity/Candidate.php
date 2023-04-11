@@ -72,12 +72,13 @@ class Candidate
     #[ORM\Column]
     private ?\DateTimeImmutable $updatedAt = null;
 
-    #[ORM\ManyToMany(targetEntity: Offer::class, inversedBy: 'candidates')]
-    private Collection $offer;
+    #[ORM\ManyToOne(inversedBy: 'candidates')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Offer $offer = null;
+
 
     public function __construct()
     {
-        $this->offer = new ArrayCollection();
         $this->updatedAt = new \DateTimeImmutable();
     }
 
@@ -193,27 +194,17 @@ class Candidate
         return $this;
     }
 
-    /**
-     * @return Collection<int, Offer>
-     */
-    public function getOffer(): Collection
+    public function getOffer(): ?Offer
     {
         return $this->offer;
     }
 
-    public function addOffer(Offer $offer): self
+    public function setOffer(?Offer $offer): self
     {
-        if (!$this->offer->contains($offer)) {
-            $this->offer->add($offer);
-        }
+        $this->offer = $offer;
 
         return $this;
     }
 
-    public function removeOffer(Offer $offer): self
-    {
-        $this->offer->removeElement($offer);
 
-        return $this;
-    }
 }
