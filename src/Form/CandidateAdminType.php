@@ -31,7 +31,7 @@ class CandidateAdminType extends AbstractType
             ->add('offer', EntityType::class, [
                 'class' => Offer::class,
                 'choice_label' => 'name',
-                'multiple' => true,
+                'multiple' => false,
                 'expanded' => true,
                 // 'query_builder' => function (IngredientRepository $er) {
                 //     return $er->createQueryBuilder('u')
@@ -42,7 +42,8 @@ class CandidateAdminType extends AbstractType
                 'group_by' => function (Offer $offer) {
                     return $offer->getCompany();
                 },
-            ]);
+            ])
+            ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void

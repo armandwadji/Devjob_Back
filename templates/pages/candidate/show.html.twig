@@ -39,7 +39,7 @@
 
 		<section class="px-4">
 
-			<h5 class="count mt-4">Ses candidatures :
+			{# <h5 class="count mt-4">Ses candidatures :
 			</h5>
 
 			<table class="table table-hover px-4">
@@ -61,7 +61,7 @@
 						</tr>
 					{% endfor %}
 				</tbody>
-			</table>
+			</table> #}
 
 			{% if isAdmin %}
 				<a href="{{path('admin.candidate.delete', { candidate: candidate.id, offer: offer, page: page, 'count' : candidatesForOffer, idOffer : offer } ) }}" class="btn btn-danger btn-lg text-end mt-4" role="button">Supprimer</a>

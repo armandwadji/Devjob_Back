@@ -26,7 +26,7 @@
 							<th scope="col" class="text-center">Nom</th>
 							<th scope="col" class="text-center">Prénom</th>
 							<th scope="col" class="text-center">email</th>
-							<th scope="col" class="text-center">Candidatures</th>
+							<th scope="col" class="text-center">Detail</th>
 							<th scope="col" class="text-center">CV</th>
 						</tr>
 					</thead>
@@ -38,7 +38,7 @@
 								<td scope="row" class="text-center">{{candidate.email}}</td>
 								<td scope="row" class="text-center">
 									<a href="{{path('candidate.show', {candidate: candidate.id, offer: offer.id, candidates : 1, page: 1 })}}" class="btn btn-success">
-										{{candidate.offer|length}}
+										<i class="fa-solid fa-magnifying-glass"></i>
 									</a>
 								</td>
 								<td scope="row" class="text-center">

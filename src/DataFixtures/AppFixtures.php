@@ -160,7 +160,7 @@ class AppFixtures extends Fixture
                 ->setEmail($this->faker->email())
                 ->setTelephone($this->faker->creditCardNumber())
                 ->setDescription($this->faker->text(300))
-                ->addOffer($offers[mt_rand(0, count($offers) - 1)])
+                ->setOffer($offers[mt_rand(0, count($offers) - 1)])
                 ;
 
             $manager->persist($candidate);

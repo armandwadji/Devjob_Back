@@ -19,7 +19,9 @@
 
 			{# total items count #}
 			<div class="count mt-4">
-				<h5> {{ users.getTotalItemCount }} entreprise(s) disponibles(s)</h5>
+				<h5>
+					{{ users.getTotalItemCount }}
+					entreprise(s) disponibles(s)</h5>
 			</div>
 
 			<table class="table table-hover mt-4">
@@ -37,31 +39,31 @@
 				<tbody>
 					{% for user in users %}
 
-                        {% if 'ROLE_ADMIN' not in user.roles  %}
-                            <tr
-                                class="table-primary">
-                                {# <th scope="row" class="text-center">{{ loop.index }}</th> #}
-                                <td scope="row" class="text-center">{{ user.company.name }}</td>
-                                <td scope="row" class="text-center">{{ user.firstname ~ ' ' ~ user.lastname }}</td>
-                                <td scope="row" class="text-center">{{ user.email }}</td>
-                                <td scope="row" class="text-center">
-                                    <a href="{{ path('admin.society.show', { name: user.company.name }) }}" class="btn {{user.company.offer|length == 0 ? 'btn-secondary': 'btn-success'}} ">
-                                        {{user.company.offer|length}}
-                                    </a>
-                                </td>
-                                <td scope="row" class="text-center">
-                                    <a href="{{ path('admin.society.edit', { name: user.company.name}) }}" class="btn btn-info">
-                                        <i class="fa-solid fa-pencil"></i>
-                                    </a>
-                                </td>
-                                <td scope="row" class="text-center">
-                                    <a href="{{path('admin.society.delete', { name: user.company.name , count: users|length } ) }}" class="btn btn-danger delete-confirm" onclick="return window.confirm('Voulez vous vraiment supprimer cette annonce ?')">
-                                        <i class="fa-solid fa-trash"></i>
-                                    </a>
-                                </td>
-                            </tr>
-                        {% endif %}
-                        
+						{% if 'ROLE_ADMIN' not in user.roles  %}
+							<tr
+								class=" {{user.isDeleted ? 'table-danger' : 'table-primary'}} ">
+								{# <th scope="row" class="text-center">{{ loop.index }}</th> #}
+								<td scope="row" class="text-center">{{ user.company.name }}</td>
+								<td scope="row" class="text-center">{{ user.firstname ~ ' ' ~ user.lastname }}</td>
+								<td scope="row" class="text-center">{{ user.email }}</td>
+								<td scope="row" class="text-center">
+									<a href="{{ path('admin.society.show', { name: user.company.name }) }}" class="btn {{user.company.offer|length == 0 ? 'btn-secondary': 'btn-success'}} ">
+										{{user.company.offer|length}}
+									</a>
+								</td>
+								<td scope="row" class="text-center">
+									<a href="{{ path('admin.society.edit', { name: user.company.name}) }}" class="btn btn-info">
+										<i class="fa-solid fa-pencil"></i>
+									</a>
+								</td>
+								<td scope="row" class="text-center">
+									<a href="{{path('admin.society.delete', { name: user.company.name , count: users|length } ) }}" class="btn btn-danger delete-confirm" onclick="return window.confirm('Voulez vous vraiment supprimer cette annonce ?')">
+										<i class="fa-solid fa-trash"></i>
+									</a>
+								</td>
+							</tr>
+						{% endif %}
+
 					{% endfor %}
 				</tbody>
 			</table>

@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\User;
 
 use App\Entity\User;
 use App\Form\RegistrationType;
-use App\Form\UserChangePasswordType;
-use App\Repository\UserRepository;
 use App\Service\MailerService;
+use App\Repository\UserRepository;
+use App\Form\UserChangePasswordType;
+use Symfony\Component\Intl\Countries;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -46,11 +47,11 @@ class SecurityController extends AbstractController
                 $form->getData()->getCompany()->setImageFile(null);
             } else {
 
-                $user = $form->getData();
-
                 // USER TOKEN
                 $tokenRegistration = $tokenGeneratorInterface->generateToken();
                 $user->setTokenRegistration($tokenRegistration);
+                $user->getCompany()->setCountry(Countries::getAlpha3Name($user->getCompany()->getCountry())); //Convertis les initiales du pays en son nom complet.
+
 
                 $manager->persist($user);
                 $manager->flush();

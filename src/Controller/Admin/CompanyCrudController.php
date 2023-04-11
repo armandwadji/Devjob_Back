@@ -129,9 +129,9 @@ class CompanyCrudController extends  AbstractController
     private function addOrUpdate(User $user, Request $request, EntityManagerInterface $manager, SessionInterface $session): Response
     {
         // GESTION DES CODES ISO POUR LA CONFORMITE DU FORMULAIRE
-        $isoCode2 = array_search($user->getCompany()->getCountry(), Countries::getNames(), true);
-        $isoCode3 = Countries::getAlpha3Code($isoCode2);
-        $user->getCompany()->setCountry($isoCode3);
+        if($user->getCompany() !== null){
+            static::countryEncode($user);
+        }
 
         $form = $this->createForm(RegistrationType::class, $user);
         $form->handleRequest($request);
@@ -172,5 +172,12 @@ class CompanyCrudController extends  AbstractController
             'form' => $form->createView(),
             'editMode'  => $user->getId(),
         ]);
+    }
+
+    private function countryEncode(User $user)
+    {
+        $isoCode2 = array_search($user->getCompany()->getCountry(), Countries::getNames(), true);
+        $isoCode3 = Countries::getAlpha3Code($isoCode2);
+        $user->getCompany()->setCountry($isoCode3);
     }
 }

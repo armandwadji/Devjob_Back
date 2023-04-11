@@ -63,8 +63,9 @@
 							<div class="dropdown-menu">
 
 								{% if 'ROLE_ADMIN' not in app.user.roles %}
-									<a class="dropdown-item" href="{{path('account.index', {id: app.user.id() } )}}">Mes infos</a>
-									<a class="dropdown-item" href="{{path('user.edit', {id: app.user.id() })}}">Edit infos</a>
+									<a class="dropdown-item" href="{{path('user.index', {id: app.user.id() } )}}">Voir profil</a>
+									<a class="dropdown-item" href="{{path('user.edit', {id: app.user.id() })}}">Editer profil</a>
+									<a class="dropdown-item" href="{{path('user.delete', {id: app.user.id() })}}">Supprimer profil</a>
 								{% endif %}
 
 							<div class="dropdown-divider"></div>
