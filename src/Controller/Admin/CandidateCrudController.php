@@ -9,7 +9,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
-use App\Form\CandidateType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -30,7 +29,7 @@ class CandidateCrudController extends AbstractController
     public function add(Offer $offer,  Request $request, EntityManagerInterface $manager, SessionInterface $session): Response
     {
         $candidate = new Candidate();
-        $candidate->addOffer($offer);
+        $candidate->setOffer($offer);
         return static::addOrUpdate($offer, $candidate,  $request, $manager, $session);
     }
 

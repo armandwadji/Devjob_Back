@@ -107,12 +107,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
     private ?Company $company = null;
 
+    #[ORM\Column]
+    private ?bool $isDeleted = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $description = null;
+
 
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
         $this->roles[] = 'ROLE_USER';
         $this->isVerified = false;
+        $this->isDeleted = false;
         $this->tokenRegistrationLifeTime = (new \DateTimeImmutable('now'))->add(new \DateInterval('P1D'));
     }
 
@@ -296,5 +303,29 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+    public function isIsDeleted(): ?bool
+    {
+        return $this->isDeleted;
+    }
+
+    public function setIsDeleted(bool $isDeleted): self
+    {
+        $this->isDeleted = $isDeleted;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): self
+    {
+        $this->description = $description;
+
+        return $this;
     }
 }

@@ -1,0 +1,73 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Devjob - Suppression du profil
+{% endblock %}
+
+{% block body %}
+<main class="container">
+	<h1 class="mt-4 px-4">
+
+    {{app.user.isDeleted ? 'Annulation de la demande de suppression du profil entreprise' : 'Demande de suppression du profil entreprise'}}
+     
+     </h1>
+
+	{# flash messages #}
+	{% include 'partials/_flash.html.twig' %}
+
+	{{form_start(form, {'attr': {'novalidate': 'novalidate'}} )}}
+
+	{# *********** SOCIETE ************** #}
+	<h3 class="mt-4 px-4 text-primary fw-bold">Société</h3>
+	<hr class="my-4 mx-4">
+
+	<div class="form-group mt-4 px-4">
+		{{form_label(form.company.name, 'Nom de la société', {'label_attr': { 'class': 'form-label'} } )}}
+		{{ form_widget(form.company.name, {'attr': {'placeholder': "nom de la société", 'readonly' : true  }}) }}
+	</div>
+
+    <div class="d-flex justify-content-between align-items-center px-4">
+
+		<div class="form-group mt-4 d-flex align-items-center">
+			{{form_label(form.company.color, 'Couleur d\'arrière plan', {'label_attr': { 'class': 'form-label pt-1', 'style': 'display:none'} } )}}
+			{{ form_widget(form.company.color, {'attr': {'placeholder': "Couleur de la société", 'readonly' : true , 'class': 'border-0 ms-2 form-control-color' , 'style': 'display:none' }}) }}
+		</div>
+
+		<div class="form-group mt-2" >
+			{{form_label(form.company.country, 'Localisation', {'label_attr': { 'class': 'form-label ', 'style': 'display:none'} } )}}
+			{{ form_widget(form.company.country, { 'attr': { 'readonly' : true , 'class': 'form-select' , 'style': 'width: 8rem; display:none'  } } ) }}
+		</div>
+            
+	</div>
+
+    {# *********** CONTACT ************** #}
+    <h3 class="mt-4 px-4 text-primary fw-bold">Contact</h3>
+    <hr class="my-4 mx-4">
+
+    <div class="form-group mt-4 px-4">
+        {{form_label(form.firstname, 'Prenom ', {'label_attr': { 'class': 'form-label'} } )}}
+        {{ form_widget(form.firstname, {'attr': {'placeholder': "Prenom", 'min': 2, 'max' : 50, 'readonly' : true  }}) }}
+    </div>
+
+    <div class="form-group mt-4 px-4">
+        {{form_label(form.lastname, 'Nom', {'label_attr': { 'class': 'form-label'} } )}}
+        {{ form_widget(form.lastname, {'attr': {'placeholder': "Nom", 'min': 2, 'max' : 50, 'readonly' : true  }}) }}
+    </div>
+
+    <div class="form-group mt-4 px-4">
+        {{form_label(form.email, 'Email', {'label_attr': { 'class': 'form-label'} } )}}
+        {{ form_widget(form.email, {'attr': {'placeholder': "blah@devjob.fr", 'max' : 180, 'readonly' : true   }}) }}
+    </div>
+
+    <div class="form-group mt-4 px-4">
+        {{form_label(form.description, 'Motif de suppression', {'label_attr': { 'class': 'form-label'} } )}}
+        {{ form_widget(form.description, {'attr': {'placeholder': "Pourquoi voulez vous nous quitter ?", 'max' : 180  }}) }}
+    </div>
+
+    <button type="submit" class="btn btn-primary mt-4 mx-4"> {{app.user.isDeleted ? 'Annuler' :  'Supprimé'}} </button>
+
+		{# Jeton CSRF #}
+    	{{ form_row(form._token) }}
+	{{form_end(form , {render_rest: false }  )}}
+</main>
+
+{% endblock %}

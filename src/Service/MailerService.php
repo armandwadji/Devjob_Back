@@ -27,7 +27,7 @@ class MailerService
             ->from(new Address('admin@devjob.fr', 'Administrateur'))
             ->to($to)
             ->subject($subject)
-            ->htmlTemplate('pages/security/' . $templateTwig)
+            ->htmlTemplate('emails/' . $templateTwig)
             ->context($context);
 
         try {
