@@ -5,7 +5,7 @@ const alerts = document.querySelectorAll( ".alert" );
 alerts.forEach((alert) => {
   setTimeout(() => {
     alert.classList.add("visually-hidden");
-  }, 3000);
+  }, 4000);
 });
 
 // Méthode d'ajout d'une couleur aux icons d'erreurs pour une meilleur visibilité
