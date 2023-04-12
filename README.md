@@ -105,6 +105,21 @@ password :
 Php1234#
 ```
 
+## Connexion en tant qu' entreprise
+
+Pour vous connecter en tant qu'entreprise voici les paramètres de login.
+
+
+email :
+```
+sélectionné un email dans la table User de votre base de donnée!
+```
+
+password :
+```
+password
+```
+
 <p align="right">Back to top :
   <a href="#top">
     ☝
