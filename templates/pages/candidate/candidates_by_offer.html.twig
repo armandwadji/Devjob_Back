@@ -2,8 +2,8 @@
 
 {% set offer = app.request.get('offer') %}
 
-{% block title %}Devjob - Candidats pour l'offre
-	{{offer.name}}
+{% block title %}
+	Devjob - Candidats pour l'offre{{offer.name}}
 {% endblock %}
 
 {% block body %}
@@ -18,17 +18,13 @@
 		{% include 'partials/_modal.html.twig'  %}
 
 		<section>
-			<h2 class="blog-post-title mb-1 text-capitalize">Candidats de l'offre
-				{{offer.name}}
-			</h2>
+			<h2 class="blog-post-title mb-1 text-capitalize"> Candidats de l'offre {{offer.name}} </h2>
 			{% if candidates.items is  same as ([]) %}
 				<h4 class='mt-4'>Vous n'avez pas encore reçus de candidatures Pour cette offre.</h4>
 			{% else %}
 
 				<div class="count mt-4">
-					<h5>Il y'a
-						{{ candidates.getTotalItemCount}}
-						candidatures au total</h5>
+					<h5>Il y'a {{ candidates.getTotalItemCount}} candidatures au total</h5>
 				</div>
 
 				<table class="table table-hover">
@@ -39,7 +35,6 @@
 							<th scope="col" class="text-center">email</th>
 							<th scope="col" class="text-center">Detail</th>
 							<th scope="col" class="text-center">CV</th>
-							{# <th scope="col" class="text-center">Supprimé</th> #}
 						</tr>
 					</thead>
 					<tbody>
@@ -58,11 +53,6 @@
 										<i class="fa-solid fa-download"></i>
 									</a>
 								</td>
-								{# <td scope="row" class="text-center">
-									<a href="{{path('candidate.delete', { candidate: candidate.id, page: candidates.getCurrentPageNumber, count : candidates|length, idOffer : app.request.get('offer').id })}}" class="btn btn-danger delete-confirm" data-bs-toggle="modal" data-bs-target="#modalWindow" >
-										<i class="fa-solid fa-trash"></i>
-									</a>
-								</td> #}
 							</tr>
 						{% endfor %}
 					</tbody>
@@ -74,7 +64,6 @@
 				</div>
 
 			{% endif %}
-
 
 		</section>
 	</main>

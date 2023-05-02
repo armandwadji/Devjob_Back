@@ -1,7 +1,7 @@
 {% extends "base.html.twig" %}
 
-
-{% block title %}Devjob - Mon compte
+{% block title %}
+	Devjob - Mon compte
 {% endblock %}
 
 {% block body %}
@@ -25,7 +25,7 @@
 
 		{% if app.user and 'ROLE_ADMIN' in app.user.roles %}
 			<section>
-				{# 'count' : offers.getTotalItemCount #}
+
 				{% include 'partials/_flash.html.twig' %}
 				<a href="{{path('admin.offer.new', {'id': user.company.id , } )}}" class="btn btn-primary mt-4">Ajouter une offre</a>
 
@@ -34,9 +34,7 @@
 				{% else %}
 					{# total items count #}
 					<div class="count mt-4">
-						<h5>Cette entreprise à
-							{{ user.company.offer|length }}
-							annonces au total</h5>
+						<h5>Cette entreprise à {{ user.company.offer|length }} annonces au total</h5>
 					</div>
 
 					<table class="table table-hover">
@@ -52,8 +50,7 @@
 						</thead>
 						<tbody>
 							{% for offer in user.company.offer %}
-								<tr
-									class="table-primary">
+								<tr	class="table-primary">
 									<td scope="row" class="text-center">{{offer.name}}</td>
 									<td scope="row" class="text-center">{{offer.contract}}</td>
 									<td scope="row" class="text-center">{{offer.createdAt | date('d/m/Y')}}</td>

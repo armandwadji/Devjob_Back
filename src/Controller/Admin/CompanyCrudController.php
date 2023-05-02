@@ -34,9 +34,9 @@ class CompanyCrudController extends  AbstractController
         $session->set('page', isset($_GET['page']) ? (int)htmlspecialchars($_GET['page'])  : 1);
 
         $users = $paginator->paginate(
-            target: $userRepository->findUserNotAdmin(), //Méthode permétant d'aller récupérer tous les users qui sont pas administrateurs
-            page: $request->query->getInt('page', 1),
-            limit: 10
+            target  : $userRepository->findUserNotAdmin(), //Méthode permétant d'aller récupérer tous les users qui sont pas administrateurs
+            page    : $request->query->getInt('page', 1),
+            limit   : 10
         );
 
         return $this->render('pages/admin/index.html.twig', [
@@ -109,8 +109,8 @@ class CompanyCrudController extends  AbstractController
         }
 
         $this->addFlash(
-            type: $user ? 'success' : 'warning',
-            message: $user ? 'La société ' . strtoupper($company->getName()) . ' à été supprimer avec succès!' : 'La société demander n\'existe pas'
+            type    : $user ? 'success' : 'warning',
+            message : $user ? 'La société ' . strtoupper($company->getName()) . ' à été supprimer avec succès!' : 'La société demander n\'existe pas'
         );
 
         return $this->redirectToRoute('admin.index', [
@@ -141,8 +141,8 @@ class CompanyCrudController extends  AbstractController
             if ($form->getData()->getCompany()->getImageFile() && !(bool)stristr($form->getData()->getCompany()->getImageFile()->getmimeType(), "image")) {
 
                 $this->addFlash(
-                    type: 'warning',
-                    message: 'Veuillez choisir une image.'
+                    type    : 'warning',
+                    message : 'Veuillez choisir une image.'
                 );
 
                 $form->getData()->getCompany()->setImageFile(null);
@@ -155,8 +155,8 @@ class CompanyCrudController extends  AbstractController
                 $user->getCompany()->setImageFile(null);
 
                 $this->addFlash(
-                    type: 'success',
-                    message: 'L\'entreprise ' . strtoupper($user->getCompany()->getName()) . ' à bien été créer.'
+                    type    : 'success',
+                    message : 'L\'entreprise ' . strtoupper($user->getCompany()->getName()) . ' à bien été créer.'
                 );
 
                 // GESTION DE LA PAGINATION:
@@ -169,7 +169,7 @@ class CompanyCrudController extends  AbstractController
         }
 
         return $this->render('pages/security/registration.html.twig', [
-            'form' => $form->createView(),
+            'form'      => $form->createView(),
             'editMode'  => $user->getId(),
         ]);
     }

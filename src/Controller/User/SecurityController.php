@@ -40,8 +40,8 @@ class SecurityController extends AbstractController
             if ($form->getData()->getCompany()->getImageFile() && !(bool)stristr($form->getData()->getCompany()->getImageFile()->getmimeType(), "image")) {
 
                 $this->addFlash(
-                    type: 'warning',
-                    message: 'Veuillez choisir une image.'
+                    type    : 'warning',
+                    message : 'Veuillez choisir une image.'
                 );
 
                 $form->getData()->getCompany()->setImageFile(null);
@@ -63,15 +63,15 @@ class SecurityController extends AbstractController
                     'Confirmation du compte utilisateur',
                     'registration_confirmation.html.twig',
                     [
-                        'user' => $user,
-                        'token' => $tokenRegistration,
+                        'user'          => $user,
+                        'token'         => $tokenRegistration,
                         'lifeTimetoken' => $user->getTokenRegistrationLifeTime()->format('d/m/Y à H:i:s')
                     ]
                 );
 
                 $this->addFlash(
-                    type: 'success',
-                    message: 'Votre compte à bien été créer. veuillez vérifiez votre email pour l\'activé.'
+                    type    : 'success',
+                    message : 'Votre compte à bien été créer. veuillez vérifiez votre email pour l\'activé.'
                 );
 
                 return $this->redirectToRoute('security.login');
@@ -79,8 +79,8 @@ class SecurityController extends AbstractController
         }
 
         return $this->render('pages/security/registration.html.twig', [
-            'form' => $form->createView(),
-            'editMode' => false
+            'form'      => $form->createView(),
+            'editMode'  => false
         ]);
     }
 
@@ -117,8 +117,8 @@ class SecurityController extends AbstractController
         $manager->flush();
 
         $this->addFlash(
-            type: 'success',
-            message: 'Votre compte à bien été activé. vous pouvez maintenant vous connecté.'
+            type    : 'success',
+            message : 'Votre compte à bien été activé. vous pouvez maintenant vous connecté.'
         );
 
         return $this->redirectToRoute('security.login');
@@ -141,8 +141,8 @@ class SecurityController extends AbstractController
             if (!filter_var($request->get('email'), FILTER_VALIDATE_EMAIL)) {
 
                 $this->addFlash(
-                    type: 'warning',
-                    message: 'Veuillez saisir un email valide.'
+                    type    : 'warning',
+                    message : 'Veuillez saisir un email valide.'
                 );
             } else {
 
@@ -151,8 +151,8 @@ class SecurityController extends AbstractController
 
                 if (!$user) {
                     $this->addFlash(
-                        type: 'warning',
-                        message: 'Cette utilisateur n\'existe pas. veuillez vérifier votre email.'
+                        type    : 'warning',
+                        message : 'Cette utilisateur n\'existe pas. veuillez vérifier votre email.'
                     );
                 } else {
                     // USER TOKEN
@@ -168,14 +168,14 @@ class SecurityController extends AbstractController
                         'Modiffication mots de passe utilisateur',
                         'change_password_email.html.twig',
                         [
-                            'user' => $user,
+                            'user'  => $user,
                             'token' => $tokenRegistration,
                         ]
                     );
 
                     $this->addFlash(
-                        type: 'success',
-                        message: 'Un email de réinitialisation de mots de passe vous à été envoyé. veuillez cliqué sur le lien pour changer votre mots de passe.'
+                        type    : 'success',
+                        message : 'Un email de réinitialisation de mots de passe vous à été envoyé. veuillez cliqué sur le lien pour changer votre mots de passe.'
                     );
 
                     return $this->redirectToRoute('security.login');
@@ -217,8 +217,8 @@ class SecurityController extends AbstractController
             $manager->flush();
 
             $this->addFlash(
-                type: 'success',
-                message: 'Votre mots de passe à bien été modifié. Veuillez vous connecter avec vos nouveaux identifiants.'
+                type    : 'success',
+                message : 'Votre mots de passe à bien été modifié. Veuillez vous connecter avec vos nouveaux identifiants.'
             );
 
             return $this->redirectToRoute('security.login');

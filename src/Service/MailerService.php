@@ -12,7 +12,6 @@ use Symfony\Component\Mime\Address;
  */
 class MailerService
 {
-
     private MailerInterface $mailerInterface;
 
     public function __construct(MailerInterface $mailerInterface)
@@ -21,6 +20,14 @@ class MailerService
         $this->mailerInterface = $mailerInterface;
     }
 
+    /**
+     * This methode send Email
+     * @param string $to
+     * @param string $subject
+     * @param string $templateTwig
+     * @param array $context
+     * @return void
+     */
     public function send(string $to, string $subject, string $templateTwig, array $context): void
     {
         $email = (new TemplatedEmail())

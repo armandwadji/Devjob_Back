@@ -69,8 +69,8 @@ class CandidateCrudController extends AbstractController
         }
 
         $this->addFlash(
-            type: $candidate ? 'success' : 'warning',
-            message: $candidate ? 'Le candidat à été supprimer avec succès!' : 'Le candidat demander n\'existe pas'
+            type    : $candidate ? 'success' : 'warning',
+            message : $candidate ? 'Le candidat à été supprimer avec succès!' : 'Le candidat demander n\'existe pas'
         );
 
         return $this->redirectToRoute('admin.offers.show', [
@@ -113,8 +113,8 @@ class CandidateCrudController extends AbstractController
                 $candidate = $form->getData();
 
                 $this->addFlash(
-                    type: 'success',
-                    message: $candidate->getId() ? "La candidature à été modifer avec succès" : "La candidature à été ajouter avec succès !"
+                    type    : 'success',
+                    message : $candidate->getId() ? "La candidature à été modifer avec succès" : "La candidature à été ajouter avec succès !"
                 );
 
                 $manager->persist($candidate);
@@ -126,14 +126,14 @@ class CandidateCrudController extends AbstractController
             }
 
             $this->addFlash(
-                type: 'warning',
-                message: 'Veuillez bien saisir tous les champs!'
+                type    : 'warning',
+                message : 'Veuillez bien saisir tous les champs!'
             );
         }
 
         return $this->render('pages/candidate/apply.html.twig', [
-            'form'  => $form->createView(),
-            'offer' => $offer,
+            'form'      => $form->createView(),
+            'offer'     => $offer,
             'imageName' => $candidate->getImageName(),
         ]);
     }

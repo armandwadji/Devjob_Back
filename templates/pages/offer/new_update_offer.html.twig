@@ -1,9 +1,7 @@
 {% extends "base.html.twig" %}
 
 {% block title %}
-	Devjob -
-	{{editMode ? "Edit" : "Nouvelle"}}
-	offre
+	Devjob - {{editMode ? "Edit" : "Nouvelle"}} offre
 {% endblock %}
 
 {% block body %}
@@ -13,8 +11,7 @@
 		{% include 'partials/_flash.html.twig' %}
 
 		<h1 class="mt-4">
-			{{editMode ? "Édition" : "Création"}}
-			d'une offre
+			{{editMode ? "Édition" : "Création"}} d'une offre
 		</h1>
 
 		{{ form_start(formOffer) }}
@@ -35,10 +32,8 @@
 		{{form_label(formOffer.url, 'Url', {'label_attr': { 'class': 'form-label mt-4 fw-bold'} } )}}
 		{{ form_widget(formOffer.url, { 'attr': { 'placeholder': "http://"  } } ) }}
 
-
 		<p class="mt-4 text-primary-emphasis fw-bold">Prérequis</p>
-		<div
-			class="border rounded-1 border-2 p-4">
+		<div class="border rounded-1 border-2 p-4">
 
 			{# RÉSUME DES PRÉREQUIS #}
 			<div class="form-group">
@@ -59,8 +54,7 @@
 		</div>
 
 		<p class="mt-4 text-primary-emphasis fw-bold">Roles</p>
-		<div
-			class="border rounded-1 border-2 p-4">
+		<div class="border rounded-1 border-2 p-4">
 
 			{# RÉSUME DES ROLES #}
 			<div class="form-group">
@@ -77,7 +71,6 @@
 					</button>
 				</div>
 			</div>
-
 
 		</div>
 

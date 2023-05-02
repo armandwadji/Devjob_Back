@@ -2,14 +2,15 @@
 
 {% set company = app.request.get('company') %}
 
-{% block title %}Devjob - Mes offres
+{% block title %}
+	Devjob - Mes offres
 {% endblock %}
 
 {% block body %}
 	<main class="container mt-4">
 		<h1>
-			{{ 'ROLE_ADMIN' not in app.user.roles  ? 'Mes' : 'Les' }}
-			offres</h1>
+			{{ 'ROLE_ADMIN' not in app.user.roles  ? 'Mes' : 'Les' }} offres
+		</h1>
 
 		{% if  'ROLE_ADMIN' not in app.user.roles %}
 			<a href="{{path('offer.new', {'company': company.id , 'count' : offers.getTotalItemCount } )}}" class="btn btn-primary mt-4">Ajouter une offre</a>
@@ -22,21 +23,17 @@
 		{% include 'partials/_modal.html.twig'  %}
 
 		{% if offers.items is  same as ([]) %}
-			<h4 class='mt-4'>
-				Aucunes offres disponibles.</h4>
+			<h4 class='mt-4'>Aucunes offres disponibles.</h4>
 		{% else %}
 
 			{# total items count #}
 			<div class="count mt-4">
-				<h5>Vous avez
-					{{ offers.getTotalItemCount }}
-					offres au total</h5>
+				<h5>Vous avez {{ offers.getTotalItemCount }} offres au total</h5>
 			</div>
 
 			<table class="table table-hover">
 				<thead>
 					<tr>
-						{# <th scope="col" class="text-center">Id</th> #}
 						<th scope="col" class="text-center">Offre</th>
 						<th scope="col" class="text-center">contrat</th>
 						<th scope="col" class="text-center">Posté Le</th>
@@ -52,7 +49,6 @@
 					{% for offer in offers %}
 						<tr
 							class="table-primary">
-							{# <th scope="row" class="text-center">{{ loop.index }}</th> #}
 							<td scope="row" class="text-center">{{offer.name}}</td>
 							<td scope="row" class="text-center">{{offer.contract}}</td>
 							<td scope="row" class="text-center">{{offer.createdAt | date('d/m/Y')}}</td>
@@ -101,7 +97,6 @@
 			</div>
 
 		{% endif %}
-
 
 	</main>
 {% endblock %}

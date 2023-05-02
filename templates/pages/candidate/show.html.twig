@@ -1,9 +1,7 @@
 {% extends "base.html.twig" %}
 
-
 {% block title %}
-	Devjob - Détail candidat
-	{{candidate.firstname ~  ' ' ~ candidate.lastname}}
+	Devjob - Détail candidat {{candidate.firstname ~  ' ' ~ candidate.lastname}}
 {% endblock %}
 
 {% block body %}
@@ -18,13 +16,12 @@
 		{# Détail du candidat #}
 		<section class="g-0 rounded overflow-hidden flex-md-row mb-4 h-md-250 position-relative">
 			<div class="col p-4 d-flex flex-column position-static">
-				<h3 class="mb-0 text-capitalize"> Candidat :  {{candidate.firstname}}
-					{{candidate.lastname}}
+				<h3 class="mb-0 text-capitalize"> 
+					Candidat :  {{candidate.firstname}} {{candidate.lastname}} 
 				</h3>
 				<strong class="d-inline-block mb-2 text-primary"> Email: {{candidate.email}}</strong>
 				<h5 class="card-text mb-auto">
-					Téléphone :
-					{{candidate.telephone}}
+					Téléphone : {{candidate.telephone}}
 				</h5>
 				<p class='mt-2'> <strong>Motivations : </strong> {{candidate.description}}</p>
 			</div>
@@ -39,38 +36,11 @@
 		<hr>
 
 		<section class="px-4">
-
-			{# <h5 class="count mt-4">Ses candidatures :
-			</h5>
-
-			<table class="table table-hover px-4">
-				<thead>
-					<tr>
-						<th scope="col" class="text-center">Id</th>
-						<th scope="col" class="text-center">Offre</th>
-						<th scope="col" class="text-center">Contrat</th>
-						<th scope="col" class="text-center">Posté Le</th>
-					</tr>
-				</thead>
-				<tbody>
-					{% for offer in candidate.offer %}
-						<tr class="table-primary">
-							<th scope="row" class="text-center">{{ loop.index }}</th>
-							<td scope="row" class="text-center">{{offer.name}}</td>
-							<td scope="row" class="text-center">{{offer.contract}}</td>
-							<td scope="row" class="text-center">{{offer.createdAt | date('d/m/Y')}}</td>
-						</tr>
-					{% endfor %}
-				</tbody>
-			</table> #}
-
 			{% if isAdmin %}
 				<a href="{{path('admin.candidate.delete', { candidate: candidate.id, offer: offer, page: page, 'count' : candidatesForOffer, idOffer : offer } ) }}" class="btn btn-danger btn-lg text-end mt-4" role="button">Supprimer</a>
 			{% else %}
 				<a href="{{path('candidate.delete', { candidate: candidate.id, page: page, 'count' : candidatesForOffer, idOffer : offer } )}}" class="btn btn-danger btn-lg text-end mt-4 delete-confirm" role="button" data-bs-toggle="modal" data-bs-target="#modalWindow" >Supprimer</a>
 			{% endif %}
-			
-
 		</section>
 
 	</main>

@@ -328,4 +328,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+    public function isExpired(){
+
+        return new \DateTimeImmutable('now') > $this->tokenRegistrationLifeTime && !$this->isVerified;
+        
+    }
 }

@@ -52,8 +52,8 @@ class UserController extends AbstractController
             if ($form->getData()->getCompany()->getImageFile() && !(bool)stristr($form->getData()->getCompany()->getImageFile()->getmimeType(), "image")) {
 
                 $this->addFlash(
-                    type: 'warning',
-                    message: 'Veuillez choisir une image.'
+                    type    : 'warning',
+                    message : 'Veuillez choisir une image.'
                 );
 
                 $form->getData()->getCompany()->setImageFile(null);
@@ -67,8 +67,8 @@ class UserController extends AbstractController
                 $user->getCompany()->setImageFile(null);
 
                 $this->addFlash(
-                    type: 'success',
-                    message: 'Les informations de votre compte ont bien été modifiées.'
+                    type    : 'success',
+                    message : 'Les informations de votre compte ont bien été modifiées.'
                 );
 
                 return $this->redirectToRoute('offer.index', [
@@ -120,8 +120,8 @@ class UserController extends AbstractController
             $manager->flush();
 
             $this->addFlash(
-                type: 'success',
-                message: 'La demande de suppression de votre compte à été ' . ($choosenUser->isIsDeleted() ? 'éffectuer' : 'annuler') . ' avec succes.'
+                type    : 'success',
+                message : 'La demande de suppression de votre compte à été ' . ($choosenUser->isIsDeleted() ? 'éffectuer' : 'annuler') . ' avec succes.'
             );
 
             return $this->redirectToRoute('offer.index', [

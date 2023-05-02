@@ -59,7 +59,8 @@ class OfferController extends AbstractController
     public function new(Company $company, Request $request, EntityManagerInterface $manager, SessionInterface $session): Response
     {
         $offer = new Offer();
-        return static::newUpdate($offer, $request, $manager, $session, $company);
+        $offer->setCompany($company);
+        return static::newUpdate($offer, $request, $manager, $session);
     }
 
     /**
@@ -86,7 +87,7 @@ class OfferController extends AbstractController
      * @param Company|null $company
      * @return Response
      */
-    private function newUpdate(Offer $offer, Request $request, EntityManagerInterface $manager, SessionInterface $session, ?Company $company = null): Response
+    private function newUpdate(Offer $offer, Request $request, EntityManagerInterface $manager, SessionInterface $session ): Response
     {
         $form = $this->createForm(OfferType::class, $offer);
         $form->handleRequest($request);
@@ -94,8 +95,6 @@ class OfferController extends AbstractController
         if ($form->isSubmitted()) {
 
             if ($form->isValid()) {
-
-                if ($company) $offer->setCompany($company);
 
                 foreach ($offer->getRequirement()->getRequirementItems() as $requirementItem) {
 
@@ -148,7 +147,6 @@ class OfferController extends AbstractController
             'offer' => $offer,
         ]);
     }
-
 
     /**
      * This controller delete offer

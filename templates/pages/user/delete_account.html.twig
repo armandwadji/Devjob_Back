@@ -1,15 +1,14 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Devjob - Suppression du profil
+{% block title %}
+    Devjob - Suppression du profil
 {% endblock %}
 
 {% block body %}
 <main class="container">
 	<h1 class="mt-4 px-4">
-
-    {{app.user.isDeleted ? 'Annulation de la demande de suppression du profil entreprise' : 'Demande de suppression du profil entreprise'}}
-     
-     </h1>
+        {{app.user.isDeleted ? 'Annulation de la demande de suppression du profil entreprise' : 'Demande de suppression du profil entreprise'}}
+    </h1>
 
 	{# flash messages #}
 	{% include 'partials/_flash.html.twig' %}
@@ -65,8 +64,8 @@
 
     <button type="submit" class="btn btn-primary mt-4 mx-4"> {{app.user.isDeleted ? 'Annuler' :  'Supprimé'}} </button>
 
-		{# Jeton CSRF #}
-    	{{ form_row(form._token) }}
+    {# Jeton CSRF #}
+    {{ form_row(form._token) }}
 	{{form_end(form , {render_rest: false }  )}}
 </main>
 

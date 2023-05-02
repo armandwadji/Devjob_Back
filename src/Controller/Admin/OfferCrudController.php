@@ -31,9 +31,9 @@ class OfferCrudController extends AbstractController
         $session->set('page', isset($_GET['page']) ? intval($request->get('page'))  : 1);
 
         $offers = $paginator->paginate(
-            target: $offerRepository->findAll(),
-            page: $request->query->getInt('page', 1),
-            limit: 10
+            target  : $offerRepository->findAll(),
+            page    : $request->query->getInt('page', 1),
+            limit   : 10
         );
 
         return $this->render('pages/offer/index.html.twig', [
@@ -106,8 +106,8 @@ class OfferCrudController extends AbstractController
         }
 
         $this->addFlash(
-            type: $offer ? 'success' : 'warning',
-            message: $offer ? 'L\' offre à été supprimer avec succès!' : 'L\'offre demander n\'existe pas'
+            type    : $offer ? 'success' : 'warning',
+            message : $offer ? 'L\' offre à été supprimer avec succès!' : 'L\'offre demander n\'existe pas'
         );
 
         
@@ -159,8 +159,8 @@ class OfferCrudController extends AbstractController
                 $offersTotalCount = isset($_GET['count']) ? intval($request->get('count')) + 1 : null; //Nombres de recettes sur la page courante
 
                 $this->addFlash(
-                    type: 'success',
-                    message: $offer->getId() ? 'L\' offre à été éditer avec succès!' : 'L\' offre à été créer avec succès!',
+                    type    : 'success',
+                    message : $offer->getId() ? 'L\' offre à été éditer avec succès!' : 'L\' offre à été créer avec succès!',
                 );
 
                 $manager->persist($offer);
@@ -174,14 +174,14 @@ class OfferCrudController extends AbstractController
                 }
                 // CAS DE DERIRECTION VERS LA LISTE DES OFFRES D'UNE SOCIETE
                 return $this->redirectToRoute('admin.society.show', [
-                    'name'    => $offer->getCompany()->getName(),
-                    'page'  => !$offersTotalCount ?  $session->get('page') : ceil($offersTotalCount / 10)
+                    'name'      => $offer->getCompany()->getName(),
+                    'page'      => !$offersTotalCount ?  $session->get('page') : ceil($offersTotalCount / 10)
                 ]);
             }
 
             $this->addFlash(
-                type: 'warning',
-                message: 'Veuillez bien saisir tous les champs!'
+                type    : 'warning',
+                message : 'Veuillez bien saisir tous les champs!'
             );
         }
 

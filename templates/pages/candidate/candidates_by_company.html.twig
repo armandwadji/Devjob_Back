@@ -1,7 +1,8 @@
 {% extends "base.html.twig" %}
 
 
-{% block title %}Devjob  - Candidatures
+{% block title %}
+	Devjob  - Candidatures
 {% endblock %}
 
 {% block body %}
@@ -15,9 +16,7 @@
 			{% else %}
 
 				<div class="count mt-4">
-					<h5>Vous avez
-						{{ candidates.getTotalItemCount}}
-						candidats au total</h5>
+					<h5>Vous avez {{ candidates.getTotalItemCount}} candidats au total</h5>
 				</div>
 
 				<table class="table table-hover">
@@ -57,7 +56,6 @@
 				</div>
 
 			{% endif %}
-
 
 		</section>
 	</main>

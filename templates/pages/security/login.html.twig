@@ -1,6 +1,7 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Devjob - Connexion
+{% block title %}
+	Devjob - Connexion
 {% endblock %}
 
 {% block body %}
@@ -13,7 +14,7 @@
         {# message d'erreur #}
 		{% if error %}
 			<div class="alert alert-dismissible alert-danger mt-4 mx-4">
-				<div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+				{{ error.messageKey|trans(error.messageData, 'security') }}
 			</div>
 		{% endif %}
 

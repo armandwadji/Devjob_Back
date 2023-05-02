@@ -26,10 +26,7 @@ class OfferApiController extends AbstractController
         $limit = intval($request->get('limit')) ?: 12;
         return $this->json(
             [
-                'jobs' => static::offersFormat($offerRepository->offersApi(
-                    offset: $offset,
-                    limit: $limit
-                )),
+                'jobs'  => static::offersFormat($offerRepository->offersApi( offset: $offset, limit: $limit )),
                 'total' => count($offerRepository->findAll())
             ],
             200,
@@ -68,17 +65,17 @@ class OfferApiController extends AbstractController
     {
         $offset = intval($request->query->get('offset'));
         $limit = intval($request->query->get('limit')) ?: 12;
-        $location = $request->query->get('location', null);
+        $location = strval($request->query->get('location', null)) ;
         $fulltime = boolval($request->query->get('fulltime', null));
         $text = strval($request->query->get('text', null));
         return $this->json(
             [
                 'jobs' => static::offersFormat($offerRepository->offersApi(
-                    offset: $offset,
-                    limit: $limit,
-                    location: $location,
-                    fulltime: $fulltime,
-                    text: $text
+                    offset      : $offset,
+                    limit       : $limit,
+                    location    : $location,
+                    fulltime    : $fulltime,
+                    text        : $text
                 )),
                 'total' => count($offerRepository->findAll())
             ],
@@ -98,14 +95,14 @@ class OfferApiController extends AbstractController
         $offersFormat = [];
         foreach ($offers as $offer) {
             $offerFormat = [
-                'company' => $offer->getCompany()->getName(),
-                'contract' => $offer->getContract()->getName(),
-                'id' => $offer->getId(),
-                'location' => $offer->getCompany()->getCountry(),
-                'logo' => $offer->getCompany()->getImageName(),
-                'logoBackground' => $offer->getCompany()->getColor(),
-                'position' => $offer->getName(),
-                'postedAt' =>  $offer->getCreatedAt()->getTimestamp(),
+                'company'           => $offer->getCompany()->getName(),
+                'contract'          => $offer->getContract()->getName(),
+                'id'                => $offer->getId(),
+                'location'          => $offer->getCompany()->getCountry(),
+                'logo'              => $offer->getCompany()->getImageName(),
+                'logoBackground'    => $offer->getCompany()->getColor(),
+                'position'          => $offer->getName(),
+                'postedAt'          =>  $offer->getCreatedAt()->getTimestamp(),
             ];
 
             $offersFormat[] = $offerFormat;
@@ -134,25 +131,19 @@ class OfferApiController extends AbstractController
         }
 
         $offerFormat = [
-            'apply' => 'http://127.0.0.1:8000/offers/'. $offer->getId() .'/apply?url='. $offer->getUrl(),
-            'company' => $offer->getCompany()->getName(),
-            'contract' => $offer->getContract()->getName(),
-            'description' => $offer->getDescription(),
-            'id' => $offer->getId(),
-            'location' => $offer->getCompany()->getCountry(),
-            'logo' => $offer->getCompany()->getImageName(),
-            'logoBackground' => $offer->getCompany()->getColor(),
-            'position' => $offer->getName(),
-            'postedAt' => $offer->getCreatedAt()->getTimestamp(),
-            'requirements' => [
-                'content' => $offer->getRequirement()->getContent(),
-                'items' => $requirementItems,
-            ],
-            'roles' => [
-                'content' => $offer->getRole()->getContent(),
-                'items' => $roleItems,
-            ],
-            'website' => $offer->getUrl(),
+            'apply'             => 'http://127.0.0.1:8000/offers/'. $offer->getId() .'/apply?url='. $offer->getUrl(),
+            'company'           => $offer->getCompany()->getName(),
+            'contract'          => $offer->getContract()->getName(),
+            'description'       => $offer->getDescription(),
+            'id'                => $offer->getId(),
+            'location'          => $offer->getCompany()->getCountry(),
+            'logo'              => $offer->getCompany()->getImageName(),
+            'logoBackground'    => $offer->getCompany()->getColor(),
+            'position'          => $offer->getName(),
+            'postedAt'          => $offer->getCreatedAt()->getTimestamp(),
+            'requirements'      => [ 'content' => $offer->getRequirement()->getContent(), 'items' => $requirementItems,],
+            'roles'             => [ 'content' => $offer->getRole()->getContent(), 'items' => $roleItems, ],
+            'website'           => $offer->getUrl(),
 
         ];
 

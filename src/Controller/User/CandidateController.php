@@ -31,9 +31,9 @@ class CandidateController extends AbstractController
     public function candidatesByOffer(Offer $offer, PaginatorInterface $paginator, Request $request): Response
     {
         $candidates = $paginator->paginate(
-            target: $offer->getCandidates(),
-            page: $request->query->getInt('page', 1),
-            limit: 5
+            target  : $offer->getCandidates(),
+            page    : $request->query->getInt('page', 1),
+            limit   : 5
         );
 
         return $this->render('pages/candidate/candidates_by_offer.html.twig', [
@@ -120,8 +120,8 @@ class CandidateController extends AbstractController
             $OffersCountPage -= 1; //Nombres de candidats sur la page courante moins le candidat supprimer
 
             $this->addFlash(
-                type: $candidate ? 'success' : 'warning',
-                message: $candidate ? 'Le candidat à été supprimer avec succès!' : 'Le candidat demander n\'existe pas'
+                type    : $candidate ? 'success' : 'warning',
+                message : $candidate ? 'Le candidat à été supprimer avec succès!' : 'Le candidat demander n\'existe pas'
             );
 
             if ($OffersCountPage === 0 && $page === 1) {
@@ -130,8 +130,8 @@ class CandidateController extends AbstractController
         } else {
 
             $this->addFlash(
-                type: 'warning',
-                message: 'Le mots de passe n\'est pas valide.'
+                type    : 'warning',
+                message : 'Le mots de passe n\'est pas valide.'
             );
 
             return $this->redirectToRoute('candidate.show', [
@@ -143,8 +143,8 @@ class CandidateController extends AbstractController
         }
 
         return $this->redirectToRoute('offer.candidates.show', [
-            'offer'    => intval($request->query->get('idOffer')),
-            'page'  => ($OffersCountPage > 0 && $page >= 2) || $page === 1 || $page === 0 ?  $page  : $page - 1
+            'offer'     => intval($request->query->get('idOffer')),
+            'page'      => ($OffersCountPage > 0 && $page >= 2) || $page === 1 || $page === 0 ?  $page  : $page - 1
         ]);
     }
 
@@ -170,8 +170,8 @@ class CandidateController extends AbstractController
                 $candidate->setOffer($offer);
 
                 $this->addFlash(
-                    type: 'success',
-                    message: "Votre candidature à été envoyer avec succès !"
+                    type    : 'success',
+                    message : "Votre candidature à été envoyer avec succès !"
                 );
 
                 $manager->persist($candidate);
@@ -181,8 +181,8 @@ class CandidateController extends AbstractController
             }
 
             $this->addFlash(
-                type: 'warning',
-                message: 'Veuillez bien saisir tous les champs!'
+                type    : 'warning',
+                message : 'Veuillez bien saisir tous les champs!'
             );
         }
 

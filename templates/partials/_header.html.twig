@@ -39,7 +39,6 @@
 							</li>
 						{% endif %}
 
-
 					{% endif %}
 
 				{% endif %}
@@ -68,9 +67,10 @@
 									<a class="dropdown-item" href="{{path('user.delete', {id: app.user.id() })}}">Supprimer profil</a>
 								{% endif %}
 
-							<div class="dropdown-divider"></div>
+								<div class="dropdown-divider"></div>
 								<a class="dropdown-item" href="{{path("security.logout")}}">Deconnexion</a>
 							</div>
+
 						</li>
 					{% else %}
 
