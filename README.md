@@ -26,9 +26,9 @@ vous pouvez executer cette commande pour installer le projet en local sur votre 
 git clone https://gitlab.cefim-formation.org/ArmandWADJI/ecf-back-end.git
 ```
 
-De plus l'aplication utilise un système d'envoie de mail, donc pour simuler un serveur SMTP en local sur votre machine pour devez en installer un. 
+De plus l'application utilise un système d'envoie de mail, donc pour simuler un serveur SMTP en local sur votre machine vous devez en installer un. 
 
-Pour ce projet nous utiliserons MailDev écrit en NodeJs. 
+Pour ce projet nous utiliserons MailDev qui à été dévélopper en NodeJs. 
 
 Saisisez dans votre terminal la commande suivante:
 
@@ -42,8 +42,9 @@ lancer le server SMPT tous simplement avec la commande suivante:
 maildev
 ```
 
-vous devez créer un fichier à la racine de votre arboresence que vous nomerez .env.dev.local
-vous y intégrerez ces lignes où vous y insérerez les informations de connexion à votre base de donnée ainsi que le port de votre serveur SMTP. 
+Vous devez créer un fichier à la racine de votre arboresence que vous nommerez **.env.dev.local**.
+
+Vous y intégrerez ces lignes, où vous y ajouteerez les informations de connexion à votre base de donnée ainsi que le port de votre serveur SMTP. 
 
 ```
 DATABASE_URL="mysql://SERVER:PASSWORD@127.0.0.1:3306/devjob?serverVersion=8&charset=utf8mb4"
@@ -62,14 +63,14 @@ Maintenant il vous faut créer votre DATABASE en saisiant la commande suivante :
 php bin/console doctrine:database:create
 ```
 
-Ensuite vous devez faire une migration dans le but de générer les requêtes SQL nécéssaire pour créer les tables et liaisons des différentes entités du projet avec la commande suivante :
+Ensuite vous devez faire une migration, dans le but de générer les requêtes SQL, nécéssaires pour créer les tables et liaisons des différentes entités du projet avec la commande suivante :
 
 ```
 php bin/console make:migration
 ```
 
 Ne vous inquiétez pas nous avons presque terminer l'installation 😊😊.
-Il vous faut maintenant créer tous le schéma de base de donné avec la commande suivante :
+Il vous faut maintenant créer tous le schéma de Base de donné avec la commande suivante :
 
 ```
 php bin/console doctrine:migrations:migrate
@@ -78,7 +79,7 @@ php bin/console doctrine:migrations:migrate
 ## Démarrer l'application
 
 Maintenant il vous faut quelques données pour pouvoir manipulé l'application.
-Cela tombe bien, nous en avons préparer, pour les ajouter en basse de donnée, saisisez la commande suivante :
+Cela tombe bien, nous en avons préparer, pour les ajoutés en Base de donnée, saisisez la commande suivante :
 
 ```
 php bin/console doctrine:fixtures:load
