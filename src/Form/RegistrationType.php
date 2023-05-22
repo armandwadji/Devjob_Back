@@ -3,13 +3,16 @@
 namespace App\Form;
 
 use App\Entity\User;
+use App\Form\CompanyType;
 use Symfony\Component\Form\AbstractType;
+use Karser\Recaptcha3Bundle\Form\Recaptcha3Type;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
+use Karser\Recaptcha3Bundle\Validator\Constraints\Recaptcha3;
 
 class RegistrationType extends AbstractType
 {
@@ -25,7 +28,14 @@ class RegistrationType extends AbstractType
                 'invalid_message' => 'Les mots de passe ne correspondent pas.',
                 'options' => ['attr' => ['class' => 'password-field']],
                 'required' => true,
-            ]);
+            ])
+            ->add('captcha', Recaptcha3Type::class, [
+                'constraints' => new Recaptcha3(),
+                'action_name' => 'registration',
+                'locale' => 'de',
+                // 'script_nonce_csp' => $nonceCSP,
+            ])
+            ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void
