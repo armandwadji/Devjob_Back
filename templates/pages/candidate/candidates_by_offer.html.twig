@@ -8,14 +8,10 @@
 
 {% block body %}
 
-	<main
-		class="container mt-4">
+	<main class="container mt-4">
 
 		{# flash messages #}
 		{% include 'partials/_flash.html.twig' %}
-
-		{# Modal deleta confirmation #}
-		{% include 'partials/_modal.html.twig'  %}
 
 		<section>
 			<h2 class="blog-post-title mb-1 text-capitalize"> Candidats de l'offre {{offer.name}} </h2>
@@ -58,7 +54,6 @@
 					</tbody>
 				</table>
 
-				{# {{candidates.getCurrentPageNumber }} #}
 				<div class="navigation d-flex justify-content-center mt-4">
 					{{ knp_pagination_render(candidates) }}
 				</div>

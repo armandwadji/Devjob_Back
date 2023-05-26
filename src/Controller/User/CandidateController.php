@@ -6,7 +6,7 @@ use App\Entity\Offer;
 use App\Entity\Company;
 use App\Entity\Candidate;
 use App\Form\CandidateType;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\CandidateRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,6 +18,11 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class CandidateController extends AbstractController
 {
+
+    public function __construct(
+        private CandidateRepository $candidateRepository,
+    ) {
+    }
 
     /**
      * This controller show all candidates by offer
@@ -60,9 +65,9 @@ class CandidateController extends AbstractController
         }
 
         $candidates = $paginator->paginate(
-            target: $candidates,
-            page: $request->query->getInt('page', 1),
-            limit: 5
+            target  : $candidates,
+            page    : $request->query->getInt('page', 1),
+            limit   : 5
         );
 
         return $this->render('pages/candidate/candidates_by_company.html.twig', [
@@ -95,29 +100,26 @@ class CandidateController extends AbstractController
     /**
      * This controller delete candidat
      * @param Candidate|null $candidate
-     * @param EntityManagerInterface $manager
      * @param Request $request
      * @param UserPasswordHasherInterface $hasher
      * @return Response
      */
     #[Security("is_granted('ROLE_USER') and user=== candidate.getOffer().getCompany().getUser()")]
-    #[Route('/my-applicants/{candidate}/delete', name: 'candidate.delete', methods: ['GET'])]
-    public function delete(Candidate $candidate = null, EntityManagerInterface $manager, Request $request, UserPasswordHasherInterface $hasher): Response
+    #[Route('/my-applicants/{candidate}/delete', name: 'candidate.delete', methods: ['POST'])]
+    public function delete(Candidate $candidate = null, Request $request, UserPasswordHasherInterface $hasher): Response
     {
-        $plainPassword = $request->cookies->get('password');
         $OffersCountPage = intval($request->query->get('count')); //Nombres de candidats sur la page courante
         $page = intval($request->query->get('page')); //numéro de la page courante
 
-        if ($hasher->isPasswordValid($candidate->getOffer()->getCompany()->getUser(), $plainPassword)) {
+        if ($hasher->isPasswordValid($candidate->getOffer()->getCompany()->getUser(), $request->request->get('_password')) && $this->isCsrfTokenValid('delete'.$candidate->getId(), $request->request->get('_token'))) {
 
             $companyId = $candidate->getOffer()->getCompany()->getId();
 
             if ($candidate) {
-                $manager->remove($candidate);
-                $manager->flush();
+                $this->candidateRepository->remove($candidate, true);
             }
 
-            $OffersCountPage -= 1; //Nombres de candidats sur la page courante moins le candidat supprimer
+            $OffersCountPage--; //Nombres de candidats sur la page courante moins le candidat supprimer
 
             $this->addFlash(
                 type    : $candidate ? 'success' : 'warning',
@@ -153,11 +155,10 @@ class CandidateController extends AbstractController
      * @param Candidate|null $candidate
      * @param Offer $offer
      * @param Request $request
-     * @param EntityManagerInterface $manager
      * @return Response
      */
     #[Route('/offers/{offer}/apply', name: 'candidate.apply', methods: ['GET', 'POST'])]
-    public function apply(Offer $offer, Request $request, EntityManagerInterface $manager): Response
+    public function apply(Offer $offer, Request $request): Response
     {
         $candidate = new Candidate();
         $form = $this->createForm(CandidateType::class, $candidate);
@@ -174,8 +175,7 @@ class CandidateController extends AbstractController
                     message : "Votre candidature à été envoyer avec succès !"
                 );
 
-                $manager->persist($candidate);
-                $manager->flush();
+                $this->candidateRepository->save($candidate, true);
 
                 return $this->redirectToRoute('home.index');
             }

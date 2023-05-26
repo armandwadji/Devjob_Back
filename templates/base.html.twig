@@ -3,29 +3,29 @@
 	<head>
 		<meta charset="UTF-8">
 		<title>
-			{% block title %}Welcome In Devjob!
-			{% endblock %}
+			{% block title %}Welcome In Devjob! {% endblock %}
 		</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1"/>
 		<link href="{{asset('assets/favicon-32x32.png')}}" rel="icon" type="image/png">
 
-		{% if app.user and 'ROLE_ADMIN' in app.user.roles %}
-			<link rel="stylesheet" href="{{asset('assets/css/bootstrap.min-cosmo.css')}}">
-		{% else %}
-			<link rel="stylesheet" href="{{asset('assets/css/bootstrap.min-united.css')}}">
-		{% endif %}
 
-		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer"/>
 		{% block stylesheets %}
+			{% if app.user and 'ROLE_ADMIN' in app.user.roles %}
+				<link rel="stylesheet" href="{{asset('assets/css/bootstrap.min-cosmo.css')}}">
+			{% else %}
+				<link rel="stylesheet" href="{{asset('assets/css/bootstrap.min-united.css')}}">
+			{% endif %}
+			
+			<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer"/>
+			<link rel="stylesheet" href="{{asset('assets/css/style.css')}}">
 			{{ encore_entry_link_tags('app') }}
 		{% endblock %}
-		<link rel="stylesheet" href="{{asset('assets/css/style.css')}}">
 
-		<script src="{{asset('assets/js/bootstrap.bundle.min.js')}}" defer></script>
 		{% block javascripts %}
+			<script src="{{asset('assets/js/bootstrap.bundle.min.js')}}" defer></script>
+			<script src="{{asset('assets/js/main.js')}}" defer></script>
 			{{ encore_entry_script_tags('app') }}
 		{% endblock %}
-		<script src="{{asset('assets/js/main.js')}}" defer></script>
 	</head>
 	<body>
 		{% block header %}
