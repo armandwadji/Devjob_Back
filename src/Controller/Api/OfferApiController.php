@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
+#[Route('/api', name: 'api.')]
 class OfferApiController extends AbstractController
 {
 
@@ -23,7 +24,7 @@ class OfferApiController extends AbstractController
      * @param Request $request
      * @return Response
      */
-    #[Route('/api/jobs', name: 'api.offers', methods: ['GET', 'POST'])]
+    #[Route('/jobs', name: 'offers', methods: ['GET', 'POST'])]
     public function offers( Request $request ): Response
     {
 
@@ -45,7 +46,7 @@ class OfferApiController extends AbstractController
      * @param Request $request
      * @return Response
      */
-    #[Route('/api/job/{id}', name: 'api.offer', methods: ['GET'])]
+    #[Route('/job/{id}', name: 'offer', methods: ['GET'])]
     public function offer( Request $request ): Response
     {
         $id = intval($request->get('id', 0));
@@ -63,7 +64,7 @@ class OfferApiController extends AbstractController
      * @param Request $request
      * @return Response
      */
-    #[Route('/api/jobs/search', name: 'api.search', methods: ['GET'])]
+    #[Route('/jobs/search', name: 'search', methods: ['GET'])]
     public function search( Request $request ): Response
     {
         $offset = intval($request->query->get('offset'));
