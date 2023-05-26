@@ -24,6 +24,14 @@ class AppFixtures extends Fixture
      */
     private Generator $faker;
 
+    const CONTRACTS = [
+        0 => 'CDI',
+        1 => 'CDD',
+        2 => 'Alternance',
+        3 => 'Stage',
+        4 => 'Intérim',
+    ];
+
 
     public function __construct()
     {
@@ -46,30 +54,12 @@ class AppFixtures extends Fixture
         // CONTRACT
         $contracts = [];
 
-        $contract = new Contract();
-        $contract->setName('CDI');
-        $contracts[] = $contract;
-        $manager->persist($contract);
-
-        $contract = new Contract();
-        $contract->setName('CDD');
-        $contracts[] = $contract;
-        $manager->persist($contract);
-
-        $contract = new Contract();
-        $contract->setName('Alternance');
-        $contracts[] = $contract;
-        $manager->persist($contract);
-
-        $contract = new Contract();
-        $contract->setName('Stage');
-        $contracts[] = $contract;
-        $manager->persist($contract);
-
-        $contract = new Contract();
-        $contract->setName('Intérim');
-        $contracts[] = $contract;
-        $manager->persist($contract);
+        foreach (self::CONTRACTS  as  $value) {
+            $contract = new Contract();
+            $contract->setName($value);
+            $contracts[] = $contract;
+            $manager->persist($contract);
+        }
 
         // USER
         $users = [];
@@ -92,9 +82,9 @@ class AppFixtures extends Fixture
         for ($i = 0; $i < 20; $i++) {
             $company = new Company();
             $company->setName($this->faker->word())
-                ->setColor($this->faker->hexColor())
-                ->setUser($users[$i])
-                ->setCountry( Countries::getAlpha3Name($this->faker->countryISOAlpha3())); //Conversion des initials des pays en nom complet
+                    ->setColor($this->faker->hexColor())
+                    ->setUser($users[$i])
+                    ->setCountry(Countries::getAlpha3Name($this->faker->countryISOAlpha3())); //Conversion des initials des pays en nom complet
 
             $companies[] = $company;
             $manager->persist($company);
@@ -120,7 +110,7 @@ class AppFixtures extends Fixture
             // AJOUT DU REQUIREMENT
             $requirement = new Requirement();
             $requirement->setContent($this->faker->text(300))
-                ->setOffer($offer);
+                        ->setOffer($offer);
 
             // AJOUT DU ROLE
             $role = new Role();
@@ -138,7 +128,7 @@ class AppFixtures extends Fixture
         for ($j = 0; $j < 50; $j++) {
             $requirementItem = new RequirementItem();
             $requirementItem->setName($this->faker->text(100))
-                ->setRequirement($requirements[mt_rand(0, count($requirements) - 1)]);
+                            ->setRequirement($requirements[mt_rand(0, count($requirements) - 1)]);
 
             $manager->persist($requirementItem);
         }
@@ -147,7 +137,7 @@ class AppFixtures extends Fixture
         for ($j = 0; $j < 50; $j++) {
             $roleItem = new RoleItem();
             $roleItem->setName($this->faker->text(100))
-                ->setRole($roles[mt_rand(0, count($roles) - 1)]);
+                    ->setRole($roles[mt_rand(0, count($roles) - 1)]);
 
             $manager->persist($roleItem);
         }
@@ -156,12 +146,11 @@ class AppFixtures extends Fixture
         for ($j = 0; $j < 200; $j++) {
             $candidate = new Candidate();
             $candidate->setFirstname($this->faker->firstName())
-                ->setLastname($this->faker->lastName())
-                ->setEmail($this->faker->email())
-                ->setTelephone($this->faker->creditCardNumber())
-                ->setDescription($this->faker->text(300))
-                ->setOffer($offers[mt_rand(0, count($offers) - 1)])
-                ;
+                    ->setLastname($this->faker->lastName())
+                    ->setEmail($this->faker->email())
+                    ->setTelephone($this->faker->creditCardNumber())
+                    ->setDescription($this->faker->text(300))
+                    ->setOffer($offers[mt_rand(0, count($offers) - 1)]);
 
             $manager->persist($candidate);
         }

@@ -4,6 +4,7 @@ namespace App\Controller\User;
 
 use App\Entity\User;
 use App\Form\UserType;
+use App\Repository\UserRepository;
 use App\Service\MailerService;
 use Symfony\Component\Intl\Countries;
 use Doctrine\ORM\EntityManagerInterface;
@@ -13,15 +14,22 @@ use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
+#[Route('/my-account', name: 'user.')]
+#[Security("is_granted('ROLE_USER') and user === choosenUser")]
 class UserController extends AbstractController
 {
+    public function __construct(
+        private UserRepository $userRepository,
+        private MailerService $mailerService
+    ) {
+    }
+
     /**
      * This controller display detail of company
      * @param User|null $choosenUser
      * @return Response
      */
-    #[Route('/my-account/{id}', name: 'user.index', methods: ['GET'])]
-    #[Security("is_granted('ROLE_USER') and user === choosenUser")]
+    #[Route('/{id}', name: 'index', methods: ['GET'])]
     public function home(User $choosenUser): Response
     {
         return $this->render('pages/user/account.html.twig', [
@@ -36,9 +44,8 @@ class UserController extends AbstractController
      * @param EntityManagerInterface $manager
      * @return Response
      */
-    #[Route('/my-account/update/{id}', name: 'user.edit', methods: ['GET', 'POST'])]
-    #[Security("is_granted('ROLE_USER') and user === choosenUser")]
-    public function edit(User $choosenUser = null, Request $request, EntityManagerInterface $manager): Response
+    #[Route('/update/{id}', name: 'edit', methods: ['GET', 'POST'])]
+    public function edit(User $choosenUser = null, Request $request): Response
     {
 
         // GESTION DES CODES ISO POUR LA CONFOMITE DU FORMULAIRE
@@ -52,27 +59,26 @@ class UserController extends AbstractController
             if ($form->getData()->getCompany()->getImageFile() && !(bool)stristr($form->getData()->getCompany()->getImageFile()->getmimeType(), "image")) {
 
                 $this->addFlash(
-                    type    : 'warning',
-                    message : 'Veuillez choisir une image.'
+                    type: 'warning',
+                    message: 'Veuillez choisir une image.'
                 );
 
                 $form->getData()->getCompany()->setImageFile(null);
             } else {
 
-                $user = $form->getData();
-                $user->getCompany()->setCountry(Countries::getAlpha3Name($user->getCompany()->getCountry())); //Convertis les initiales du pays en son nom complet.
+                $choosenUser->getCompany()->setCountry(Countries::getAlpha3Name($choosenUser->getCompany()->getCountry())); //Convertis les initiales du pays en son nom complet.
 
-                $manager->persist($user);
-                $manager->flush();
-                $user->getCompany()->setImageFile(null);
+                $this->userRepository->save($choosenUser, true);
+
+                $choosenUser->getCompany()->setImageFile(null);
 
                 $this->addFlash(
-                    type    : 'success',
-                    message : 'Les informations de votre compte ont bien été modifiées.'
+                    type: 'success',
+                    message: 'Les informations de votre compte ont bien été modifiées.'
                 );
 
                 return $this->redirectToRoute('offer.index', [
-                    'company' => $user->getCompany()->getId(),
+                    'company' => $choosenUser->getCompany()->getId(),
                 ]);
             }
         }
@@ -82,9 +88,8 @@ class UserController extends AbstractController
         ]);
     }
 
-    #[Route('/my-account/delete/{id}', name: 'user.delete', methods: ['GET', 'POST'])]
-    #[Security("is_granted('ROLE_USER') and user === choosenUser")]
-    public function deleteAccount(User $choosenUser, Request $request, EntityManagerInterface $manager, MailerService $mailerService): Response
+    #[Route('/delete/{id}', name: 'delete', methods: ['GET', 'POST'])]
+    public function deleteAccount(User $choosenUser, Request $request): Response
     {
         // GESTION DES CODES ISO POUR LA CONFOMITE DU FORMULAIRE
         static::countryEncode($choosenUser);
@@ -97,31 +102,16 @@ class UserController extends AbstractController
             $choosenUser->setDescription($choosenUser->isIsDeleted() ? $choosenUser->getDescription() : null);
             $choosenUser->getCompany()->setCountry(Countries::getAlpha3Name($choosenUser->getCompany()->getCountry())); //Convertis les initiales du pays en son nom complet.
 
-            if($choosenUser->isIsDeleted()){
+            if ($choosenUser->isIsDeleted()) {
 
-                // MAILER SEND USER
-                $mailerService->send(
-                    $choosenUser->getEmail(),
-                    'Demande de suppresion de compte.',
-                    'delete_account.html.twig',
-                    ['user' => $choosenUser]
-                );
-    
-                // MAILER SEND ADMIN
-                $mailerService->send(
-                    'admin@devjob.com',
-                    'Demande de suppresion de compte.',
-                    'delete_account.html.twig',
-                    ['user' => $choosenUser]
-                );
+                static::sendEmail($choosenUser);
             }
 
-            $manager->persist($choosenUser);
-            $manager->flush();
+            $this->userRepository->save($choosenUser, true);
 
             $this->addFlash(
-                type    : 'success',
-                message : 'La demande de suppression de votre compte à été ' . ($choosenUser->isIsDeleted() ? 'éffectuer' : 'annuler') . ' avec succes.'
+                type: 'success',
+                message: 'La demande de suppression de votre compte à été ' . ($choosenUser->isIsDeleted() ? 'éffectuer' : 'annuler') . ' avec succes.'
             );
 
             return $this->redirectToRoute('offer.index', [
@@ -134,10 +124,39 @@ class UserController extends AbstractController
         ]);
     }
 
+    /**
+     * This method convert country code in country name
+     * @param \App\Entity\User $user
+     * @return void
+     */
     private function countryEncode(User $user)
     {
         $isoCode2 = array_search($user->getCompany()->getCountry(), Countries::getNames(), true);
         $isoCode3 = Countries::getAlpha3Code($isoCode2);
         $user->getCompany()->setCountry($isoCode3);
+    }
+
+    /**
+     * This method that sends an email when requesting to delete an account
+     * @param \App\Entity\User $user
+     * @return void
+     */
+    private function sendEmail(User $user): void
+    {
+        // MAILER SEND USER
+        $this->mailerService->send(
+            $user->getEmail(),
+            'Demande de suppresion de compte.',
+            'delete_account.html.twig',
+            ['user' => $user]
+        );
+
+        // MAILER SEND ADMIN
+        $this->mailerService->send(
+            'admin@devjob.com',
+            'Demande de suppresion de compte.',
+            'delete_account.html.twig',
+            ['user' => $user]
+        );
     }
 }

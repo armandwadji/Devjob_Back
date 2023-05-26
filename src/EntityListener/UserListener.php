@@ -8,15 +8,12 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 class UserListener
 {
 
-    /**
-     * Summary of hasher
-     * @var UserPasswordHasherInterface
-     */
-    private UserPasswordHasherInterface $hasher;
-
-    public function __construct(UserPasswordHasherInterface $hasher)
+     /**
+      * Summary of hasher
+      * @param UserPasswordHasherInterface $hasher
+      */
+    public function __construct(private UserPasswordHasherInterface $hasher)
     {
-        $this->hasher = $hasher;
     }
 
     //Encode le password avant de le persister
@@ -39,7 +36,7 @@ class UserListener
     public function encodePassword(User $user): void
     {
         if ($user->getPlainPassword() === null) return;
- 
+
         $user->setPassword(
             $this->hasher->hashPassword(
                 $user,

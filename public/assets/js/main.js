@@ -30,23 +30,4 @@ eyes.forEach((eye) => {
   });
 });
 
-// Modal pour confirmation de suppression
-const deletes = document.querySelectorAll(".delete-confirm");
-
-deletes.forEach((deleteBtn) => {
-  deleteBtn.addEventListener("click", (e) => {
-    const url = e.target.href;
-    const form = document.querySelector( "#modalWindow form" );
-
-    form.addEventListener("submit", (e) => {
-      e.preventDefault();
-
-      document.cookie = `password=${form.password.value}; expires= "${new Date(Date.now() + 1000).toUTCString()}"`;
-
-      window.location.href = url;
-    });
-
-    form.password.value = "";
-  });
-});
 

@@ -7,7 +7,6 @@ use App\Entity\Company;
 
 use App\Form\OfferType;
 use App\Repository\OfferRepository;
-use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,8 +14,15 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
+#[Route('/admin/offers', name: 'admin.offer.')]
 class OfferCrudController extends AbstractController
 {
+
+    public function __construct(
+        private OfferRepository $offerRepository,
+    ) {
+    }
+
     /**
      * This controller show all offers
      * @param OfferRepository $offerRepository
@@ -25,13 +31,13 @@ class OfferCrudController extends AbstractController
      * @param SessionInterface $session
      * @return Response
      */
-    #[Route('/admin/offers/', name: 'admin.offers', methods: ['GET'])]
-    public function offers(OfferRepository $offerRepository, PaginatorInterface $paginator, Request $request, SessionInterface $session): Response
+    #[Route('/', name: 'index', methods: ['GET'])]
+    public function offers( PaginatorInterface $paginator, Request $request, SessionInterface $session): Response
     {
         $session->set('page', isset($_GET['page']) ? intval($request->get('page'))  : 1);
 
         $offers = $paginator->paginate(
-            target  : $offerRepository->findAll(),
+            target  : $this->offerRepository->findAll(),
             page    : $request->query->getInt('page', 1),
             limit   : 10
         );
@@ -45,16 +51,15 @@ class OfferCrudController extends AbstractController
      * This controller add offer
      * @param Company $company
      * @param Request $request
-     * @param EntityManagerInterface $manager
      * @param SessionInterface $session
      * @return Response
      */
-    #[Route('/admin/offers/new?{id}', name: 'admin.offer.new', methods: ['GET', 'POST'])]
-    public function add(Company $company, Request $request, EntityManagerInterface $manager, SessionInterface $session): Response
+    #[Route('/new?{id}', name: 'new', methods: ['GET', 'POST'])]
+    public function add(Company $company, Request $request, SessionInterface $session): Response
     {
         $offer = new Offer();
         $offer->setCompany($company);
-        return static::addOrUpdate($offer, $request, $manager, $session);
+        return static::addOrUpdate($offer, $request, $session);
     }
 
     /**
@@ -62,7 +67,7 @@ class OfferCrudController extends AbstractController
      * @param Offer $offer
      * @return Response
      */
-    #[Route('/admin/offers/{offer}', name: 'admin.offers.show', methods: ['GET'])]
+    #[Route('/{offer}', name: 'show', methods: ['GET'])]
     public function show(Offer $offer): Response
     {
         return $this->render('pages/offer/show.html.twig', [
@@ -74,46 +79,41 @@ class OfferCrudController extends AbstractController
      * This controller edit offer
      * @param Offer $offer
      * @param Request $request
-     * @param EntityManagerInterface $manager
      * @param SessionInterface $session
      * @return Response
      */
-    #[Route('/admin/offers/{offer}/update', name: 'admin.offer.update', methods: ['GET', 'POST'])]
-    public function edit(Offer $offer, Request $request, EntityManagerInterface $manager, SessionInterface $session): Response
+    #[Route('/{offer}/update', name: 'update', methods: ['GET', 'POST'])]
+    public function edit(Offer $offer, Request $request, SessionInterface $session): Response
     {
         $isAllOffer = boolval($request->get('isAllOffer')) ; //Boolean permet de rediriger vers la liste de toutes les offres ou bien la liste des offres d'une entreprise
-        return static::addOrUpdate($offer, $request, $manager, $session, $isAllOffer);
+        return static::addOrUpdate($offer, $request, $session, $isAllOffer);
     }
 
     /**
      * This controller delete offer
      * @param Offer|null $offer
      * @param Request $request
-     * @param EntityManagerInterface $manager
      * @param SessionInterface $session
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    #[Route('/admin/offers/{offer}/delete', name: 'admin.offer.delete', methods: ['GET', 'POST'])]
-    public function delete(Offer $offer = null,  Request $request, EntityManagerInterface $manager, SessionInterface $session)
+    #[Route('/{offer}/delete', name: 'delete', methods: ['POST'])]
+    public function delete(Offer $offer = null,  Request $request, SessionInterface $session)
     {
-        $OffersCountPage = intval($request->query->get('count')) - 1; //Nombres d'offres sur la page courante moins l'offre à supprimer
+        $OffersCountPage = intval($request->query->get('count')); //Nombres d'offres sur la page courante moins l'offre à supprimer
         $page = intval(htmlspecialchars($session->get('page'))); //numéro de la page courante
         $isAllOffer = boolval($request->get('isAllOffer')) ; //Boolean permet de rediriger vers la liste de toutes les offres ou bien la liste des offres d'une entreprise
 
-        if ($offer) {
-            $manager->remove($offer);
-            $manager->flush();
+        dd($request);
+        if ($offer && $this->isCsrfTokenValid('delete'.$offer->getId(), $request->request->get('_token'))) {
+            $this->offerRepository->remove($offer, true);
+            $this->addFlash( type :'success', message :'L\' offre à été supprimer avec succès.');
+            $OffersCountPage--;
+        }else{
+            $this->addFlash( type: 'warning', message :'L\'offre demander n\'a pas pu être supprimé.');
         }
 
-        $this->addFlash(
-            type    : $offer ? 'success' : 'warning',
-            message : $offer ? 'L\' offre à été supprimer avec succès!' : 'L\'offre demander n\'existe pas'
-        );
-
-        
         if($isAllOffer){
-
-            return $this->redirectToRoute('admin.offers', [
+            return $this->redirectToRoute('admin.offer.index', [
                 'page'  => ($OffersCountPage > 0 && $page >= 2) || $page === 1 ?  $page  : $page - 1
             ]);
         }
@@ -129,12 +129,11 @@ class OfferCrudController extends AbstractController
      * This controller add or update offer
      * @param Offer $offer
      * @param Request $request
-     * @param EntityManagerInterface $manager
      * @param SessionInterface $session
      * @param bool|null $isAllOffer
      * @return Response|\Symfony\Component\HttpFoundation\RedirectResponse
      */
-    private function addOrUpdate(Offer $offer, Request $request, EntityManagerInterface $manager, SessionInterface $session, ?bool $isAllOffer = false)
+    private function addOrUpdate(Offer $offer, Request $request, SessionInterface $session, ?bool $isAllOffer = false)
     {
         $form = $this->createForm(OfferType::class, $offer);
         $form->handleRequest($request);
@@ -163,12 +162,11 @@ class OfferCrudController extends AbstractController
                     message : $offer->getId() ? 'L\' offre à été éditer avec succès!' : 'L\' offre à été créer avec succès!',
                 );
 
-                $manager->persist($offer);
-                $manager->flush();
+                $this->offerRepository->save($offer, true);
 
                 // CAS DE REDIRECTION VERS LA LISTE DE TOUTES LES OFFRES
                 if($isAllOffer){
-                    return $this->redirectToRoute('admin.offers', [
+                    return $this->redirectToRoute('admin.offer.index', [
                         'page'  => !$offersTotalCount ?  $session->get('page') : ceil($offersTotalCount / 10)
                     ]);
                 }

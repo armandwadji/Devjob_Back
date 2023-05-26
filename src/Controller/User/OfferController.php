@@ -6,20 +6,27 @@ use App\Entity\Offer;
 use App\Entity\Company;
 use App\Form\OfferType;
 use App\Service\MailerService;
+use App\Repository\OfferRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
+#[Route('/my-offers', name: 'offer.')]
 class OfferController extends AbstractController
 {
+    public function __construct(
+        private OfferRepository $offerRepository,
+        private MailerService $mailerService
+    ) {
+    }
+
     /**
      * This controller display all offers by company
      * @param Company $company
@@ -29,7 +36,7 @@ class OfferController extends AbstractController
      * @return Response
      */
     #[Security("is_granted('ROLE_USER') and user=== company.getUser()")]
-    #[Route('/my-offers?{company}', name: 'offer.index', methods: ['GET', 'POST'])]
+    #[Route('?{company}', name: 'index', methods: ['GET', 'POST'])]
     public function index(Company $company, PaginatorInterface $paginator, Request $request,  SessionInterface $session): Response
     {
         $session->set('page', isset($_GET['page']) ? intval($request->get('page')) : 1);
@@ -53,14 +60,13 @@ class OfferController extends AbstractController
      * @param SessionInterface $session
      * @return Response
      */
-    #[IsGranted('ROLE_USER')]
     #[Security("is_granted('ROLE_USER') and user=== company.getUser()")]
-    #[Route('/my-offers/new?{company}', name: 'offer.new', methods: ['GET', 'POST'])]
-    public function new(Company $company, Request $request, EntityManagerInterface $manager, SessionInterface $session): Response
+    #[Route('/new?{company}', name: 'new', methods: ['GET', 'POST'])]
+    public function new(Company $company, Request $request, SessionInterface $session): Response
     {
         $offer = new Offer();
         $offer->setCompany($company);
-        return static::newUpdate($offer, $request, $manager, $session);
+        return static::newUpdate($offer, $request, $session);
     }
 
     /**
@@ -72,22 +78,78 @@ class OfferController extends AbstractController
      * @return Response
      */
     #[Security("is_granted('ROLE_USER') and user=== offer.getCompany().getUser()")]
-    #[Route('/my-offers/{offer}/update', name: 'offer.edit', methods: ['GET', 'POST'])]
-    public function update(Offer $offer, Request $request, EntityManagerInterface $manager, SessionInterface $session): Response
+    #[Route('/{offer}/update', name: 'edit', methods: ['GET', 'POST'])]
+    public function update(Offer $offer, Request $request, SessionInterface $session): Response
     {
-        return static::newUpdate($offer, $request, $manager, $session);
+        return static::newUpdate($offer, $request, $session);
+    }
+
+    /**
+     * This controller delete offer
+     * @param Offer|null $offer
+     * @param Request $request
+     * @param EntityManagerInterface $manager
+     * @param SessionInterface $session
+     * @param UserPasswordHasherInterface $hasher
+     * @return Response
+     */
+    #[Security("is_granted('ROLE_USER') and user=== offer.getCompany().getUser()")]
+    #[Route('/{offer}/delete', name: 'delete', methods: ['POST'])]
+    public function delete(Offer $offer = null,  Request $request, SessionInterface $session,  UserPasswordHasherInterface $hasher): Response
+    {
+        $OffersCountPage = intval($request->query->get('count')); //Nombres d'offres sur la page courante 
+        $page = intval(htmlspecialchars($session->get('page'))); //Numéro de la page courante
+
+
+        // dd($this->isCsrfTokenValid('delete'.$offer->getId(), $request->request->get('_token')));
+        if ($hasher->isPasswordValid($offer->getCompany()->getUser(), $request->request->get('_password')) && $this->isCsrfTokenValid('delete' . $offer->getId(), $request->request->get('_token'))) {
+
+            if ($offer) {
+                static::sendEmail($offer);
+                $this->offerRepository->remove($offer, true);
+            }
+
+            $OffersCountPage--; //Nombres d'offres sur la page courante moins l'offre à supprimer
+
+            $this->addFlash(
+                type: $offer ? 'success' : 'warning',
+                message: $offer ? 'Votre offre à été supprimer avec succès!' : 'L\'offre demander n\'existe pas'
+            );
+        } else {
+
+            $this->addFlash(
+                type: 'warning',
+                message: 'Mots de passe et ou token invalide.'
+            );
+        }
+
+        return $this->redirectToRoute('offer.index', [
+            'company'   => intval($request->query->get('idCompany')),
+            'page'      => ($OffersCountPage > 0 && $page >= 2) || $page === 1 ?  $page  : $page - 1
+        ]);
+    }
+
+    /**
+     * This controller show detail of offer
+     * @param Offer $offer
+     * @return Response
+     */
+    #[Route('/{offer}', name: 'show', methods: ['GET'])]
+    public function show(Offer $offer): Response
+    {
+        return $this->render('pages/offer/show.html.twig', [
+            'offer' => $offer,
+        ]);
     }
 
     /**
      * This controller create or update offer
      * @param Offer $offer
      * @param Request $request
-     * @param EntityManagerInterface $manager
      * @param SessionInterface $session
-     * @param Company|null $company
      * @return Response
      */
-    private function newUpdate(Offer $offer, Request $request, EntityManagerInterface $manager, SessionInterface $session ): Response
+    private function newUpdate(Offer $offer, Request $request, SessionInterface $session): Response
     {
         $form = $this->createForm(OfferType::class, $offer);
         $form->handleRequest($request);
@@ -114,8 +176,7 @@ class OfferController extends AbstractController
                     message: $offer->getId() ? "Votre offre à été éditer avec succès!" : 'Votre offre à été créer avec succès!',
                 );
 
-                $manager->persist($offer);
-                $manager->flush();
+                $this->offerRepository->save($offer, true);
 
                 return $this->redirectToRoute('offer.index', [
                     'company'    => $offer->getCompany()->getId(),
@@ -136,77 +197,25 @@ class OfferController extends AbstractController
     }
 
     /**
-     * This controller show detail of offer
-     * @param Offer $offer
-     * @return Response
+     * This method send Email of notification after delete offer
+     * @param \App\Entity\Offer $offer
+     * @return void
      */
-    #[Route('/offers/{offer}', name: 'offer.show', methods: ['GET'])]
-    public function show(Offer $offer): Response
+    private function sendEmail(Offer $offer): void
     {
-        return $this->render('pages/offer/show.html.twig', [
-            'offer' => $offer,
-        ]);
-    }
-
-    /**
-     * This controller delete offer
-     * @param Offer|null $offer
-     * @param Request $request
-     * @param EntityManagerInterface $manager
-     * @param SessionInterface $session
-     * @param UserPasswordHasherInterface $hasher
-     * @return Response
-     */
-    #[Security("is_granted('ROLE_USER') and user=== offer.getCompany().getUser()")]
-    #[Route('/my-offers/{offer}/delete', name: 'offer.delete', methods: ['GET'])]
-    public function delete(Offer $offer = null,  Request $request, EntityManagerInterface $manager, SessionInterface $session,  UserPasswordHasherInterface $hasher, MailerService $mailerService): Response
-    {
-        $plainPassword = $request->cookies->get('password');
-        $OffersCountPage = intval($request->query->get('count')); //Nombres d'offres sur la page courante 
-        $page = intval(htmlspecialchars($session->get('page'))); //Numéro de la page courante
-
-
-        if ($hasher->isPasswordValid($offer->getCompany()->getUser(), $plainPassword)) {
-
-            if ($offer) {
-
-                // EMAIL DE NOTIFICATION
-                foreach ($offer->getCandidates() as $candidate) {
-                    $mailerService->send(
-                        $candidate->getEmail(),
-                        'Réponse candidature pour le poste :' . $offer->getName(),
-                        'candidate_email.html.twig',
-                        [
-                            'candidate' => $candidate,
-                            'offer' => $offer,
-                            'company' => $offer->getCompany(),
-                            'contact' => $offer->getCompany()->getUser()
-                        ]
-                    );
-                }
-
-                $manager->remove($offer);
-                $manager->flush();
-            }
-
-            $OffersCountPage -= 1; //Nombres d'offres sur la page courante moins l'offre à supprimer
-
-            $this->addFlash(
-                type: $offer ? 'success' : 'warning',
-                message: $offer ? 'Votre offre à été supprimer avec succès!' : 'L\'offre demander n\'existe pas'
-            );
-        } else {
-
-            $this->addFlash(
-                type: 'warning',
-                message: 'Le mots de passe n\'est pas valide.'
+        foreach ($offer->getCandidates() as $candidate) {
+            $this->mailerService->send(
+                $candidate->getEmail(),
+                'Réponse candidature pour le poste :' . $offer->getName(),
+                'candidate_email.html.twig',
+                [
+                    'candidate' => $candidate,
+                    'offer' => $offer,
+                    'company' => $offer->getCompany(),
+                    'contact' => $offer->getCompany()->getUser()
+                ]
             );
         }
-
-        return $this->redirectToRoute('offer.index', [
-            'company'   => intval($request->query->get('idCompany')),
-            'page'      => ($OffersCountPage > 0 && $page >= 2) || $page === 1 ?  $page  : $page - 1
-        ]);
     }
 
     // #[Route('/test', name: 'offer.test', methods: ['GET', 'POST'])]

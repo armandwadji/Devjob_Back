@@ -65,9 +65,14 @@
 										</a>
 									</td>
 									<td scope="row" class="text-center">
-										<a href="{{path('admin.offer.delete', { offer: offer.id, count: user.company.offer|length, idCompany : user.company.id }) }}" class="btn btn-danger delete-confirm" onclick="return window.confirm('Voulez vous vraiment supprimer cette annonce ?')">
-											<i class="fa-solid fa-trash"></i>
-										</a>
+										{% include "partials/_delete_form.html.twig" with 
+											{
+												link: 'admin.offer.delete', 
+												query: { offer: offer.id, count: user.company.offer|length, idCompany : user.company.id }, 
+												id: offer.id,
+												message : 'Etes vous sur de vouloir supprimé cette offre ?'
+											} 
+										%}
 									</td>
 								</tr>
 							{% endfor %}

@@ -4,8 +4,7 @@
 {% endblock %}
 {% block body %}
 	<main class="container mt-4">
-		<div
-			class="jumbotron">
+		<div class="jumbotron">
 
 			{# flash messages #}
 			{% include 'partials/_flash.html.twig' %}
@@ -17,29 +16,14 @@
 				<p>Pour commencer, rendez-vous sur la page d'inscription pour utiliser l'application.</p>
 
 				<div class="d-flex justify-content-start">
-					<a class="btn btn-primary btn-lg text-end" href="{{path('security.registration')}}" role="button">Inscription</a>
+					<a class="btn btn-primary btn-lg text-end " href="{{path('security.registration')}}" role="button">Inscription</a>
 				</div>
-				<hr>
+				<hr style='opacity: unset;'>
 
 				{#  LIST DES OFFRES D'EMPLOIS#}
-				<ul class="row mx-auto p-0 justify-content-center mt-4">
+				<ul class="row mx-auto p-0 justify-content-around mt-4 row">
 					{% for offer in offers %}
-						<div class="card m-lg-3 mx-sm-auto p-3 mb-5 col-lg-3 col-md-4 col-sm-12 position-relative border-primary shadow  bg-body-tertiary rounded">
-							<div class="card-body">
-								<h6 class="card-subtitle mb-2 text-muted">Publié le
-									{{offer.createdAt | date('d/m/Y') }}
-									.
-									{{offer.contract}}
-								</h6>
-								<h4 class="card-title">{{offer.name|capitalize}}</h4>
-								<h6 class="card-subtitle mb-2 text-muted">
-									{{offer.company.name | capitalize }}
-								</h6>
-								<img class='position-absolute top-50 start-50 rounded-circle' style="max-width: 3.5rem; max-height: 43.5em;" src=" {{ vich_uploader_asset(offer.company, 'imageFile') ? vich_uploader_asset(offer.company, 'imageFile') : 'https://picsum.photos/250/250' }} ">
-								<a href=" {{path('offer.show', {offer: offer.id})}} " class="card-link">Détail</a>
-							</div>
-						</div>
-
+						{% include "partials/_card.html.twig" with {offer} %}
 					{% endfor %}
 				</ul>
 

@@ -9,9 +9,6 @@
 
 		{# flash messages #}
 		{% include 'partials/_flash.html.twig' %}
-		
-		{# Modal deleta confirmation #}
-		{% include 'partials/_modal.html.twig'  %}
 
 		{# Détail du candidat #}
 		<section class="g-0 rounded overflow-hidden flex-md-row mb-4 h-md-250 position-relative">
@@ -37,9 +34,24 @@
 
 		<section class="px-4">
 			{% if isAdmin %}
-				<a href="{{path('admin.candidate.delete', { candidate: candidate.id, offer: offer, page: page, 'count' : candidatesForOffer, idOffer : offer } ) }}" class="btn btn-danger btn-lg text-end mt-4" role="button">Supprimer</a>
+				{% include "partials/_delete_form.html.twig" with 
+					{
+						link: 'admin.candidate.delete', 
+						query: { candidate: candidate.id, offer: offer, page: page, 'count' : candidatesForOffer, idOffer : offer }, 
+						id: candidate.id,
+						message : 'Etes vous sur de vouloir supprimé ce candidat ?'
+					} 
+				%}
 			{% else %}
-				<a href="{{path('candidate.delete', { candidate: candidate.id, page: page, 'count' : candidatesForOffer, idOffer : offer } )}}" class="btn btn-danger btn-lg text-end mt-4 delete-confirm" role="button" data-bs-toggle="modal" data-bs-target="#modalWindow" >Supprimer</a>
+				<button class="btn btn-danger btn-lg text-end mt-4 delete-confirm" role="button" data-bs-toggle="modal" data-bs-target="#modalWindow{{candidate.id}}" >Supprimer</button>
+				{# Modal confirm delete password #}
+				{% include 'partials/_modal.html.twig' with 
+					{ 
+						link: 'candidate.delete',
+						query: { candidate: candidate.id, page: page, 'count' : candidatesForOffer, idOffer : offer },
+						id: candidate.id
+					}  
+				%}
 			{% endif %}
 		</section>
 
