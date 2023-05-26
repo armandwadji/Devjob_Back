@@ -23,7 +23,7 @@
 					</p>
 				</div>
 
-				<img class='rounded-circle mx-4' style="width: 100%; height: 100%; max-height: 200px; max-width: 200px; object-fit: contain " src="{{ vich_uploader_asset(offer.company, 'imageFile') ? vich_uploader_asset(offer.company, 'imageFile') : 'https://picsum.photos/250/250' }}" alt="Logo de {{offer.company.name}}">
+				<img class='rounded-circle mx-4' style="width: 100%; height: 100%; max-height: 200px; max-width: 200px; object-fit: contain " src=" {% if vich_uploader_asset(offer.company, 'imageFile') %} {{vich_uploader_asset(offer.company, 'imageFile')}} {% else %} https://picsum.photos/id/{{offer.id}}/250/250 {% endif %}" alt="Logo de {{offer.company.name}}">
 			</div>
 			<hr>
 
@@ -104,9 +104,14 @@
 											</a>
 										</td>
 										<td scope="row" class="text-center">
-											<a href="{{ path('admin.candidate.delete', { candidate : candidate.id, offer: offer.id, count: offer.candidates|length, idCompany : offer.company.id }) }}" class="btn btn-danger delete-confirm" onclick="return window.confirm('Voulez vous vraiment supprimer ce candidat ?')">
-												<i class="fa-solid fa-trash"></i>
-											</a>
+											{% include "partials/_delete_form.html.twig" with 
+												{
+													link: 'admin.candidate.delete', 
+													query: { candidate : candidate.id, offer: offer.id, count: offer.candidates|length, idCompany : offer.company.id  }, 
+													id: candidate.id,
+													message : 'Etes vous sur de vouloir supprimé ce candidat ?'
+												} 
+											%}
 										</td>
 									</tr>
 								{% endfor %}

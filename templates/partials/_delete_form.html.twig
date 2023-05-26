@@ -1,0 +1,7 @@
+
+<form action="{{path(link, query )}} " method="POST" onsubmit="return confirm('{{message}}');">
+    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ id) }}">
+    <button class="btn btn-danger">
+        <i class="fa-solid fa-trash"></i>
+    </button>
+</form>

@@ -12,22 +12,27 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class OfferApiController extends AbstractController
 {
+
+    public function __construct(
+        private OfferRepository $offerRepository,
+    ) {
+    }
+
     /**
      * This controller returns offers
-     * @param OfferRepository $offerRepository
      * @param Request $request
      * @return Response
      */
     #[Route('/api/jobs', name: 'api.offers', methods: ['GET', 'POST'])]
-    public function offers(OfferRepository $offerRepository, Request $request): Response
+    public function offers( Request $request ): Response
     {
 
         $offset = intval($request->query->get('offset'));
         $limit = intval($request->get('limit')) ?: 12;
         return $this->json(
             [
-                'jobs'  => static::offersFormat($offerRepository->offersApi( offset: $offset, limit: $limit )),
-                'total' => count($offerRepository->findAll())
+                'jobs'  => static::offersFormat($this->offerRepository->offersApi( offset: $offset, limit: $limit )),
+                'total' => count($this->offerRepository->findAll())
             ],
             200,
             [],
@@ -35,17 +40,16 @@ class OfferApiController extends AbstractController
         );
     }
 
-    #[Route('/api/job/{id}', name: 'api.offer', methods: ['GET'])]
     /**
      * This controller returns an offer based on its ID
-     * @param OfferRepository $offerRepository
      * @param Request $request
      * @return Response
      */
-    public function offer(OfferRepository $offerRepository, Request $request): Response
+    #[Route('/api/job/{id}', name: 'api.offer', methods: ['GET'])]
+    public function offer( Request $request ): Response
     {
         $id = intval($request->get('id', 0));
-        $offer = $offerRepository->find(['id' => $id]);
+        $offer = $this->offerRepository->find(['id' => $id]);
 
         if (!$offer) {
             return $this->json(['error' => 'job not found'], 400);
@@ -56,28 +60,28 @@ class OfferApiController extends AbstractController
 
     /**
      * This controller returns offers based on search parameters
-     * @param OfferRepository $offerRepository
      * @param Request $request
      * @return Response
      */
     #[Route('/api/jobs/search', name: 'api.search', methods: ['GET'])]
-    public function search(OfferRepository $offerRepository, Request $request): Response
+    public function search( Request $request ): Response
     {
         $offset = intval($request->query->get('offset'));
         $limit = intval($request->query->get('limit')) ?: 12;
         $location = strval($request->query->get('location', null)) ;
         $fulltime = boolval($request->query->get('fulltime', null));
         $text = strval($request->query->get('text', null));
+
         return $this->json(
             [
-                'jobs' => static::offersFormat($offerRepository->offersApi(
+                'jobs' => static::offersFormat($this->offerRepository->offersApi(
                     offset      : $offset,
                     limit       : $limit,
                     location    : $location,
                     fulltime    : $fulltime,
                     text        : $text
                 )),
-                'total' => count($offerRepository->findAll())
+                'total' => count($this->offerRepository->findAll())
             ],
             200,
             [],

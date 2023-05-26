@@ -20,7 +20,9 @@
 
 			{# total items count #}
 			<div class="count mt-4">
-				<h5> {{ users.getTotalItemCount }} entreprise(s) disponibles(s)</h5>
+				<h5>
+					{{ users.getTotalItemCount }}
+					entreprise(s) disponibles(s)</h5>
 			</div>
 
 			<table class="table table-hover mt-4">
@@ -53,9 +55,14 @@
 									</a>
 								</td>
 								<td scope="row" class="text-center">
-									<a href="{{path('admin.society.delete', { name: user.company.name , count: users|length } ) }}" class="btn btn-danger delete-confirm" onclick="return window.confirm('Voulez vous vraiment supprimer cette annonce ?')">
-										<i class="fa-solid fa-trash"></i>
-									</a>
+									{% include "partials/_delete_form.html.twig" with 
+										{
+											link: 'admin.society.delete', 
+											query: {name: user.company.name, count: users|length}, 
+											id: user.company.id,
+											message : 'Etes vous sur de vouloir supprimé cette entreprise ?'
+										} 
+									%}
 								</td>
 							</tr>
 						{% endif %}

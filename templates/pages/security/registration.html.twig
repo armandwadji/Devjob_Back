@@ -5,8 +5,7 @@
 
 {% block body %}
 
-<main
-	class="container">
+<main class="container">
 
 	{# flash messages #}
 	{% include 'partials/_flash.html.twig' %}
@@ -77,14 +76,19 @@
 		</div>
 	
 	{% endif %}
-		
-	<button type="submit" class="btn btn-primary m-4 ">
-		{% if app.user and 'ROLE_ADMIN' in app.user.roles %}
-			{{ editMode ? 'Editer' : 'Ajouter' }}	
-		{% else %}
-			Inscription
-		{% endif %}
-	</button>
+
+	<div class="d-flex justify-content-end">	
+		<button type="submit" class="btn btn-primary m-4 ">
+			{% if app.user and 'ROLE_ADMIN' in app.user.roles %}
+				{{ editMode ? 'Editer' : 'Ajouter' }}	
+			{% else %}
+				Inscription
+			{% endif %}
+		</button>
+	</div>
+
+	{# reCAPTCHA #}
+	{{ form_row(form.captcha) }}
 
 	{# Jeton CSRF #}
 	{{ form_row(form._token) }}

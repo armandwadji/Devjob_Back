@@ -45,6 +45,7 @@ class OfferRepository extends ServiceEntityRepository
      */
     public function findOfferOrderDesc(): array
     {
+        // SELECT * FROM `offer` ORDER BY `offer`.`created_at` DESC;
         return $this->createQueryBuilder('o')
             ->orderBy('o.createdAt', 'DESC')
             ->getQuery()
@@ -63,6 +64,14 @@ class OfferRepository extends ServiceEntityRepository
     // ************ API REQUEST *************
     public function offersApi(int $offset, int $limit, ?string $location = null, ?bool $fulltime = false, ?string $text = null)
     {
+        //SELECT * FROM `offer` 
+        // JOIN `company`
+        // JOIN `contract`
+        // WHERE `company`.`country` LIKE 'canada' AND `contract`.`name` LIKE 'CDI' AND `company`.`name` LIKE 'itaque'
+        // ORDER BY `offer`.created_At DESC
+        // LIMIT 2
+        // OFFSET 3;
+
         $query = $this->createQueryBuilder('o')
             ->join('o.company', 'c')
             ->join('o.contract', 'ct')
