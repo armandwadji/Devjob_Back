@@ -152,7 +152,6 @@ class CandidateController extends AbstractController
 
     /**
      * This controller allows a candidate to apply for an offer
-     * @param Candidate|null $candidate
      * @param Offer $offer
      * @param Request $request
      * @return Response

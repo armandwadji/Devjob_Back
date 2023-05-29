@@ -32,8 +32,7 @@ class RegistrationType extends AbstractType
             ->add('captcha', Recaptcha3Type::class, [
                 'constraints' => new Recaptcha3(),
                 'action_name' => 'registration',
-                'locale' => 'de',
-                // 'script_nonce_csp' => $nonceCSP,
+                'locale' => 'fr',
             ])
             ;
     }

@@ -4,7 +4,7 @@ namespace App\Entity;
 
 use App\Repository\RequirementItemRepository;
 use Symfony\Component\Serializer\Annotation\Groups;
-
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: RequirementItemRepository::class)]
@@ -16,6 +16,12 @@ class RequirementItem
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\Length(
+        min: 2,
+        max: 50,
+        minMessage: 'La description d\'un prérequis doit contenir au moins 2 caractères',
+        maxMessage: 'La description d\'un prérequis doit contenir maximum 255 caractères'
+    )]
     #[Groups('offer:detail')]
     private ?string $name = null;
 

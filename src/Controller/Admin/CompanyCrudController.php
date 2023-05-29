@@ -13,7 +13,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Form\RegistrationType;
 use App\Repository\UserRepository;
 use Symfony\Component\Intl\Countries;
-use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -28,7 +27,6 @@ class CompanyCrudController extends  AbstractController
 
     /**
      * This controller show all companies
-     * @param UserRepository $userRepository
      * @param PaginatorInterface $paginator
      * @param Request $request
      * @param SessionInterface $session
@@ -53,7 +51,6 @@ class CompanyCrudController extends  AbstractController
     /**
      * This coontroller add company
      * @param Request $request
-     * @param EntityManagerInterface $manager
      * @param SessionInterface $session
      * @return Response
      */
@@ -81,7 +78,6 @@ class CompanyCrudController extends  AbstractController
      * This controller edit company
      * @param Company $company
      * @param Request $request
-     * @param EntityManagerInterface $manager
      * @param SessionInterface $session
      * @return Response
      */
@@ -97,7 +93,6 @@ class CompanyCrudController extends  AbstractController
      * @param Company $company
      * @param Request $request
      * @param SessionInterface $session
-     * @param EntityManagerInterface $manager
      * @return Response
      */
     #[Route('/society/{name}/delete/', name: 'delete', methods: ['POST'])]
@@ -175,6 +170,11 @@ class CompanyCrudController extends  AbstractController
         ]);
     }
 
+    /**
+     * This method convert country code in country name
+     * @param User $user
+     * @return void
+     */
     private function countryEncode(User $user)
     {
         $isoCode2 = array_search($user->getCompany()->getCountry(), Countries::getNames(), true);

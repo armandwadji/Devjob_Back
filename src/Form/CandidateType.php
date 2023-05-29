@@ -33,7 +33,6 @@ class CandidateType extends AbstractType
                 'required' => true,
                 'download_label' => 'Télécharger',
             ])
-            // ->add('offer')
         ;
     }
 

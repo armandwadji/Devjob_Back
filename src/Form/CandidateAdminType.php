@@ -33,12 +33,6 @@ class CandidateAdminType extends AbstractType
                 'choice_label' => 'name',
                 'multiple' => false,
                 'expanded' => true,
-                // 'query_builder' => function (IngredientRepository $er) {
-                //     return $er->createQueryBuilder('u')
-                //         ->where('u.user = :user')
-                //         ->orderBy('u.name', 'ASC')
-                //         ->setParameter('user', $this->token->getToken()->getUser()); //Methode permettant d'aller chercher l'utilisateur courent.
-                // },
                 'group_by' => function (Offer $offer) {
                     return $offer->getCompany();
                 },

@@ -7,6 +7,8 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 class RequirementItemType extends AbstractType
 {
@@ -14,8 +16,17 @@ class RequirementItemType extends AbstractType
     {
         $builder
             ->add('name', TextType::class, [
+                'constraints' => [
+                    new Assert\NotBlank(['message' => 'Le résumé des prérequis d\'une offre est requise.']),
+                    new Assert\Length([
+                        'min' => 5,
+                        'minMessage'=> 'La description d\'un prérequis doit contenir au moins 2 caractères',
+                        'max' => 255,
+                        'maxMessage'=> 'La description d\'un prérequis doit contenir maximum 255 caractères',
+                    ]),
+                ],
                 'attr' => [
-                    'placeholder' => 'Prérequi'
+                    'placeholder' => 'Prérequis'
                 ],
                 'label' => ' '
             ])

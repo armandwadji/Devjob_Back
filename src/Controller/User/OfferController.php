@@ -100,8 +100,6 @@ class OfferController extends AbstractController
         $OffersCountPage = intval($request->query->get('count')); //Nombres d'offres sur la page courante 
         $page = intval(htmlspecialchars($session->get('page'))); //Numéro de la page courante
 
-
-        // dd($this->isCsrfTokenValid('delete'.$offer->getId(), $request->request->get('_token')));
         if ($hasher->isPasswordValid($offer->getCompany()->getUser(), $request->request->get('_password')) && $this->isCsrfTokenValid('delete' . $offer->getId(), $request->request->get('_token'))) {
 
             if ($offer) {

@@ -25,7 +25,6 @@ class OfferCrudController extends AbstractController
 
     /**
      * This controller show all offers
-     * @param OfferRepository $offerRepository
      * @param PaginatorInterface $paginator
      * @param Request $request
      * @param SessionInterface $session

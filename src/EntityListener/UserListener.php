@@ -8,10 +8,10 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 class UserListener
 {
 
-     /**
-      * Summary of hasher
-      * @param UserPasswordHasherInterface $hasher
-      */
+    /**
+     * Summary of hasher
+     * @param UserPasswordHasherInterface $hasher
+     */
     public function __construct(private UserPasswordHasherInterface $hasher)
     {
     }

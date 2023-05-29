@@ -77,6 +77,12 @@ class CandidateCrudController extends AbstractController
         ]);
     }
 
+    /**
+     * This controller show detail of candidate
+     * @param Candidate $candidate
+     * @param Request $request
+     * @return Response
+     */
     #[Route('/{candidate}', name: 'show', methods: ['GET'])]
     public function show (Candidate $candidate, Request $request): Response
     {

@@ -7,7 +7,6 @@ use App\Form\UserType;
 use App\Repository\UserRepository;
 use App\Service\MailerService;
 use Symfony\Component\Intl\Countries;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -41,7 +40,6 @@ class UserController extends AbstractController
      * This controller edit companu profil
      * @param User|null $choosenUser
      * @param Request $request
-     * @param EntityManagerInterface $manager
      * @return Response
      */
     #[Route('/update/{id}', name: 'edit', methods: ['GET', 'POST'])]
@@ -88,6 +86,12 @@ class UserController extends AbstractController
         ]);
     }
 
+    /**
+     * This controller makes a request to delete a user account 
+     * @param User $choosenUser
+     * @param Request $request
+     * @return Response
+     */
     #[Route('/delete/{id}', name: 'delete', methods: ['GET', 'POST'])]
     public function deleteAccount(User $choosenUser, Request $request): Response
     {
@@ -138,7 +142,7 @@ class UserController extends AbstractController
 
     /**
      * This method that sends an email when requesting to delete an account
-     * @param \App\Entity\User $user
+     * @param User $user
      * @return void
      */
     private function sendEmail(User $user): void

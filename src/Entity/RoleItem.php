@@ -5,8 +5,8 @@ namespace App\Entity;
 use App\Entity\Role;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\RoleItemRepository;
-
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: RoleItemRepository::class)]
 class RoleItem
@@ -18,6 +18,12 @@ class RoleItem
 
     #[ORM\Column(length: 255)]
     #[Groups('offer:read')]
+    #[Assert\Length(
+        min: 2,
+        max: 50,
+        minMessage: 'La description d\'un role doit contenir au moins 2 caractères',
+        maxMessage: 'La description d\'un role doit contenir maximum 255 caractères'
+    )]
     private ?string $name = null;
 
     #[ORM\ManyToOne(targetEntity: Role::class, inversedBy: 'roleItems')]
