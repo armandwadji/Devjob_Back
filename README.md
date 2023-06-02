@@ -5,7 +5,7 @@
   </h1> 
 </div> 
 
-<img width="1538" alt="Capture d’écran 2023-06-02 à 12 59 00" src="https://github.com/armandwadji/Devjob_Back/assets/90448006/6e859f6f-0f19-4a0b-8281-b6d179e00bfc">
+<img width="1562" alt="Capture d’écran 2023-04-01 à 16 38 01" src="https://user-images.githubusercontent.com/90448006/229295742-a05dd915-a339-41b5-9065-a782d09d1242.png">
 
 
 ## Description
