@@ -1,8 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}
-	Devjob - Administration
-{% endblock %}
+{% block title %}Administration{% endblock %}
 
 {% block body %}
 
@@ -20,9 +18,7 @@
 
 			{# total items count #}
 			<div class="count mt-4">
-				<h5>
-					{{ users.getTotalItemCount }}
-					entreprise(s) disponibles(s)</h5>
+				<h5> {{ users.getTotalItemCount }} entreprise(s) disponibles(s)</h5>
 			</div>
 
 			<table class="table table-hover mt-4">

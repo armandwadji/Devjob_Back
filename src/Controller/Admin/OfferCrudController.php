@@ -102,7 +102,6 @@ class OfferCrudController extends AbstractController
         $page = intval(htmlspecialchars($session->get('page'))); //numéro de la page courante
         $isAllOffer = boolval($request->get('isAllOffer')) ; //Boolean permet de rediriger vers la liste de toutes les offres ou bien la liste des offres d'une entreprise
 
-        dd($request);
         if ($offer && $this->isCsrfTokenValid('delete'.$offer->getId(), $request->request->get('_token'))) {
             $this->offerRepository->remove($offer, true);
             $this->addFlash( type :'success', message :'L\' offre à été supprimer avec succès.');

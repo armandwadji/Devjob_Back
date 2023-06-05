@@ -15,6 +15,7 @@ use App\Repository\UserRepository;
 use Symfony\Component\Intl\Countries;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\VarDumper\VarDumper;
 
 #[Route('/admin', name: 'admin.society.')]
 class CompanyCrudController extends  AbstractController
@@ -134,7 +135,7 @@ class CompanyCrudController extends  AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            if ($form->getData()->getCompany()->getImageFile() && !(bool)stristr($form->getData()->getCompany()->getImageFile()->getmimeType(), "image")) {
+            if ($user->getCompany()->getImageFile() && !(bool)stristr($user->getCompany()->getImageFile()->getmimeType(), "image")) {
 
                 $this->addFlash(
                     type    : 'warning',
@@ -144,7 +145,6 @@ class CompanyCrudController extends  AbstractController
                 $form->getData()->getCompany()->setImageFile(null);
             } else {
 
-                $user = $form->getData();
                 $user->getCompany()->setCountry(Countries::getAlpha3Name($user->getCompany()->getCountry())); //Convertis les initiales du pays en son nom complet.
 
                 $this->userRepository->save($user, true);
@@ -152,7 +152,7 @@ class CompanyCrudController extends  AbstractController
 
                 $this->addFlash(
                     type    : 'success',
-                    message : 'L\'entreprise ' . strtoupper($user->getCompany()->getName()) . ' à bien été créer.'
+                    message : 'L\'entreprise ' . strtoupper($user->getCompany()->getName()) . ' à bien été' . ($user->getId() ? ' éditer.' : ' créer.')
                 );
 
                 // GESTION DE LA PAGINATION:

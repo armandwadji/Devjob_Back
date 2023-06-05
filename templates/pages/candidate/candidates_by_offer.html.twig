@@ -2,9 +2,7 @@
 
 {% set offer = app.request.get('offer') %}
 
-{% block title %}
-	Devjob - Candidats pour l'offre{{offer.name}}
-{% endblock %}
+{% block title %}Candidats pour l'offre {{offer.name}}{% endblock %}
 
 {% block body %}
 

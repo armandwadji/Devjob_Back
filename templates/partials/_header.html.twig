@@ -58,7 +58,9 @@
 									<img class='rounded-circle' style="width: 2.5rem; height: 2.5rem;" src="{{ vich_uploader_asset(app.user.company, 'imageFile') }}">
 								</a>
 							{% else %}
-								<a class="nav-link dropdown-toggle {% if route_name in ['user.index', 'user.edit', 'user.delete' ]  %} active {% endif %}" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">{{app.user.firstname ~  " " ~  app.user.lastname}}</a>
+								<a class="nav-link dropdown-toggle {% if route_name in ['user.index', 'user.edit', 'user.delete' ]  %} active {% endif %}" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+									{{app.user.firstname ~  " " ~  app.user.lastname}}
+								</a>
 							{% endif %}
 
 							<div class="dropdown-menu">
