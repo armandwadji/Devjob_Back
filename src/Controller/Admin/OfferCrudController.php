@@ -140,8 +140,6 @@ class OfferCrudController extends AbstractController
 
             if ($form->isValid()) {
 
-                $offer =  $form->getData();
-
                 foreach ($offer->getRequirement()->getRequirementItems() as $requirementItem) {
 
                     if (!$requirementItem->getRequirement()) $requirementItem->setRequirement($offer->getRequirement());

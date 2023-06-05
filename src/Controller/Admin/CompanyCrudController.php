@@ -142,7 +142,7 @@ class CompanyCrudController extends  AbstractController
                     message : 'Veuillez choisir une image.'
                 );
 
-                $form->getData()->getCompany()->setImageFile(null);
+                $user->getCompany()->setImageFile(null);
             } else {
 
                 $user->getCompany()->setCountry(Countries::getAlpha3Name($user->getCompany()->getCountry())); //Convertis les initiales du pays en son nom complet.

@@ -111,8 +111,6 @@ class CandidateCrudController extends AbstractController
 
             if ($form->isValid() && ($form->getData()->getImageFile() || $form->getData()->getImageName())) {
 
-                $candidate = $form->getData();
-
                 $this->addFlash(
                     type    : 'success',
                     message : $candidate->getId() ? "La candidature à été modifer avec succès" : "La candidature à été ajouter avec succès !"
