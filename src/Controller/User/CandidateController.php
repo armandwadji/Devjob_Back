@@ -133,7 +133,7 @@ class CandidateController extends AbstractController
 
             $this->addFlash(
                 type    : 'warning',
-                message : 'Le mots de passe n\'est pas valide.'
+                message : 'Mots de passe et ou token invalide.'
             );
 
             return $this->redirectToRoute('candidate.show', [
