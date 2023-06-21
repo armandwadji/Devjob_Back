@@ -3,23 +3,26 @@
 namespace App\Controller\User;
 
 use App\Entity\User;
+use App\Event\UserDeleteEvent;
 use App\Form\UserType;
-use App\Repository\UserRepository;
 use App\Service\MailerService;
+use App\Repository\UserRepository;
 use Symfony\Component\Intl\Countries;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-#[Route('/my-account', name: 'user.')]
+#[Route('/my-account', name: 'user.', requirements: ['id' => '\d+'])]
 #[Security("is_granted('ROLE_USER') and user === choosenUser")]
 class UserController extends AbstractController
 {
     public function __construct(
         private UserRepository $userRepository,
-        private MailerService $mailerService
+        private MailerService $mailerService,
+        private EventDispatcherInterface $eventDispatcher
     ) {
     }
 
@@ -28,7 +31,7 @@ class UserController extends AbstractController
      * @param User|null $choosenUser
      * @return Response
      */
-    #[Route('/{id}', name: 'index', methods: ['GET'])]
+    #[Route('/{id}', name: 'index',  methods: ['GET'])]
     public function home(User $choosenUser): Response
     {
         return $this->render('pages/user/account.html.twig', [
@@ -108,10 +111,11 @@ class UserController extends AbstractController
 
             if ($choosenUser->isIsDeleted()) {
 
-                static::sendEmail($choosenUser);
+                $this->eventDispatcher->dispatch(new UserDeleteEvent($choosenUser));
+                // static::sendEmail($choosenUser);
             }
 
-            $this->userRepository->save($choosenUser, true);
+            // $this->userRepository->save($choosenUser, true);
 
             $this->addFlash(
                 type: 'success',

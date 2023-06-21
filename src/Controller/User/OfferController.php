@@ -4,6 +4,7 @@ namespace App\Controller\User;
 
 use App\Entity\Offer;
 use App\Entity\Company;
+use App\Event\OfferDeleteEvent;
 use App\Form\OfferType;
 use App\Service\MailerService;
 use App\Repository\OfferRepository;
@@ -15,15 +16,18 @@ use Symfony\Component\Routing\Annotation\Route;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\VarDumper\VarDumper;
 
 #[Route('/my-offers', name: 'offer.')]
 class OfferController extends AbstractController
 {
     public function __construct(
         private OfferRepository $offerRepository,
-        private MailerService $mailerService
+        private MailerService $mailerService,
+        private EventDispatcherInterface $eventDispatcher
     ) {
     }
 
@@ -103,8 +107,9 @@ class OfferController extends AbstractController
         if ($hasher->isPasswordValid($offer->getCompany()->getUser(), $request->request->get('_password')) && $this->isCsrfTokenValid('delete' . $offer->getId(), $request->request->get('_token'))) {
 
             if ($offer) {
-                static::sendEmail($offer);
-                $this->offerRepository->remove($offer, true);
+                $this->eventDispatcher->dispatch(new OfferDeleteEvent($offer));
+                // static::sendEmail($offer);
+                // $this->offerRepository->remove($offer, true);
             }
 
             $OffersCountPage--; //Nombres d'offres sur la page courante moins l'offre à supprimer
