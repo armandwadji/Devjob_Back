@@ -61,16 +61,16 @@ class SecurityController extends AbstractController
                 $user->getCompany()->setImageFile(null);
 
                 // MAILER SEND
-                $this->mailerService->send(
-                    $user->getEmail(),
-                    'Confirmation du compte utilisateur',
-                    'registration_confirmation.html.twig',
-                    [
-                        'user'          => $user,
-                        'token'         => $tokenRegistration,
-                        'lifeTimetoken' => $user->getTokenRegistrationLifeTime()->format('d/m/Y à H:i:s')
-                    ]
-                );
+                // $this->mailerService->send(
+                //     $user->getEmail(),
+                //     'Confirmation du compte utilisateur',
+                //     'registration_confirmation.html.twig',
+                //     [
+                //         'user'          => $user,
+                //         'token'         => $tokenRegistration,
+                //         'lifeTimetoken' => $user->getTokenRegistrationLifeTime()->format('d/m/Y à H:i:s')
+                //     ]
+                // );
 
                 $this->addFlash(
                     type: 'success',

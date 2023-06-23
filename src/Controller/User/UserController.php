@@ -108,7 +108,7 @@ class UserController extends AbstractController
 
             if ($choosenUser->isIsDeleted()) {
 
-                static::sendEmail($choosenUser);
+                // static::sendEmail($choosenUser);
             }
 
             $this->userRepository->save($choosenUser, true);

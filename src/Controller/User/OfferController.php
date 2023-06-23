@@ -103,7 +103,7 @@ class OfferController extends AbstractController
         if ($hasher->isPasswordValid($offer->getCompany()->getUser(), $request->request->get('_password')) && $this->isCsrfTokenValid('delete' . $offer->getId(), $request->request->get('_token'))) {
 
             if ($offer) {
-                static::sendEmail($offer);
+                // static::sendEmail($offer);
                 $this->offerRepository->remove($offer, true);
             }
 
