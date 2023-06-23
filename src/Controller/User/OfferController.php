@@ -23,7 +23,7 @@ class OfferController extends AbstractController
 {
     public function __construct(
         private OfferRepository $offerRepository,
-        private MailerService $mailerService
+        // private MailerService $mailerService
     ) {
     }
 
@@ -194,27 +194,27 @@ class OfferController extends AbstractController
         ]);
     }
 
-    /**
-     * This method send Email of notification after delete offer
-     * @param \App\Entity\Offer $offer
-     * @return void
-     */
-    private function sendEmail(Offer $offer): void
-    {
-        foreach ($offer->getCandidates() as $candidate) {
-            $this->mailerService->send(
-                $candidate->getEmail(),
-                'Réponse candidature pour le poste :' . $offer->getName(),
-                'candidate_email.html.twig',
-                [
-                    'candidate' => $candidate,
-                    'offer' => $offer,
-                    'company' => $offer->getCompany(),
-                    'contact' => $offer->getCompany()->getUser()
-                ]
-            );
-        }
-    }
+    // /**
+    //  * This method send Email of notification after delete offer
+    //  * @param \App\Entity\Offer $offer
+    //  * @return void
+    //  */
+    // private function sendEmail(Offer $offer): void
+    // {
+    //     foreach ($offer->getCandidates() as $candidate) {
+    //         $this->mailerService->send(
+    //             $candidate->getEmail(),
+    //             'Réponse candidature pour le poste :' . $offer->getName(),
+    //             'candidate_email.html.twig',
+    //             [
+    //                 'candidate' => $candidate,
+    //                 'offer' => $offer,
+    //                 'company' => $offer->getCompany(),
+    //                 'contact' => $offer->getCompany()->getUser()
+    //             ]
+    //         );
+    //     }
+    // }
 
     // #[Route('/test', name: 'offer.test', methods: ['GET', 'POST'])]
     // public function test(Request $request,): Response

@@ -22,7 +22,7 @@ class SecurityController extends AbstractController
 
     public function __construct(
         private UserRepository $userRepository,
-        private MailerService $mailerService
+        // private MailerService $mailerService
     ) {
     }
 
@@ -160,15 +160,15 @@ class SecurityController extends AbstractController
                     $this->userRepository->save($user, true);
 
                     // MAILER SEND
-                    $this->mailerService->send(
-                        $user->getEmail(),
-                        'Modiffication mots de passe utilisateur',
-                        'change_password_email.html.twig',
-                        [
-                            'user'  => $user,
-                            'token' => $tokenRegistration,
-                        ]
-                    );
+                    // $this->mailerService->send(
+                    //     $user->getEmail(),
+                    //     'Modiffication mots de passe utilisateur',
+                    //     'change_password_email.html.twig',
+                    //     [
+                    //         'user'  => $user,
+                    //         'token' => $tokenRegistration,
+                    //     ]
+                    // );
 
                     $this->addFlash(
                         type: 'success',
