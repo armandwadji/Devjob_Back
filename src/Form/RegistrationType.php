@@ -29,11 +29,11 @@ class RegistrationType extends AbstractType
                 'options' => ['attr' => ['class' => 'password-field']],
                 'required' => true,
             ])
-            ->add('captcha', Recaptcha3Type::class, [
-                'constraints' => new Recaptcha3(),
-                'action_name' => 'registration',
-                'locale' => 'fr',
-            ])
+            // ->add('captcha', Recaptcha3Type::class, [
+            //     'constraints' => new Recaptcha3(),
+            //     'action_name' => 'registration',
+            //     'locale' => 'fr',
+            // ])
             ;
     }
 
