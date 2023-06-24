@@ -52,7 +52,7 @@
 			</ol>
 
 			{% if not ( app.user )   %}
-				<a class="btn btn-primary btn-lg" href="{{path('candidate.apply', {offer: offer.id , url: offer.url} )}}" role="button">Candidater</a>
+				<a class="btn btn-primary btn-lg" href="{{path('candidate.apply', {offer: offer.id } )}}" role="button">Candidater</a>
 			{% endif %}
 
 			{% if (app.user and 'ROLE_ADMIN' in app.user.roles )  %}
