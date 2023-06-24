@@ -136,7 +136,7 @@ class OfferApiController extends AbstractController
         }
 
         $offerFormat = [
-            'apply'             => $request->server->get('HOST'). '/' . 'offers/' . $offer->getId() . '/apply',
+            'apply'             => $request->server->get('BASE_URL'). '/' . 'offers/' . $offer->getId() . '/apply',
             'company'           => $offer->getCompany()->getName(),
             'contract'          => $offer->getContract()->getName(),
             'description'       => $offer->getDescription(),
