@@ -56,7 +56,7 @@ class OfferApiController extends AbstractController
             return $this->json(['error' => 'job not found'], 400);
         }
 
-        return $this->json(['jobs' => static::offerFormat($offer, $request)], 200, [], ['groups' => 'offer:detail']);
+        return $this->json(['jobs' => static::offerFormat($offer)], 200, [], ['groups' => 'offer:detail']);
     }
 
     /**
@@ -121,7 +121,7 @@ class OfferApiController extends AbstractController
      * @param Offer $offer
      * @return array
      */
-    private function offerFormat(Offer $offer, Request $request): array
+    private function offerFormat(Offer $offer): array
     {
         // REQUIREMENTS ITEMS
         $requirementItems = [];
@@ -136,7 +136,7 @@ class OfferApiController extends AbstractController
         }
 
         $offerFormat = [
-            'apply'             => $request->server->get('BASE_URL'). '/' . 'offers/' . $offer->getId() . '/apply',
+            'apply'             => 'http://devjobs.wadji.cefim.o2switch.site/offers/' . $offer->getId() . '/apply',
             'company'           => $offer->getCompany()->getName(),
             'contract'          => $offer->getContract()->getName(),
             'description'       => $offer->getDescription(),
