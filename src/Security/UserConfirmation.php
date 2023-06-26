@@ -27,7 +27,7 @@ class UserConfirmation implements UserCheckerInterface
             return;
         }
         
-        // // user account is expired, the user may be notified
+        // user account is expired, the user may be notified
         if ($user->isExpired()) {
             throw new CustomUserMessageAccountStatusException('Votre token à expirer. Veuillez refaire une demande d\'inscription.');
         }

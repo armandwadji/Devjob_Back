@@ -5,16 +5,17 @@ namespace App\Controller\User;
 use App\Entity\Offer;
 use App\Entity\Company;
 use App\Form\OfferType;
-use App\Service\MailerService;
+use App\Event\OfferDeleteEvent;
 use App\Repository\OfferRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
 
+use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
@@ -23,7 +24,7 @@ class OfferController extends AbstractController
 {
     public function __construct(
         private OfferRepository $offerRepository,
-        private MailerService $mailerService
+        private EventDispatcherInterface $eventDispatcher
     ) {
     }
 
@@ -42,14 +43,12 @@ class OfferController extends AbstractController
         $session->set('page', isset($_GET['page']) ? intval($request->get('page')) : 1);
 
         $offers = $paginator->paginate(
-            target: $company->getOffer(),
-            page: $request->query->getInt('page', 1),
-            limit: 10
+            target  : $company->getOffer(),
+            page    : $request->query->getInt('page', 1),
+            limit   : 10
         );
 
-        return $this->render('pages/offer/index.html.twig', [
-            'offers' => $offers,
-        ]);
+        return $this->render('pages/offer/index.html.twig', ['offers' => $offers]);
     }
 
     /**
@@ -99,26 +98,18 @@ class OfferController extends AbstractController
     {
         $OffersCountPage = intval($request->query->get('count')); //Nombres d'offres sur la page courante 
         $page = intval(htmlspecialchars($session->get('page'))); //Numéro de la page courante
+        $passwordAndTokenValid = $hasher->isPasswordValid($offer->getCompany()->getUser(), $request->request->get('_password')) && $this->isCsrfTokenValid('delete' . $offer->getId(), $request->request->get('_token'));
 
-        if ($hasher->isPasswordValid($offer->getCompany()->getUser(), $request->request->get('_password')) && $this->isCsrfTokenValid('delete' . $offer->getId(), $request->request->get('_token'))) {
+        if ($passwordAndTokenValid) {
 
-            if ($offer) {
-                static::sendEmail($offer);
-                $this->offerRepository->remove($offer, true);
-            }
-
+            $this->eventDispatcher->dispatch(new OfferDeleteEvent($offer));
+            $this->offerRepository->remove($offer, true);
+            $this->addFlash(type: 'success', message: 'Votre offre à été supprimer avec succès!');
             $OffersCountPage--; //Nombres d'offres sur la page courante moins l'offre à supprimer
 
-            $this->addFlash(
-                type: $offer ? 'success' : 'warning',
-                message: $offer ? 'Votre offre à été supprimer avec succès!' : 'L\'offre demander n\'existe pas'
-            );
         } else {
 
-            $this->addFlash(
-                type: 'warning',
-                message: 'Mots de passe et ou token invalide.'
-            );
+            $this->addFlash(type: 'warning', message: 'Mots de passe et ou token invalide.');
         }
 
         return $this->redirectToRoute('offer.index', [
@@ -135,9 +126,7 @@ class OfferController extends AbstractController
     #[Route('/{offer}', name: 'show', methods: ['GET'])]
     public function show(Offer $offer): Response
     {
-        return $this->render('pages/offer/show.html.twig', [
-            'offer' => $offer,
-        ]);
+        return $this->render('pages/offer/show.html.twig', ['offer' => $offer]);
     }
 
     /**
@@ -182,10 +171,7 @@ class OfferController extends AbstractController
                 ]);
             }
 
-            $this->addFlash(
-                type: 'warning',
-                message: 'Veuillez bien saisir tous les champs!'
-            );
+            $this->addFlash(type: 'warning', message: 'Veuillez bien saisir tous les champs!');
         }
 
         return $this->render('pages/offer/new_update_offer.html.twig', [
@@ -193,33 +179,4 @@ class OfferController extends AbstractController
             'editMode'  => $offer->getId()
         ]);
     }
-
-    /**
-     * This method send Email of notification after delete offer
-     * @param \App\Entity\Offer $offer
-     * @return void
-     */
-    private function sendEmail(Offer $offer): void
-    {
-        foreach ($offer->getCandidates() as $candidate) {
-            $this->mailerService->send(
-                $candidate->getEmail(),
-                'Réponse candidature pour le poste :' . $offer->getName(),
-                'candidate_email.html.twig',
-                [
-                    'candidate' => $candidate,
-                    'offer' => $offer,
-                    'company' => $offer->getCompany(),
-                    'contact' => $offer->getCompany()->getUser()
-                ]
-            );
-        }
-    }
-
-    // #[Route('/test', name: 'offer.test', methods: ['GET', 'POST'])]
-    // public function test(Request $request,): Response
-    // {
-
-    //     return $this->render('pages/offer/test.html.twig', []);
-    // }
 }
