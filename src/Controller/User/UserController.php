@@ -19,7 +19,7 @@ class UserController extends AbstractController
 {
     public function __construct(
         private UserRepository $userRepository,
-        // private MailerService $mailerService
+        private MailerService $mailerService
     ) {
     }
 
@@ -108,7 +108,7 @@ class UserController extends AbstractController
 
             if ($choosenUser->isIsDeleted()) {
 
-                // static::sendEmail($choosenUser);
+                static::sendEmail($choosenUser);
             }
 
             $this->userRepository->save($choosenUser, true);
@@ -145,22 +145,22 @@ class UserController extends AbstractController
      * @param User $user
      * @return void
      */
-    // private function sendEmail(User $user): void
-    // {
-    //     // MAILER SEND USER
-    //     $this->mailerService->send(
-    //         $user->getEmail(),
-    //         'Demande de suppresion de compte.',
-    //         'delete_account.html.twig',
-    //         ['user' => $user]
-    //     );
+    private function sendEmail(User $user): void
+    {
+        // MAILER SEND USER
+        $this->mailerService->send(
+            $user->getEmail(),
+            'Demande de suppresion de compte.',
+            'delete_account.html.twig',
+            ['user' => $user]
+        );
 
-    //     // MAILER SEND ADMIN
-    //     $this->mailerService->send(
-    //         'admin@devjob.com',
-    //         'Demande de suppresion de compte.',
-    //         'delete_account.html.twig',
-    //         ['user' => $user]
-    //     );
-    // }
+        // MAILER SEND ADMIN
+        $this->mailerService->send(
+            'admin@devjob.com',
+            'Demande de suppresion de compte.',
+            'delete_account.html.twig',
+            ['user' => $user]
+        );
+    }
 }

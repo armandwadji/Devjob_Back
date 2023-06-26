@@ -22,7 +22,7 @@ class SecurityController extends AbstractController
 
     public function __construct(
         private UserRepository $userRepository,
-        // private MailerService $mailerService
+        private MailerService $mailerService
     ) {
     }
 
@@ -61,16 +61,16 @@ class SecurityController extends AbstractController
                 $user->getCompany()->setImageFile(null);
 
                 // MAILER SEND
-                // $this->mailerService->send(
-                //     $user->getEmail(),
-                //     'Confirmation du compte utilisateur',
-                //     'registration_confirmation.html.twig',
-                //     [
-                //         'user'          => $user,
-                //         'token'         => $tokenRegistration,
-                //         'lifeTimetoken' => $user->getTokenRegistrationLifeTime()->format('d/m/Y à H:i:s')
-                //     ]
-                // );
+                $this->mailerService->send(
+                    $user->getEmail(),
+                    'Confirmation du compte utilisateur',
+                    'registration_confirmation.html.twig',
+                    [
+                        'user'          => $user,
+                        'token'         => $tokenRegistration,
+                        'lifeTimetoken' => $user->getTokenRegistrationLifeTime()->format('d/m/Y à H:i:s')
+                    ]
+                );
 
                 $this->addFlash(
                     type: 'success',
@@ -160,15 +160,15 @@ class SecurityController extends AbstractController
                     $this->userRepository->save($user, true);
 
                     // MAILER SEND
-                    // $this->mailerService->send(
-                    //     $user->getEmail(),
-                    //     'Modiffication mots de passe utilisateur',
-                    //     'change_password_email.html.twig',
-                    //     [
-                    //         'user'  => $user,
-                    //         'token' => $tokenRegistration,
-                    //     ]
-                    // );
+                    $this->mailerService->send(
+                        $user->getEmail(),
+                        'Modiffication mots de passe utilisateur',
+                        'change_password_email.html.twig',
+                        [
+                            'user'  => $user,
+                            'token' => $tokenRegistration,
+                        ]
+                    );
 
                     $this->addFlash(
                         type: 'success',

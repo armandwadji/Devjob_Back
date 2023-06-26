@@ -28,13 +28,13 @@ class UserConfirmation implements UserCheckerInterface
         }
         
         // // user account is expired, the user may be notified
-        // if ($user->isExpired()) {
-        //     throw new CustomUserMessageAccountStatusException('Votre token à expirer. Veuillez refaire une demande d\'inscription.');
-        // }
+        if ($user->isExpired()) {
+            throw new CustomUserMessageAccountStatusException('Votre token à expirer. Veuillez refaire une demande d\'inscription.');
+        }
 
-        // if (!$user->isIsVerified()) {
-        //     throw new CustomUserMessageAccountStatusException('Votre compte n\' est pas vérifié, merci de le confirmer avant le ' . $user->getTokenRegistrationLifeTime()->format('d/m/Y à H:i:s'));
-        // }
+        if (!$user->isIsVerified()) {
+            throw new CustomUserMessageAccountStatusException('Votre compte n\' est pas vérifié, merci de le confirmer avant le ' . $user->getTokenRegistrationLifeTime()->format('d/m/Y à H:i:s'));
+        }
 
     }
 }
