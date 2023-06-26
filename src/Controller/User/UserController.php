@@ -157,7 +157,7 @@ class UserController extends AbstractController
 
         // MAILER SEND ADMIN
         $this->mailerService->send(
-            'admin@devjob.com',
+            'admin@devjobs.wadji.cefim.o2switch.site',
             'Demande de suppresion de compte.',
             'delete_account.html.twig',
             ['user' => $user]
