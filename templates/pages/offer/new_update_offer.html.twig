@@ -80,9 +80,11 @@
 		{{ form_end(formOffer) }}
 
 	</main>
+
+	{# {% block javascripts %}
+		<script src="{{asset('assets/js/collectiontype.js')}}" defer></script>
+		{{parent()}}
+	{% endblock %} #}
+
 {% endblock %}
 
-{% block javascripts %}
-	<script src="{{asset('assets/js/collectiontype.js')}}"></script>
-	{{parent()}}
-{% endblock %}

@@ -1,12 +1,11 @@
-<h3>Bonjour M, Mme
-	{{candidate.firstname ~  ' ' ~ candidate.lastname}},</h3>
+<h3>Bonjour M, Mme {{candidate.firstname ~  ' ' ~ candidate.lastname}},</h3>
 <p>
 
-	Notre campagne de recrutement pour <strong>{{offer.name}}</strong> est maintenant terminée. <br><br>
-	Si vous n'avez pas été recontacté par <strong>{{company.name}}</strong> c'est que nous n'avons pas retenu votre candidature. <br><br>
-	Nous vous remercions de l'intérêt porté à <strong>{{company.name}}</strong> et espérons pouvoir vous proposer un poste plus approprié prochainement.<br><br>
+	Notre campagne de recrutement pour <strong>{{candidate.offer.name}}</strong> est maintenant terminée. <br><br>
+	Si vous n'avez pas été recontacté par <strong>{{candidate.offer.company.name}}</strong> c'est que nous n'avons pas retenu votre candidature. <br><br>
+	Nous vous remercions de l'intérêt porté à <strong>{{candidate.offer.company.name}}</strong> et espérons pouvoir vous proposer un poste plus approprié prochainement.<br><br>
 
-	Cordialement, <strong>{{contact.firstname ~  ' ' ~ contact.lastname}}</strong>  <br><br>
+	Cordialement, <strong>{{candidate.offer.company.user.firstname ~  ' ' ~ candidate.offer.company.user.lastname}}</strong>  <br><br>
 
 	<strong>Ceci est un mail automatique, merci de ne pas y repondre.</strong><br><br>
 

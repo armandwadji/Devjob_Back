@@ -45,8 +45,15 @@ class OfferRepository extends ServiceEntityRepository
      */
     public function findOfferOrderDesc(): array
     {
-        // SELECT * FROM `offer` ORDER BY `offer`.`created_at` DESC;
+        // SELECT * FROM `offer` 
+        // JOIN `user`
+        // WHERE user.is_deleted = true
+        // ORDER BY `offer`.created_At DESC;
         return $this->createQueryBuilder('o')
+            ->join('o.company', 'c')
+            ->join('c.user', 'u')
+            ->andWhere('u.isDeleted = :delete')
+            ->setParameter('delete', false)
             ->orderBy('o.createdAt', 'DESC')
             ->getQuery()
             ->getResult();

@@ -27,8 +27,6 @@ class HomeController extends AbstractController
             12,
         );
 
-        return $this->render('pages/home.html.twig', [
-            'offers' => $offers,
-        ]);
+        return $this->render('pages/home.html.twig', ['offers' => $offers]);
     }
 }

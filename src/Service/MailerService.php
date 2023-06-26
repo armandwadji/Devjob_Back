@@ -28,7 +28,7 @@ class MailerService
     public function send(string $to, string $subject, string $templateTwig, array $context): void
     {
         $email = (new TemplatedEmail())
-            ->from(new Address('admin@devjob.fr', 'Administrateur'))
+            ->from(new Address('admin@devjobs.wadji.cefim.o2switch.site', 'Devjob'))
             ->to($to)
             ->subject($subject)
             ->htmlTemplate('emails/' . $templateTwig)
