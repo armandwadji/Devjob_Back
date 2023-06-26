@@ -32,7 +32,7 @@ class OfferApiController extends AbstractController
         $limit = intval($request->get('limit')) ?: 12;
         return $this->json(
             [
-                'jobs'  => static::offersFormat($this->offerRepository->offersApi(offset: $offset, limit: $limit)),
+                'jobs'  => static::offersFormat($this->offerRepository->offersApi(offset: $offset, limit: $limit), $request),
                 'total' => count($this->offerRepository->findAll())
             ],
             200,
@@ -75,13 +75,16 @@ class OfferApiController extends AbstractController
 
         return $this->json(
             [
-                'jobs' => static::offersFormat($this->offerRepository->offersApi(
-                    offset: $offset,
-                    limit: $limit,
-                    location: $location,
-                    fulltime: $fulltime,
-                    text: $text
-                )),
+                'jobs' => static::offersFormat(
+                    $this->offerRepository->offersApi(
+                        offset: $offset,
+                        limit: $limit,
+                        location: $location,
+                        fulltime: $fulltime,
+                        text: $text
+                    ),
+                    $request
+                ),
                 'total' => count($this->offerRepository->findAll())
             ],
             200,
@@ -95,8 +98,9 @@ class OfferApiController extends AbstractController
      * @param array $offers
      * @return array
      */
-    private function offersFormat(array $offers): array
+    private function offersFormat(array $offers, Request $request): array
     {
+        // https://devjobs.wadji.cefim.o2switch.site/files/candidates/cvjennyterrible-6499606e11b9b405973973.pdf
         $offersFormat = [];
         foreach ($offers as $offer) {
             $offerFormat = [
@@ -104,7 +108,7 @@ class OfferApiController extends AbstractController
                 'contract'          => $offer->getContract()->getName(),
                 'id'                => $offer->getId(),
                 'location'          => $offer->getCompany()->getCountry(),
-                'logo'              => $offer->getCompany()->getImageName() ?: 'https://picsum.photos/id/'.$offer->getId().'/250/250',
+                'logo'              => $offer->getCompany()->getImageName() ? $request->server->get('BASE_URL').'/images/company/'.$offer->getCompany()->getImageName(): 'https://picsum.photos/id/' . $offer->getId() . '/250/250',
                 'logoBackground'    => $offer->getCompany()->getColor(),
                 'position'          => $offer->getName(),
                 'postedAt'          => $offer->getCreatedAt()->getTimestamp(),
@@ -136,13 +140,13 @@ class OfferApiController extends AbstractController
         }
 
         $offerFormat = [
-            'apply'             => $request->server->get('BASE_URL'). '/' . 'offers/' . $offer->getId() . '/apply',
+            'apply'             => $request->server->get('BASE_URL') . '/' . 'offers/' . $offer->getId() . '/apply',
             'company'           => $offer->getCompany()->getName(),
             'contract'          => $offer->getContract()->getName(),
             'description'       => $offer->getDescription(),
             'id'                => $offer->getId(),
             'location'          => $offer->getCompany()->getCountry(),
-            'logo'              => $offer->getCompany()->getImageName() ?: 'https://picsum.photos/id/'.$offer->getId().'/250/250',
+            'logo'              => $offer->getCompany()->getImageName() ? $request->server->get('BASE_URL').'/images/company/'.$offer->getCompany()->getImageName(): 'https://picsum.photos/id/' . $offer->getId() . '/250/250',
             'logoBackground'    => $offer->getCompany()->getColor(),
             'position'          => $offer->getName(),
             'postedAt'          => $offer->getCreatedAt()->getTimestamp(),
