@@ -28,7 +28,8 @@ vous pouvez executer cette commande pour installer le projet en local sur votre 
 git clone https://gitlab.cefim-formation.org/ArmandWADJI/ecf-back-end.git
 ```
 
-De plus l'application utilise un système d'envoie de mail, donc pour simuler un serveur SMTP en local sur votre machine vous devez en installer un. 
+## MailDev
+L'application utilise un système d'envoie de mail, donc pour simuler un serveur SMTP en local sur votre machine vous devez en installer un. 
 
 Pour ce projet nous utiliserons MailDev qui à été dévélopper en NodeJs. 
 
@@ -44,13 +45,16 @@ lancer le server SMPT tous simplement avec la commande suivante:
 maildev
 ```
 
+## .env
 Vous devez créer un fichier à la racine de votre arboresence que vous nommerez **.env.dev.local**.
 
-Vous y intégrerez ces lignes, où vous y ajouteerez les informations de connexion à votre base de donnée ainsi que le port de votre serveur SMTP. 
+Vous y intégrerez ces lignes, où vous y ajouterez les informations de connexion à votre base de donnée, ainsi que le port de votre serveur SMTP. 
 
 ```
 DATABASE_URL="mysql://SERVER:PASSWORD@127.0.0.1:3306/devjob?serverVersion=8&charset=utf8mb4"
 MAILER_DSN=smtp://localhost:PORTDUSERVEURSMTP
+RECAPTCHA3_KEY=XXXXXXXXXXXXX
+RECAPTCHA3_SECRET=XXXXXXXXXXXXXX
 ```
 
 Ensuite, ouvrez un autre terminal et installez les dépendances du projet avec la commande suivante :
@@ -121,6 +125,32 @@ sélectionné un email dans la table User de votre base de donnée!
 password :
 ```
 password
+```
+
+## Supplement:  Recaptcha
+L'application utilise aussi un recaptcha sur le formulaire d'inscription. Pour fonctionner, il faut faire comme ceci:
+```
+composer require karser/karser-recaptcha3-bundle
+```
+
+Puis, vous devez décommenter le code qui se trouve dans les fichiers : 
+```
+src/Form/RegistrationType.php 
+```
+![RegistrationType](https://github.com/armandwadji/Devjob_Back/assets/90448006/61868316-2485-46a3-aff8-10cc8db62d85)
+
+
+```
+et templates/pages/security/registration.html.twig
+```
+![RegistrationHtml](https://github.com/armandwadji/Devjob_Back/assets/90448006/e2ed5f70-51d8-4ddc-bd41-e52c75dc5f31)
+
+## .env
+Dans votre fichier .env vous devez rajouter la clé api et la clé secrete de votre recaptcha
+
+```
+RECAPTCHA3_KEY=XXXXXXXXXXXXX
+RECAPTCHA3_SECRET=XXXXXXXXXXXXXX
 ```
 
 <p align="right">Back to top :
