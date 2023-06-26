@@ -2,6 +2,11 @@
 
 {% block title %} {{editMode ? "Edition" : "Nouvelle"}} offre {% endblock %}
 
+{% block javascripts %}
+	<script src="{{asset('assets/js/collectiontype.js')}}" defer></script>
+	{{parent()}}
+{% endblock %}
+
 {% block body %}
 	<main class="container">
 
@@ -80,9 +85,8 @@
 		{{ form_end(formOffer) }}
 
 	</main>
+
+
+
 {% endblock %}
 
-{% block javascripts %}
-	<script src="{{asset('assets/js/collectiontype.js')}}"></script>
-	{{parent()}}
-{% endblock %}
