@@ -24,6 +24,7 @@ class MailerEventSubscriber implements EventSubscriberInterface
         private TokenGeneratorInterface $tokenGeneratorInterface
     ) {
     }
+
     public static function getSubscribedEvents()
     {
         return [
@@ -45,6 +46,11 @@ class MailerEventSubscriber implements EventSubscriberInterface
         ];
     }
 
+    /**
+     * This controller sends an email to all candidates who have applied for the offer delete
+     * @param \App\Event\OfferDeleteEvent $offerDeleteEvent
+     * @return void
+     */
     public function onOfferDelete(OfferDeleteEvent $offerDeleteEvent): void
     {
         $offer = $offerDeleteEvent->offer;
@@ -70,40 +76,55 @@ class MailerEventSubscriber implements EventSubscriberInterface
         }
     }
 
+    /**
+     * This controller sends an email to a candidate when his application is deleted
+     * @param \App\Event\CandidateDeleteEvent $candidateDeleteEvent
+     * @return void
+     */
     public function onCandidateDelete(CandidateDeleteEvent $candidateDeleteEvent): void
     {
         $candidate = $candidateDeleteEvent->candidate;
 
         $this->mailerService->send(
-            to              :$candidate->getEmail(),
-            subject         :'Réponse candidature pour le poste :' . $candidate->getOffer()->getName(),
-            templateTwig    :'candidate_email.html.twig',
-            context         :['candidate' => $candidateDeleteEvent->candidate]
+            to: $candidate->getEmail(),
+            subject: 'Réponse candidature pour le poste :' . $candidate->getOffer()->getName(),
+            templateTwig: 'candidate_email.html.twig',
+            context: ['candidate' => $candidateDeleteEvent->candidate]
         );
     }
 
+    /**
+     * This controller sends an email to the company and to the administrator when requesting the deletion of the account of the company which requests it
+     * @param \App\Event\UserDeleteEvent $userDeleteEvent
+     * @return void
+     */
     public function onUserDelete(UserDeleteEvent $userDeleteEvent): Void
     {
         $user = $userDeleteEvent->user;
 
         // MAILER SEND USER
         $this->mailerService->send(
-            to              :$user->getEmail(),
-            subject         :'Demande de suppresion de compte.',
-            templateTwig    :'delete_account.html.twig',
-            context         :['user' => $user]
+            to: $user->getEmail(),
+            subject: 'Demande de suppresion de compte.',
+            templateTwig: 'delete_account.html.twig',
+            context: ['user' => $user]
         );
 
         // MAILER SEND ADMIN
         $this->mailerService->send(
-            to              :'admin@devjobs.wadji.cefim.o2switch.site',
-            subject         :'Demande de suppresion de compte.',
-            templateTwig    :'delete_account.html.twig',
-            context         :['user' => $user]
+            to: 'admin@devjobs.wadji.cefim.o2switch.site',
+            subject: 'Demande de suppresion de compte.',
+            templateTwig: 'delete_account.html.twig',
+            context: ['user' => $user]
         );
     }
 
-    public function onTokenRegistration (UserTokenRegistrationEvent $userTokenRegistration):void
+    /**
+     * This controller sends an email to a user for the confirmation of his account
+     * @param \App\Event\UserTokenRegistrationEvent $userTokenRegistration
+     * @return void
+     */
+    public function onTokenRegistration(UserTokenRegistrationEvent $userTokenRegistration): void
     {
         $user = $userTokenRegistration->user;
 
@@ -119,7 +140,13 @@ class MailerEventSubscriber implements EventSubscriberInterface
         );
     }
 
-    public function onUserForgetPassword (UserForgetPasswordEvent $userForgetPasswordEvent):void{
+    /**
+     * This controller sends an email to a user to reset his password
+     * @param \App\Event\UserForgetPasswordEvent $userForgetPasswordEvent
+     * @return void
+     */
+    public function onUserForgetPassword(UserForgetPasswordEvent $userForgetPasswordEvent): void
+    {
 
         $user = $userForgetPasswordEvent->user;
 
