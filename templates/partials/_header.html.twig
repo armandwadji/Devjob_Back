@@ -28,7 +28,7 @@
 					{% else %}
 
 						<li class="nav-item">
-							<a class="nav-link {% if route_name in ['offer.index', 'offer.candidates.show', 'offer.new'] %} active {% endif %}" href="{{path('offer.index', {company: app.user.company.id } )}}">Offres
+							<a class="nav-link {% if route_name in ['offer.index', 'offer.candidates.show', 'offer.new', 'offer.edit'] %} active {% endif %}" href="{{path('offer.index', {company: app.user.company.id } )}}">Offres
 								<span class="visually-hidden">(current)</span>
 							</a>
 						</li>
