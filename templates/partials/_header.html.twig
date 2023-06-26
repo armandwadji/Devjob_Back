@@ -15,7 +15,7 @@
 					{% if 'ROLE_ADMIN' in app.user.roles %}
 
 						<li class="nav-item">
-							<a class="nav-link {% if route_name in ['admin.society.index', 'admin.society.new', 'admin.society.edit', 'admin.society.show'] %} active {% endif %}" href="{{path('admin.society.index' )}}">Entreprises
+							<a class="nav-link {% if route_name in ['admin.society.index', 'admin.society.new', 'admin.society.show', 'admin.society.edit'] %} active {% endif %}" href="{{path('admin.society.index' )}}">Entreprises
 								<span class="visually-hidden">(current)</span>
 							</a>
 						</li>
