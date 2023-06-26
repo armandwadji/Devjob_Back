@@ -1,8 +1,7 @@
 
-
-
 window.onload = () => {
   if ( !document.querySelector( "#requirements-item" ) ) {
+    
     // Méthode de visibility hidden des méssages d'alertes au bout de 3s
     const alerts = document.querySelectorAll( ".alert" );
 
