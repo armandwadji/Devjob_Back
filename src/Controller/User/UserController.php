@@ -47,7 +47,7 @@ class UserController extends AbstractController
     {
 
         // GESTION DES CODES ISO POUR LA CONFOMITE DU FORMULAIRE
-        static::countryEncode($choosenUser);
+        $choosenUser->countryEncode();
 
         $form = $this->createForm(UserType::class, $choosenUser);
         $form->handleRequest($request);
@@ -64,7 +64,7 @@ class UserController extends AbstractController
                 $form->getData()->getCompany()->setImageFile(null);
             } else {
 
-                $choosenUser->getCompany()->setCountry(Countries::getAlpha3Name($choosenUser->getCompany()->getCountry())); //Convertis les initiales du pays en son nom complet.
+                $choosenUser->countryDecode(); //Convertis les initiales du pays en son nom complet.
 
                 $this->userRepository->save($choosenUser, true);
 
@@ -96,7 +96,7 @@ class UserController extends AbstractController
     public function deleteAccount(User $choosenUser, Request $request): Response
     {
         // GESTION DES CODES ISO POUR LA CONFOMITE DU FORMULAIRE
-        static::countryEncode($choosenUser);
+        $choosenUser->countryEncode();
 
         $form = $this->createForm(UserType::class, $choosenUser);
         $form->handleRequest($request);
@@ -104,7 +104,7 @@ class UserController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $choosenUser->setIsDeleted(!$choosenUser->isIsDeleted());
             $choosenUser->setDescription($choosenUser->isIsDeleted() ? $choosenUser->getDescription() : null);
-            $choosenUser->getCompany()->setCountry(Countries::getAlpha3Name($choosenUser->getCompany()->getCountry())); //Convertis les initiales du pays en son nom complet.
+            $choosenUser->countryDecode(); //Convertis les initiales du pays en son nom complet.
 
             if ($choosenUser->isIsDeleted()) {
 
@@ -126,18 +126,6 @@ class UserController extends AbstractController
         return $this->render('pages/user/delete_account.html.twig', [
             'form' => $form,
         ]);
-    }
-
-    /**
-     * This method convert country code in country name
-     * @param \App\Entity\User $user
-     * @return void
-     */
-    private function countryEncode(User $user)
-    {
-        $isoCode2 = array_search($user->getCompany()->getCountry(), Countries::getNames(), true);
-        $isoCode3 = Countries::getAlpha3Code($isoCode2);
-        $user->getCompany()->setCountry($isoCode3);
     }
 
     /**

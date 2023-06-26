@@ -127,7 +127,7 @@ class CompanyCrudController extends  AbstractController
     {
         // GESTION DES CODES ISO POUR LA CONFORMITE DU FORMULAIRE
         if($user->getCompany() !== null){
-            static::countryEncode($user);
+            $user->countryEncode();
         }
 
         $form = $this->createForm(RegistrationType::class, $user);
@@ -145,7 +145,7 @@ class CompanyCrudController extends  AbstractController
                 $user->getCompany()->setImageFile(null);
             } else {
 
-                $user->getCompany()->setCountry(Countries::getAlpha3Name($user->getCompany()->getCountry())); //Convertis les initiales du pays en son nom complet.
+                $user->countryDecode(); //Convertis les initiales du pays en son nom complet.
 
                 $this->userRepository->save($user, true);
                 $user->getCompany()->setImageFile(null);
@@ -170,15 +170,4 @@ class CompanyCrudController extends  AbstractController
         ]);
     }
 
-    /**
-     * This method convert country code in country name
-     * @param User $user
-     * @return void
-     */
-    private function countryEncode(User $user)
-    {
-        $isoCode2 = array_search($user->getCompany()->getCountry(), Countries::getNames(), true);
-        $isoCode3 = Countries::getAlpha3Code($isoCode2);
-        $user->getCompany()->setCountry($isoCode3);
-    }
 }
