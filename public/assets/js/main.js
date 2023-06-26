@@ -1,6 +1,7 @@
 
 window.onload = () => {
-  if ( !document.querySelector( "#requirements-item" ) ) {
+
+  if ( document.querySelectorAll( ".alert" ) && document.querySelectorAll( ".form-error-icon" )) {
     
     // Méthode de visibility hidden des méssages d'alertes au bout de 3s
     const alerts = document.querySelectorAll( ".alert" );
@@ -33,7 +34,9 @@ window.onload = () => {
       });
     });
     
-  } else {
+  }
+
+  if ( document.querySelector( "#requirements-item" ) )  {
     
     // ******** REQUIREMENT *********
     let requirements = document.querySelector("#requirements-item");

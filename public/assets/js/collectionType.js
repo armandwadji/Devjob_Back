@@ -37,7 +37,7 @@
 // };
 
 // // Méthode de création du boutton supprimer d'un item
-// const createDeletebtn = (index, requirements) => {
+// function createDeletebtn (index, requirements) {
 //   const boutonSupp = document.createElement("button");
 //   boutonSupp.className = "btn btn-danger";
 //   boutonSupp.id = `delete-ingredient-${index}`;
@@ -56,7 +56,7 @@
 // };
 
 // // Méthode de création d'un nouvel item
-// const createNewItemForm = (requirements) => {
+// function createNewItemForm (requirements) {
 //   let index = requirements.dataset.index;
 //   let prototype = requirements.dataset.prototype.replace(/__name__/g, index);
 
