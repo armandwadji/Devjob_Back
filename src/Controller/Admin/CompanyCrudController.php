@@ -12,10 +12,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 use App\Form\RegistrationType;
 use App\Repository\UserRepository;
-use Symfony\Component\Intl\Countries;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\VarDumper\VarDumper;
 
 #[Route('/admin', name: 'admin.society.')]
 class CompanyCrudController extends  AbstractController
