@@ -13,7 +13,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 #[Route('/api', name: 'api.')]
 class OfferApiController extends AbstractController
 {
-    const HEADER = ['Access-Control-Allow-Origin' => '*', 'Content-Type' => 'application/json'];
+    const HEADER = [
+        'Access-Control-Allow-Origin' => '*', 
+        'Content-Type' => 'application/json'
+    ];
 
     public function __construct(
         private OfferRepository $offerRepository,
@@ -93,7 +96,7 @@ class OfferApiController extends AbstractController
                         'total' => count($this->offerRepository->findAll())
                       ],
             status  : 200,
-            headers : [],
+            headers : static::HEADER,
             context : ['groups' => 'offer:read']
         );
     }
@@ -105,7 +108,6 @@ class OfferApiController extends AbstractController
      */
     private function offersFormat(array $offers, Request $request): array
     {
-        // https://devjobs.wadji.cefim.o2switch.site/files/candidates/cvjennyterrible-6499606e11b9b405973973.pdf
         $offersFormat = [];
         foreach ($offers as $offer) {
             $offerFormat = [
