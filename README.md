@@ -46,15 +46,13 @@ maildev
 ```
 
 ## .env
-Vous devez créer un fichier à la racine de votre arboresence que vous nommerez **.env.dev.local**.
+Vous devez créer un fichier à la racine de votre arborescence que vous nommerez **.env.dev.local**.
 
 Vous y intégrerez ces lignes, où vous y ajouterez les informations de connexion à votre base de donnée, ainsi que le port de votre serveur SMTP. 
 
 ```
 DATABASE_URL="mysql://SERVER:PASSWORD@127.0.0.1:3306/devjob?serverVersion=8&charset=utf8mb4"
 MAILER_DSN=smtp://localhost:PORTDUSERVEURSMTP
-RECAPTCHA3_KEY=XXXXXXXXXXXXX
-RECAPTCHA3_SECRET=XXXXXXXXXXXXXX
 ```
 
 Ensuite, ouvrez un autre terminal et installez les dépendances du projet avec la commande suivante :
@@ -63,7 +61,7 @@ Ensuite, ouvrez un autre terminal et installez les dépendances du projet avec l
 composer install
 ```
 
-Maintenant il vous faut créer votre DATABASE en saisiant la commande suivante :
+Maintenant il vous faut créer votre DATABASE en saisisant la commande suivante :
 
 ```
 php bin/console doctrine:database:create
@@ -115,7 +113,6 @@ Php1234#
 ## Connexion en tant qu' entreprise
 
 Pour vous connecter en tant qu'entreprise voici les paramètres de login.
-
 
 email :
 ```
