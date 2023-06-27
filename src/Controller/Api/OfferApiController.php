@@ -58,10 +58,10 @@ class OfferApiController extends AbstractController
         }
 
         return $this->json(
-            data    :['jobs' => static::offerFormat($offer, $request)], 
-            status  :200, 
-            headers :static::HEADER, 
-            context :['groups' => 'offer:detail']);
+            data    : static::offerFormat($offer, $request), 
+            status  : 200, 
+            headers : static::HEADER, 
+            context : ['groups' => 'offer:detail']);
     }
 
     /**
@@ -79,7 +79,7 @@ class OfferApiController extends AbstractController
         $text = strval($request->query->get('text', null));
 
         return $this->json(
-            data    :[
+            data    : [
                         'jobs' => static::offersFormat(
                             $this->offerRepository->offersApi(
                                 offset: $offset,
@@ -91,10 +91,10 @@ class OfferApiController extends AbstractController
                             $request
                         ),
                         'total' => count($this->offerRepository->findAll())
-                    ],
-            status  :200,
-            headers :[],
-            context :['groups' => 'offer:read']
+                      ],
+            status  : 200,
+            headers : [],
+            context : ['groups' => 'offer:read']
         );
     }
 
@@ -156,7 +156,7 @@ class OfferApiController extends AbstractController
             'position'          => $offer->getName(),
             'postedAt'          => $offer->getCreatedAt()->getTimestamp(),
             'requirements'      => ['content' => $offer->getRequirement()->getContent(), 'items' => $requirementItems,],
-            'roles'             => ['content' => $offer->getRole()->getContent(), 'items' => $roleItems,],
+            'role'              => ['content' => $offer->getRole()->getContent(), 'items' => $roleItems,],
             'website'           => $offer->getUrl(),
 
         ];
