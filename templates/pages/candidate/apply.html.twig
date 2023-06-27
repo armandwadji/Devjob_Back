@@ -17,28 +17,28 @@
 		{{ form_start(form) }}
 
 		<div class="form-group mt-4 px-4">
-			{{form_label(form.firstname, 'Nom :', {'label_attr': { 'class': 'form-label'} } )}}
+			{{form_label(form.firstname, 'Prénom *', {'label_attr': { 'class': 'form-label'} } )}}
 			{{ form_widget(form.firstname, {'attr': {'placeholder': "Votre nom",   }}) }}
 		</div>
 
 		<div class="form-group mt-4 px-4">
-			{{form_label(form.lastname, 'Prénom :', {'label_attr': { 'class': 'form-label'} } )}}
+			{{form_label(form.lastname, 'Nom *', {'label_attr': { 'class': 'form-label'} } )}}
 			{{ form_widget(form.lastname, {'attr': {'placeholder': "Votre prénom",   }}) }}
 		</div>
 
 		<div class="form-group mt-4 px-4">
-			{{form_label(form.email, 'Email :', {'label_attr': { 'class': 'form-label'} } )}}
+			{{form_label(form.email, 'Email *', {'label_attr': { 'class': 'form-label'} } )}}
 			{{ form_widget(form.email, {'attr': {'placeholder': "devjob@candidate.fr",   }}) }}
 		</div>
 
 		<div class="form-group mt-4 px-4">
-			{{form_label(form.telephone, 'Telephone :', {'label_attr': { 'class': 'form-label'} } )}}
+			{{form_label(form.telephone, 'Telephone *', {'label_attr': { 'class': 'form-label'} } )}}
 			{{ form_widget(form.telephone, {'attr': {'placeholder': "00000000",   }}) }}
 		</div>
 
 		{% if not (app.user and 'ROLE_ADMIN' in app.user.roles) or not imageName %}
 			<div class="form-group mt-4 px-4">
-				{{form_label(form.imageFile, ' CV', {'label_attr': { 'class': 'form-label'} } )}}
+				{{form_label(form.imageFile, ' CV *', {'label_attr': { 'class': 'form-label'} } )}}
 				{{ form_widget(form.imageFile, { 'attr': { 'class': 'd-flex'  } } ) }}
 			</div>
 		{% endif %}

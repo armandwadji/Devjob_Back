@@ -15,19 +15,19 @@
 		{{ form_start(formOffer) }}
 
 		{# Nom de l'offre #}
-		{{form_label(formOffer.name, 'Nom', {'label_attr': { 'class': 'form-label mt-4 fw-bold '} } )}}
+		{{form_label(formOffer.name, 'Nom *', {'label_attr': { 'class': 'form-label mt-4 fw-bold '} } )}}
 		{{ form_widget(formOffer.name, {'attr': {'placeholder': "titre de l'offre"  }}) }}
 
 		{# Description de l'offre #}
-		{{form_label(formOffer.description, 'Description', {'label_attr': { 'class': 'form-label mt-4 fw-bold '} } )}}
+		{{form_label(formOffer.description, 'Description *', {'label_attr': { 'class': 'form-label mt-4 fw-bold '} } )}}
 		{{ form_widget(formOffer.description, { 'attr': { 'placeholder': "Description de l'offre" } } ) }}
 
 		{# Type de contrat de l'offre #}
-		{{form_label(formOffer.contract, 'Type de contrat', {'label_attr': { 'class': 'form-label mt-4 fw-bold '} } )}}
+		{{form_label(formOffer.contract, 'Type de contrat *', {'label_attr': { 'class': 'form-label mt-4 fw-bold '} } )}}
 		{{ form_widget(formOffer.contract, { 'attr': { 'class': 'form-select'  } } ) }}
 
 		{# Url de l'offre #}
-		{{form_label(formOffer.url, 'Url', {'label_attr': { 'class': 'form-label mt-4 fw-bold'} } )}}
+		{{form_label(formOffer.url, 'Url *', {'label_attr': { 'class': 'form-label mt-4 fw-bold'} } )}}
 		{{ form_widget(formOffer.url, { 'attr': { 'placeholder': "http://"  } } ) }}
 
 		<p class="mt-4 text-primary-emphasis fw-bold">Prérequis</p>
@@ -36,7 +36,7 @@
 			{# RÉSUME DES PRÉREQUIS #}
 			<div class="form-group">
 				{{form_label(formOffer.requirement.content, ' ', {'label_attr': { 'class': 'form-label'} } )}}
-				{{ form_widget(formOffer.requirement.content, {'attr': {'placeholder': "Résumé  des prérequis", 'class' : 'border-0 border-bottom'   }}) }}
+				{{ form_widget(formOffer.requirement.content, {'attr': {'placeholder': "Résumé  des prérequis *", 'class' : 'border-0 border-bottom'   }}) }}
 			</div>
 
 			{# DÉTAILS DES PRÉREQUIS #}
@@ -57,7 +57,7 @@
 			{# RÉSUME DES ROLES #}
 			<div class="form-group">
 				{{form_label(formOffer.role.content, ' ', {'label_attr': { 'class': 'form-label'} } )}}
-				{{ form_widget(formOffer.role.content, {'attr': {'placeholder': "Résumé  des roles", 'class' : 'border-0 border-bottom '   }}) }}
+				{{ form_widget(formOffer.role.content, {'attr': {'placeholder': "Résumé  des roles *", 'class' : 'border-0 border-bottom '   }}) }}
 			</div>
 
 			{# DÉTAILS DES ROLES #}
