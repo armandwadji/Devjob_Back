@@ -89,7 +89,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\Regex(
         pattern: '/^(?=.*?[#?!@$%^&*-]).{2,}$/',
         match: true,
-        message: 'Le mot de passe doit contenir au moins un caratère spécial.',
+        message: 'Le mot de passe doit contenir au moins un caratère spécial.( #?!@$%&*- )',
     )]
     private ?string $plainPassword = null;
 
