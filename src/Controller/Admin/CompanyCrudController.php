@@ -42,9 +42,7 @@ class CompanyCrudController extends  AbstractController
             limit   : 10
         );
 
-        return $this->render('pages/admin/index.html.twig', [
-            'users' => $users
-        ]);
+        return $this->render('pages/admin/index.html.twig', ['users' => $users]);
     }
 
     /**
@@ -68,9 +66,7 @@ class CompanyCrudController extends  AbstractController
     #[Route('/society/{name}', name: 'show', methods: ['GET'])]
     public function show(Company $company): Response
     {
-        return $this->render('pages/user/account.html.twig', [
-            'user' => $company->getUser(),
-        ]);
+        return $this->render('pages/user/account.html.twig', ['user' => $company->getUser()]);
     }
 
     /**
@@ -103,15 +99,17 @@ class CompanyCrudController extends  AbstractController
         $user = $company->getUser();
 
         if ($user && $this->isCsrfTokenValid('delete'.$company->getId(), $request->request->get('_token')) ) {
+
             $this->userRepository->remove($user, true);
             $this->addFlash( type: 'success', message : 'La société ' . strtoupper($company->getName()) . ' à été supprimer avec succès.');
+
         }else{
+
             $this->addFlash( type: 'warning', message : 'La société ' . strtoupper($company->getName()) . ' n\'à pas pu être supprimer.');
+        
         }
 
-        return $this->redirectToRoute('admin.society.index', [
-            'page'  => ($OffersCountPage > 0 && $page >= 2) || $page === 1 ?  $page  : $page - 1,
-        ]);
+        return $this->redirectToRoute('admin.society.index', ['page' => ($OffersCountPage > 0 && $page >= 2) || $page === 1 ? $page : $page - 1]);
     }
 
     /**
@@ -133,15 +131,10 @@ class CompanyCrudController extends  AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            if ($user->getCompany()->getImageFile() && !(bool)stristr($user->getCompany()->getImageFile()->getmimeType(), "image")) {
+            $imageIsInvalid = $user->getCompany()->getImageFile() && !(bool) stristr($user->getCompany()->getImageFile()->getmimeType(), "image");
 
-                $this->addFlash(
-                    type    : 'warning',
-                    message : 'Veuillez choisir une image.'
-                );
 
-                $user->getCompany()->setImageFile(null);
-            } else {
+            if (!$imageIsInvalid) {
 
                 $user->countryDecode(); //Convertis les initiales du pays en son nom complet.
 
@@ -159,7 +152,10 @@ class CompanyCrudController extends  AbstractController
                 return $this->redirectToRoute('admin.society.index', [
                     'page'  => !$offersTotalCount ?  $session->get('page') : ceil($offersTotalCount / 10)
                 ]);
-            }
+            } 
+
+            $this->addFlash(type: 'warning', message: 'Veuillez choisir une image.');
+            $user->getCompany()->setImageFile(null);
         }
 
         return $this->render('pages/security/registration.html.twig', [

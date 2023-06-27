@@ -51,7 +51,7 @@ class UserController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $imageIsInvalid = $form->getData()->getCompany()->getImageFile() && !(bool) stristr($form->getData()->getCompany()->getImageFile()->getmimeType(), "image");
+            $imageIsInvalid = $choosenUser->getCompany()->getImageFile() && !(bool) stristr($choosenUser->getCompany()->getImageFile()->getmimeType(), "image");
 
             if (!$imageIsInvalid) {
 

@@ -86,10 +86,10 @@ class MailerEventSubscriber implements EventSubscriberInterface
         $candidate = $candidateDeleteEvent->candidate;
 
         $this->mailerService->send(
-            to: $candidate->getEmail(),
-            subject: 'Réponse candidature pour le poste :' . $candidate->getOffer()->getName(),
-            templateTwig: 'candidate_email.html.twig',
-            context: ['candidate' => $candidateDeleteEvent->candidate]
+            to              : $candidate->getEmail(),
+            subject         : 'Réponse candidature pour le poste :' . $candidate->getOffer()->getName(),
+            templateTwig    : 'candidate_email.html.twig',
+            context         : ['candidate' => $candidate]
         );
     }
 
@@ -104,18 +104,18 @@ class MailerEventSubscriber implements EventSubscriberInterface
 
         // MAILER SEND USER
         $this->mailerService->send(
-            to: $user->getEmail(),
-            subject: 'Demande de suppresion de compte.',
-            templateTwig: 'delete_account.html.twig',
-            context: ['user' => $user]
+            to              : $user->getEmail(),
+            subject         : 'Demande de suppresion de compte.',
+            templateTwig    : 'delete_account.html.twig',
+            context         : ['user' => $user]
         );
 
         // MAILER SEND ADMIN
         $this->mailerService->send(
-            to: 'admin@devjobs.wadji.cefim.o2switch.site',
-            subject: 'Demande de suppresion de compte.',
-            templateTwig: 'delete_account.html.twig',
-            context: ['user' => $user]
+            to              : 'admin@devjobs.wadji.cefim.o2switch.site',
+            subject         : 'Demande de suppresion de compte.',
+            templateTwig    : 'delete_account.html.twig',
+            context         : ['user' => $user]
         );
     }
 
@@ -129,14 +129,14 @@ class MailerEventSubscriber implements EventSubscriberInterface
         $user = $userTokenRegistration->user;
 
         $this->mailerService->send(
-            $user->getEmail(),
-            'Confirmation du compte utilisateur',
-            'registration_confirmation.html.twig',
-            [
-                'user'          => $user,
-                'token'         => $user->getTokenRegistration(),
-                'lifeTimetoken' => $user->getTokenRegistrationLifeTime()->format('d/m/Y à H:i:s')
-            ]
+            to              : $user->getEmail(),
+            subject         : 'Confirmation du compte utilisateur',
+            templateTwig    : 'registration_confirmation.html.twig',
+            context         : [
+                                'user'          => $user,
+                                'token'         => $user->getTokenRegistration(),
+                                'lifeTimetoken' => $user->getTokenRegistrationLifeTime()->format('d/m/Y à H:i:s')
+                              ]
         );
     }
 
@@ -151,13 +151,13 @@ class MailerEventSubscriber implements EventSubscriberInterface
         $user = $userForgetPasswordEvent->user;
 
         $this->mailerService->send(
-            $user->getEmail(),
-            'Modiffication mots de passe utilisateur',
-            'change_password_email.html.twig',
-            [
-                'user'  => $user,
-                'token' => $user->getTokenRegistration(),
-            ]
+            to              : $user->getEmail(),
+            subject         : 'Modiffication mots de passe utilisateur',
+            templateTwig    : 'change_password_email.html.twig',
+            context         : [
+                                'user'  => $user,
+                                'token' => $user->getTokenRegistration(),
+                              ]
         );
     }
 }

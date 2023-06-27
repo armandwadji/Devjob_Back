@@ -7,7 +7,6 @@ use App\Entity\Company;
 use App\Form\OfferType;
 use App\Event\OfferDeleteEvent;
 use App\Repository\OfferRepository;
-use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -55,7 +54,6 @@ class OfferController extends AbstractController
      * This controller create offer
      * @param Company $company
      * @param Request $request
-     * @param EntityManagerInterface $manager
      * @param SessionInterface $session
      * @return Response
      */
@@ -72,7 +70,6 @@ class OfferController extends AbstractController
      * This controller update offer
      * @param Offer $offer
      * @param Request $request
-     * @param EntityManagerInterface $manager
      * @param SessionInterface $session
      * @return Response
      */
@@ -87,7 +84,6 @@ class OfferController extends AbstractController
      * This controller delete offer
      * @param Offer|null $offer
      * @param Request $request
-     * @param EntityManagerInterface $manager
      * @param SessionInterface $session
      * @param UserPasswordHasherInterface $hasher
      * @return Response
@@ -102,8 +98,8 @@ class OfferController extends AbstractController
 
         if ($passwordAndTokenValid) {
 
-            $this->eventDispatcher->dispatch(new OfferDeleteEvent($offer));
             $this->offerRepository->remove($offer, true);
+            $this->eventDispatcher->dispatch(new OfferDeleteEvent($offer));
             $this->addFlash(type: 'success', message: 'Votre offre à été supprimer avec succès!');
             $OffersCountPage--; //Nombres d'offres sur la page courante moins l'offre à supprimer
 
@@ -166,8 +162,8 @@ class OfferController extends AbstractController
                 $this->offerRepository->save($offer, true);
 
                 return $this->redirectToRoute('offer.index', [
-                    'company'    => $offer->getCompany()->getId(),
-                    'page'  => !$offersTotalCount ?  $session->get('page') : ceil($offersTotalCount / 10)
+                    'company'   => $offer->getCompany()->getId(),
+                    'page'      => !$offersTotalCount ?  $session->get('page') : ceil($offersTotalCount / 10)
                 ]);
             }
 
