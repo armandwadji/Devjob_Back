@@ -13,6 +13,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 #[Route('/api', name: 'api.')]
 class OfferApiController extends AbstractController
 {
+    const HEADER = ['Access-Control-Allow-Origin' => '*', 'Content-Type' => 'application/json'];
 
     public function __construct(
         private OfferRepository $offerRepository,
@@ -31,16 +32,13 @@ class OfferApiController extends AbstractController
         $offset = intval($request->query->get('offset'));
         $limit = intval($request->get('limit')) ?: 12;
         return $this->json(
-            data: [
-                'jobs'  => static::offersFormat($this->offerRepository->offersApi(offset: $offset, limit: $limit), $request),
-                'total' => count($this->offerRepository->findAll())
-            ],
-            status: 200,
-            headers: [
-                'Access-Control-Allow-Origin' => '*',
-                'Content-Type' => 'application/json'
-            ],
-            context: ['groups' => 'offer:read']
+            data    : [
+                        'jobs'  => static::offersFormat($this->offerRepository->offersApi(offset: $offset, limit: $limit), $request),
+                        'total' => count($this->offerRepository->findAll()),
+                      ],
+            status  : 200,
+            headers : static::HEADER,
+            context : ['groups' => 'offer:read']
         );
     }
 
@@ -59,7 +57,11 @@ class OfferApiController extends AbstractController
             return $this->json(['error' => 'job not found'], 400);
         }
 
-        return $this->json(['jobs' => static::offerFormat($offer, $request)], 200, [], ['groups' => 'offer:detail']);
+        return $this->json(
+            data    :['jobs' => static::offerFormat($offer, $request)], 
+            status  :200, 
+            headers :static::HEADER, 
+            context :['groups' => 'offer:detail']);
     }
 
     /**
@@ -77,22 +79,22 @@ class OfferApiController extends AbstractController
         $text = strval($request->query->get('text', null));
 
         return $this->json(
-            [
-                'jobs' => static::offersFormat(
-                    $this->offerRepository->offersApi(
-                        offset: $offset,
-                        limit: $limit,
-                        location: $location,
-                        fulltime: $fulltime,
-                        text: $text
-                    ),
-                    $request
-                ),
-                'total' => count($this->offerRepository->findAll())
-            ],
-            200,
-            [],
-            ['groups' => 'offer:read']
+            data    :[
+                        'jobs' => static::offersFormat(
+                            $this->offerRepository->offersApi(
+                                offset: $offset,
+                                limit: $limit,
+                                location: $location,
+                                fulltime: $fulltime,
+                                text: $text
+                            ),
+                            $request
+                        ),
+                        'total' => count($this->offerRepository->findAll())
+                    ],
+            status  :200,
+            headers :[],
+            context :['groups' => 'offer:read']
         );
     }
 
