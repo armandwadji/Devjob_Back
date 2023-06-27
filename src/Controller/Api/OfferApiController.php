@@ -31,13 +31,16 @@ class OfferApiController extends AbstractController
         $offset = intval($request->query->get('offset'));
         $limit = intval($request->get('limit')) ?: 12;
         return $this->json(
-            [
+            data: [
                 'jobs'  => static::offersFormat($this->offerRepository->offersApi(offset: $offset, limit: $limit), $request),
                 'total' => count($this->offerRepository->findAll())
             ],
-            200,
-            [],
-            ['groups' => 'offer:read']
+            status: 200,
+            headers: [
+                'Access-Control-Allow-Origin' => '*',
+                'Content-Type' => 'application/json'
+            ],
+            context: ['groups' => 'offer:read']
         );
     }
 
@@ -108,7 +111,7 @@ class OfferApiController extends AbstractController
                 'contract'          => $offer->getContract()->getName(),
                 'id'                => $offer->getId(),
                 'location'          => $offer->getCompany()->getCountry(),
-                'logo'              => $offer->getCompany()->getImageName() ? $request->server->get('BASE_URL').'/images/company/'.$offer->getCompany()->getImageName(): 'https://picsum.photos/id/' . $offer->getId() . '/250/250',
+                'logo'              => $offer->getCompany()->getImageName() ? $request->server->get('BASE_URL') . '/images/company/' . $offer->getCompany()->getImageName() : 'https://picsum.photos/id/' . $offer->getId() . '/250/250',
                 'logoBackground'    => $offer->getCompany()->getColor(),
                 'position'          => $offer->getName(),
                 'postedAt'          => $offer->getCreatedAt()->getTimestamp(),
@@ -146,7 +149,7 @@ class OfferApiController extends AbstractController
             'description'       => $offer->getDescription(),
             'id'                => $offer->getId(),
             'location'          => $offer->getCompany()->getCountry(),
-            'logo'              => $offer->getCompany()->getImageName() ? $request->server->get('BASE_URL').'/images/company/'.$offer->getCompany()->getImageName(): 'https://picsum.photos/id/' . $offer->getId() . '/250/250',
+            'logo'              => $offer->getCompany()->getImageName() ? $request->server->get('BASE_URL') . '/images/company/' . $offer->getCompany()->getImageName() : 'https://picsum.photos/id/' . $offer->getId() . '/250/250',
             'logoBackground'    => $offer->getCompany()->getColor(),
             'position'          => $offer->getName(),
             'postedAt'          => $offer->getCreatedAt()->getTimestamp(),
