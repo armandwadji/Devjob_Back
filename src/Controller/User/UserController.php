@@ -13,7 +13,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-#[Route('/my-account', name: 'user.')]
+#[Route('/my-account', name: 'user.', requirements: ['id' => '\d+'])]
 #[Security("is_granted('ROLE_USER') and user === choosenUser")]
 class UserController extends AbstractController
 {
