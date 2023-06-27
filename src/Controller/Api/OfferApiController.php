@@ -118,7 +118,7 @@ class OfferApiController extends AbstractController
                 'logo'              => $offer->getCompany()->getImageName() ? $request->server->get('BASE_URL') . '/images/company/' . $offer->getCompany()->getImageName() : 'https://picsum.photos/id/' . $offer->getCompany()->getId() . '/250/250',
                 'logoBackground'    => $offer->getCompany()->getColor(),
                 'position'          => $offer->getName(),
-                'postedAt'          => $offer->getCreatedAt()->getTimestamp(),
+                'postedAt'          => intval($offer->getCreatedAt()->format('Uv')),
             ];
 
             $offersFormat[] = $offerFormat;
@@ -156,7 +156,7 @@ class OfferApiController extends AbstractController
             'logo'              => $offer->getCompany()->getImageName() ? $request->server->get('BASE_URL') . '/images/company/' . $offer->getCompany()->getImageName() : 'https://picsum.photos/id/' . $offer->getCompany()->getId() . '/250/250',
             'logoBackground'    => $offer->getCompany()->getColor(),
             'position'          => $offer->getName(),
-            'postedAt'          => $offer->getCreatedAt()->getTimestamp(),
+            'postedAt'          => intval($offer->getCreatedAt()->format('Uv')),
             'requirements'      => ['content' => $offer->getRequirement()->getContent(), 'items' => $requirementItems,],
             'role'              => ['content' => $offer->getRole()->getContent(), 'items' => $roleItems,],
             'website'           => $offer->getUrl(),
