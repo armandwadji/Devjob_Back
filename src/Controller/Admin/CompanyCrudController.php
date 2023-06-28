@@ -93,7 +93,7 @@ class CompanyCrudController extends  AbstractController
     #[Route('/society/{name}/delete/', name: 'delete', methods: ['POST'])]
     public function delete(Company $company, Request $request, SessionInterface $session): Response
     {
-        $OffersCountPage = intval($request->query->get('count')) - 1; //Nombres d'offres sur la page courante moins l'offre à supprimer
+        $companyCountPage = intval($request->query->get('count')); //Nombres d'entreprises sur la page courante
         $page = intval(htmlspecialchars($session->get('page'))); //numéro de la page courante
 
         $user = $company->getUser();
@@ -101,6 +101,7 @@ class CompanyCrudController extends  AbstractController
         if ($user && $this->isCsrfTokenValid('delete'.$company->getId(), $request->request->get('_token')) ) {
 
             $this->userRepository->remove($user, true);
+            $companyCountPage--; //Nombres d'entreprises sur la page courante moins l'entreprise supprimer
             $this->addFlash( type: 'success', message : 'La société ' . strtoupper($company->getName()) . ' à été supprimer avec succès.');
 
         }else{
@@ -109,7 +110,7 @@ class CompanyCrudController extends  AbstractController
         
         }
 
-        return $this->redirectToRoute('admin.society.index', ['page' => ($OffersCountPage > 0 && $page >= 2) || $page === 1 ? $page : $page - 1]);
+        return $this->redirectToRoute('admin.society.index', ['page' => ($companyCountPage > 0 && $page >= 2) || $page === 1 ? $page : $page - 1]);
     }
 
     /**
