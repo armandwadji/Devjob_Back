@@ -1,10 +1,11 @@
 {% extends "base.html.twig" %}
 
-{% block title %}page non trouvée{% endblock %}
+{% block title %}Erreur service
+{% endblock %}
 
 {% block body %}
-    <main class="container mt-5">
-        <h1>{{message}}</h1>
-        <p> Detail : {{detail}} </p>
-    </main>
+	<main class="container mt-5">
+		<h1 class="text-danger">{{message}}</h1>
+		<h5 class="mt-4"> Detail : {{detail}} </h5>
+	</main>
 {% endblock %}
