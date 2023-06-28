@@ -90,12 +90,12 @@ class OfferRepository extends ServiceEntityRepository
                 ->setParameter('location', '%' . $location . '%');
         }
 
-        if ($fulltime && $fulltime != null) {
+        if ($fulltime) {
             $query
-                ->andWhere('ct.name = :contract')
-                ->setParameter('contract', 'CDI');
+            ->andWhere('ct.name = :contract')
+            ->setParameter('contract', 'CDI');
         }
-
+        
         if ($text) {
             $query
                 ->andWhere('c.name = :name')

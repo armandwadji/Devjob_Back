@@ -78,7 +78,11 @@ class OfferApiController extends AbstractController
         $offset = intval($request->query->get('offset'));
         $limit = intval($request->query->get('limit')) ?: 12;
         $location = strval($request->query->get('location', null));
-        $fulltime = boolval($request->query->get('fulltime', null));
+
+        $fulltime = $request->query->get('fulltime') ?: 0;
+        if ($fulltime !== 0 && $fulltime !== '1') return $this->json(['error' => 'fulltime must take the values 0 or 1'], 400);
+        
+
         $text = strval($request->query->get('text', null));
 
         return $this->json(
