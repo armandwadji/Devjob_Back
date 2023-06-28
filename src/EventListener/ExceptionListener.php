@@ -17,32 +17,18 @@ class ExceptionListener
     public function onKernelException(ExceptionEvent $exceptionEvent): void
     {
         $exception = $exceptionEvent->getThrowable();
+        $message = '';
 
-        if ($exception instanceof NotFoundHttpException) {
-            $content = $this->twig->render(
-                'exceptions/not_found.html.twig',
-                [
-                    'message'   => 'Page non trouvée.',
-                    'detail'    => $exception->getMessage(),
-                ]
-            );
-        } else if ($exception instanceof AccessDeniedHttpException) {
-            $content = $this->twig->render(
-                'exceptions/not_found.html.twig',
-                [
-                    'message'   => 'Vous n\'avez pas les droits d\'accès à cette ressource.',
-                    'detail'    => $exception->getMessage(),
-                ]
-            );
-        } else {
-            $content = $this->twig->render(
-                'exceptions/not_found.html.twig',
-                [
-                    'message'   => 'Une erreur est survenue, veuillez actualiser la page.',
-                    'detail'    => $exception->getMessage(),
-                ]
-            );
-        }
+        if ($exception instanceof NotFoundHttpException) $message = 'Page non trouvée.';
+
+        else if ($exception instanceof AccessDeniedHttpException) $message = 'Vous n\'avez pas les droits d\'accès à cette ressource.';
+
+        else $message = 'Une erreur est survenue, veuillez actualiser la page.';
+
+        $content = $this->twig->render(
+            name: 'exceptions/not_found.html.twig',
+            context:[ 'message'=> $message, 'detail'=> $exception->getMessage()],
+        );
 
         $exceptionEvent->setResponse((new Response())->setContent($content));
     }
