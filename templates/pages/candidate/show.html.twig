@@ -1,6 +1,10 @@
 {% extends "base.html.twig" %}
 
-{% block title %}Détail candidat {{candidate.firstname ~  ' ' ~ candidate.lastname}} {% endblock %}
+{% block title %}
+	Détail candidat
+	{{candidates[0].firstname ~  ' ' ~ candidates[0].lastname}}
+{% endblock %}
+
 
 {% block body %}
 	<main class="container mt-5">
@@ -11,46 +15,23 @@
 		{# Détail du candidat #}
 		<section class="g-0 rounded overflow-hidden flex-md-row mb-4 h-md-250 position-relative">
 			<div class="col p-4 d-flex flex-column position-static">
-				<h3 class="mb-0 text-capitalize"> 
-					Candidat :  {{candidate.firstname}} {{candidate.lastname}} 
+				<h3 class="mb-0 text-capitalize">
+					Candidat : {{candidates[0].firstname ~  ' ' ~ candidates[0].lastname}}
 				</h3>
-				<strong class="d-inline-block mb-2 text-primary"> Email: {{candidate.email}}</strong>
+				<strong class="d-inline-block mb-2 text-primary">
+					Email: {{candidates[0].email}}
+				</strong>
 				<h5 class="card-text mb-auto">
-					Téléphone : {{candidate.telephone}}
+					Téléphone : {{candidates[0].telephone}}
 				</h5>
-				<p class='mt-2'> <strong>Motivations : </strong> {{candidate.description}}</p>
-			</div>
 
-			<div class="d-flex flex-row align-items-center">
-				<h5 class='mx-4'5>CV : </h5>
-				<a href="{{ vich_uploader_asset(candidate, 'imageFile') }}" download class=" btn btn-info d-flex justify-content-center align-items-center" style="width: 4rem; height: 2rem; ">
-					<i class="fa-solid fa-download"></i>
-				</a>
-			</div>
-		</section>
-		<hr>
+				<h6 class="card-text mb-auto mt-2">
+					Offre(s) :
+				</h6>
 
-		<section class="px-4">
-			{% if isAdmin %}
-				{% include "partials/_delete_form.html.twig" with 
-					{
-						link: 'admin.candidate.delete', 
-						query: { candidate: candidate.id, offer: offer, page: page, 'count' : candidatesForOffer, idOffer : offer }, 
-						id: candidate.id,
-						message : 'Etes vous sur de vouloir supprimé ce candidat ?'
-					} 
-				%}
-			{% else %}
-				<button class="btn btn-danger btn-lg text-end mt-4 delete-confirm" role="button" data-bs-toggle="modal" data-bs-target="#modalWindow{{candidate.id}}" >Supprimer</button>
-				{# Modal confirm delete password #}
-				{% include 'partials/_modal.html.twig' with 
-					{ 
-						link: 'candidate.delete',
-						query: { candidate: candidate.id, page: page, 'count' : candidatesForOffer, idOffer : offer },
-						id: candidate.id
-					}  
-				%}
-			{% endif %}
+				{% include "partials/_offers_by_candidates_table.html.twig" with ({candidates, page, count, redirect}) %}
+
+			</div>
 		</section>
 
 	</main>

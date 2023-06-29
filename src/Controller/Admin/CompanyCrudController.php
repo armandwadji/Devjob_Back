@@ -5,15 +5,17 @@ namespace App\Controller\Admin;
 use App\Entity\User;
 use App\Entity\Company;
 
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-
 use App\Form\RegistrationType;
 use App\Repository\UserRepository;
 use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Component\HttpFoundation\Request;
+
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 #[Route('/admin', name: 'admin.society.')]
 class CompanyCrudController extends  AbstractController
@@ -88,25 +90,25 @@ class CompanyCrudController extends  AbstractController
      * @param Company $company
      * @param Request $request
      * @param SessionInterface $session
+     * @param UserPasswordHasherInterface $hasher
      * @return Response
      */
     #[Route('/society/{name}/delete/', name: 'delete', methods: ['POST'])]
-    public function delete(Company $company, Request $request, SessionInterface $session): Response
+    public function delete(Company $company, Request $request, SessionInterface $session, UserPasswordHasherInterface $hasher): Response
     {
-        $companyCountPage = intval($request->query->get('count')); //Nombres d'entreprises sur la page courante
-        $page = intval(htmlspecialchars($session->get('page'))); //numéro de la page courante
+        $companyCountPage = (int)$request->query->get('count'); //Nombres d'entreprises sur la page courante
+        $page = (int)htmlspecialchars($session->get('page')); //numéro de la page courante
+        $passwordAndTokenValid = $company->getUser() && $hasher->isPasswordValid($this->getUser(), $request->request->get('_password')) && $this->isCsrfTokenValid('delete' . $company->getId(), $request->request->get('_token')); //user password and token valids
 
-        $user = $company->getUser();
+        if ($passwordAndTokenValid) {
 
-        if ($user && $this->isCsrfTokenValid('delete'.$company->getId(), $request->request->get('_token')) ) {
-
-            $this->userRepository->remove($user, true);
+            $this->userRepository->remove($company->getUser(), true);
             $companyCountPage--; //Nombres d'entreprises sur la page courante moins l'entreprise supprimer
             $this->addFlash( type: 'success', message : 'La société ' . strtoupper($company->getName()) . ' à été supprimer avec succès.');
 
         }else{
 
-            $this->addFlash( type: 'warning', message : 'La société ' . strtoupper($company->getName()) . ' n\'à pas pu être supprimer.');
+            $this->addFlash( type: 'warning', message : 'La société ' . strtoupper($company->getName()) . ' n\'à pas pu être supprimer. Mot de passe ou token invalid');
         
         }
 
@@ -120,7 +122,7 @@ class CompanyCrudController extends  AbstractController
      * @param SessionInterface $session
      * @return Response
      */
-    private function addOrUpdate(User $user, Request $request, SessionInterface $session): Response
+    private function addOrUpdate(User $user, Request $request, SessionInterface $session): Response|RedirectResponse
     {
         // GESTION DES CODES ISO POUR LA CONFORMITE DU FORMULAIRE
         if($user->getCompany() !== null){
@@ -148,7 +150,7 @@ class CompanyCrudController extends  AbstractController
                 );
 
                 // GESTION DE LA PAGINATION:
-                $offersTotalCount = isset($_GET['count']) ? intval($request->get('count')) + 1 : null; //Nombres d'offer sur la page courante
+                $offersTotalCount = isset($_GET['count']) ? (int)$request->get('count') + 1 : null; //Nombres d'offer sur la page courante
 
                 return $this->redirectToRoute('admin.society.index', [
                     'page'  => !$offersTotalCount ?  $session->get('page') : ceil($offersTotalCount / 10)

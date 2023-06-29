@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Candidate;
+use App\Entity\Company;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -40,44 +41,50 @@ class CandidateRepository extends ServiceEntityRepository
     }
 
     /**
-     * This function return all candidates by company
+     * This method return all candidates and or by company
      * @param int|null $companyId
      * @return array
      */
-    public function findCandidatesByCompany(?int $companyId): array
+    public function findCandidatesGroupByEmail(?Company $company = null): array
     {
+        // SELECT * FROM `offer`
+        // INNER JOIN `candidate` ON `candidate`.`offer_id` = `offer`.`id`
+        // INNER JOIN `company` ON `company`.`id` = `offer`.`company_id`
+        // WHERE `company`.`id` = 127
+        // AND `candidate`.`email` LIKE 'anastasie99@bodin.com';
+
         $query = $this->createQueryBuilder('ca')
-            // ->join('ca.offer', 'o')
-            // ->join('o.company', 'co')
-            // ->Where('co.id = :id')
-            // ->setParameter('id', $companyId )
-        ;
+            ->join('ca.offer', 'o')
+            ->join('o.company', 'co');
+
+        if ($company) {
+            $query->Where('co.id = :id')
+                ->setParameter('id', $company->getId());
+        }
 
         return $query->groupBy('ca.email')
             ->getQuery()
             ->getResult();
+    }
 
-        // SELECT firstname, lastname, email, company_id, COUNT(`candidate`.`email`) as count FROM `candidate`
-        //     INNER JOIN `candidate_offer` ON `candidate_offer`.`candidate_id` = `candidate`.`id`
-        //     INNER JOIN `offer` ON `offer`.`id` = `candidate_offer`.`offer_id`
-        //     WHERE `offer`.`company_id` = 748
-        //     GROUP BY `candidate`.`email`  
-        //     ORDER BY `count` DESC;
-        
-        // $conn = $this->getEntityManager()->getConnection();
+    public function findCandidatesForOneOffer(Candidate $candidate)
+    {
 
-        // $sql = '
-        //             SELECT * , COUNT(`candidate`.`email`) as count FROM `candidate` 
-        //             INNER JOIN `offer` ON `candidate`.`offer_id` = `offer`.`id`
-        //             INNER JOIN `company` ON `offer`.`company_id` = `company`.`id`
-        //             WHERE `company`.id = :id
-        //             GROUP BY `candidate`.`email`
-        //         ';
+        // SELECT * FROM `offer`
+        // INNER JOIN `candidate` ON `candidate`.`offer_id` = `offer`.`id`
+        // INNER JOIN `company` ON `company`.`id` = `offer`.`company_id`
+        // WHERE `company`.`id` = 127
+        // AND `candidate`.`email` LIKE 'anastasie99@bodin.com';
 
+        $query = $this->createQueryBuilder('ca')
+            ->join('ca.offer', 'ca')
+            ->join('o.company', 'co')
+            ->Where('co.id = :id')
+            ->andWhere('ca.email = :email')
+            ->setParameter('id', $candidate->getOffer()->getCompany()->getId())
+            ->setParameter('email', $candidate->getEmail());
 
-        // $stmt = $conn->prepare($sql);
-        // $resultSet = $stmt->executeQuery(['id' => $companyId]);
-
-        // return $resultSet->fetchAllAssociative();
+        return $query->getQuery()
+            ->getResult();
     }
 }

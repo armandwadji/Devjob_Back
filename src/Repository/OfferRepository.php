@@ -2,6 +2,8 @@
 
 namespace App\Repository;
 
+use App\Entity\Candidate;
+use App\Entity\Company;
 use App\Entity\Offer;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -49,6 +51,7 @@ class OfferRepository extends ServiceEntityRepository
         // JOIN `user`
         // WHERE user.is_deleted = true
         // ORDER BY `offer`.created_At DESC;
+
         return $this->createQueryBuilder('o')
             ->join('o.company', 'c')
             ->join('c.user', 'u')
@@ -62,9 +65,37 @@ class OfferRepository extends ServiceEntityRepository
     public function findCandidateGroupByEmail($company): array
     {
         return $this->createQueryBuilder('o')
-            ->where('o.company = :company')
-            ->setParameter('company', $company)
+            ->join('o.candidates', 'ca')
+            ->join('o.company', 'co')
+            ->where('co.id = :id')
+            ->setParameter('id', $company->getId())
+            ->groupBy('ca.email')
             ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * This method returns the list of offers from a company ti which a candidate has applied
+     * @param Candidate $candidate
+     * @return array
+     */
+    public function findOffersForCandidateOfOneCompany( Candidate $candidate ): array
+    {
+        // SELECT * FROM `offer`
+        // INNER JOIN `candidate` ON `candidate`.`offer_id` = `offer`.`id`
+        // INNER JOIN `company` ON `company`.`id` = `offer`.`company_id`
+        // WHERE `company`.`id` = 127
+        // AND `candidate`.`email` LIKE 'anastasie99@bodin.com';
+
+        $query = $this->createQueryBuilder('o')
+            ->join('o.candidates', 'ca')
+            ->join('o.company', 'co')
+            ->Where('co.id = :id')
+            ->andWhere('ca.email = :email')
+            ->setParameter('id', $candidate->getOffer()->getCompany()->getId())
+            ->setParameter('email', $candidate->getEmail());
+
+        return $query->getQuery()
             ->getResult();
     }
 
@@ -92,10 +123,10 @@ class OfferRepository extends ServiceEntityRepository
 
         if ($fulltime) {
             $query
-            ->andWhere('ct.name = :contract')
-            ->setParameter('contract', 'CDI');
+                ->andWhere('ct.name = :contract')
+                ->setParameter('contract', 'CDI');
         }
-        
+
         if ($text) {
             $query
                 ->andWhere('c.name = :name')

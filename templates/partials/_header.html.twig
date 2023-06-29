@@ -20,7 +20,12 @@
 							</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link {% if route_name in ['admin.offer.index', 'admin.offers.show', 'admin.offer.new', 'admin.offer.update'] %} active {% endif %}" href="{{path('admin.offer.index' )}}">Offres
+							<a class="nav-link {% if route_name in ['admin.offer.index', 'admin.offer.show', 'admin.offer.new', 'admin.offer.update'] %} active {% endif %}" href="{{path('admin.offer.index' )}}">Offres
+								<span class="visually-hidden">(current)</span>
+							</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link {% if route_name in ['admin.candidate.all', 'admin.candidate.show', 'admin.candidate.edit'] %} active {% endif %}" href=" {{path('admin.candidate.all')}} ">Candidats
 								<span class="visually-hidden">(current)</span>
 							</a>
 						</li>

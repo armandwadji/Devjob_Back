@@ -1,0 +1,73 @@
+<table class="table table-hover">
+	<thead>
+		<tr>
+			<th scope="col" class="text-center">Offre</th>
+			<th scope="col" class="text-center">contrat</th>
+			<th scope="col" class="text-center">Posté Le</th>
+			<th scope="col" class="text-center">CV</th>
+			{% if 'ROLE_ADMIN' in app.user.roles %}
+				<th scope="col" class="text-center">Edité</th>
+			{% endif %}
+			<th scope="col" class="text-center">Supprimé</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for candidate in candidates %}
+			<tr class="table-primary">
+				<td scope="row" class="text-center">{{candidate.offer.name}}</td>
+				<td scope="row" class="text-center">{{candidate.offer.contract}}</td>
+				<td scope="row" class="text-center">{{candidate.offer.createdAt | date('d/m/Y')}}</td>
+				<td scope="row" class="text-center">
+					<a href="{{ vich_uploader_asset(candidate, 'imageFile') }}" download class="btn btn-info delete-confirm">
+						<i class="fa-solid fa-download"></i>
+					</a>
+				</td>
+				{% if 'ROLE_ADMIN' in app.user.roles %}
+
+					<td scope="row" class="text-center">
+						<a href="{{path('admin.candidate.edit', { candidate : candidate.id, offer: candidate.offer.id } )}}" class="btn btn-info">
+							<i class="fa-solid fa-pencil"></i>
+						</a>
+					</td>
+
+				{% endif %}
+
+
+				<td scope="row" class="d-flex justify-content-center">
+					<button class="btn btn-danger delete-confirm" data-bs-toggle="modal" data-bs-target="#modalWindow{{candidate.id}}">
+						<i class="fa-solid fa-trash"></i>
+					</button>
+
+					{% if 'ROLE_ADMIN' in app.user.roles %}
+						{% include "partials/_modal.html.twig" with 
+                            {
+                                id: candidate.id,
+                                link: 'admin.candidate.delete', 
+                                query: { 
+                                            page: page, 
+                                            candidate: candidate.id, 
+                                            redirect: redirect, 
+                                            count: candidates|length, 
+                                            paginationCount:count 
+                                        }, 
+                            } 
+                        %}
+					{% else %}
+						{% include 'partials/_modal.html.twig' with 
+                            { 
+                                id: candidate.id,
+                                link: 'candidate.delete',
+                                query: { 
+                                            page: page,  
+                                            candidate: candidate.id, 
+                                            redirect: redirect , 
+                                            count: count
+                                        },
+                            }  
+                        %}
+					{% endif %}
+				</td>
+			</tr>
+		{% endfor %}
+	</tbody>
+</table>

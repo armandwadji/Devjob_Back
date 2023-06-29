@@ -42,6 +42,10 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         }
     }
 
+    /**
+     * This method return methods who not have role admin
+     * @return array
+     */
     public function findUserNotAdmin () : array
     {
         return $this->createQueryBuilder('u')

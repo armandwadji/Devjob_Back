@@ -13,6 +13,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 #[Route('/admin/offers', name: 'admin.offer.')]
 class OfferCrudController extends AbstractController
@@ -31,14 +33,14 @@ class OfferCrudController extends AbstractController
      * @return Response
      */
     #[Route('/', name: 'index', methods: ['GET'])]
-    public function offers( PaginatorInterface $paginator, Request $request, SessionInterface $session): Response
+    public function offers(PaginatorInterface $paginator, Request $request, SessionInterface $session): Response
     {
         $session->set('page', isset($_GET['page']) ? intval($request->get('page'))  : 1);
 
         $offers = $paginator->paginate(
-            target  : $this->offerRepository->findAll(),
-            page    : $request->query->getInt('page', 1),
-            limit   : 10
+            target: $this->offerRepository->findAll(),
+            page: $request->query->getInt('page', 1),
+            limit: 10
         );
 
         return $this->render('pages/offer/index.html.twig', [
@@ -67,10 +69,17 @@ class OfferCrudController extends AbstractController
      * @return Response
      */
     #[Route('/{offer}', name: 'show', methods: ['GET'])]
-    public function show(Offer $offer): Response
+    public function show(Offer $offer, PaginatorInterface $paginator, Request $request,): Response
     {
+        $candidates = $paginator->paginate(
+            target: $offer->getCandidates(),
+            page: $request->query->getInt('page', 1),
+            limit: 5
+        );
+
         return $this->render('pages/offer/show.html.twig', [
             'offer' => $offer,
+            'candidates' => $candidates,
         ]);
     }
 
@@ -84,33 +93,34 @@ class OfferCrudController extends AbstractController
     #[Route('/{offer}/update', name: 'update', methods: ['GET', 'POST'])]
     public function edit(Offer $offer, Request $request, SessionInterface $session): Response
     {
-        $isAllOffer = boolval($request->get('isAllOffer')) ; //Boolean permet de rediriger vers la liste de toutes les offres ou bien la liste des offres d'une entreprise
+        $isAllOffer = (bool)$request->get('isAllOffer'); //Boolean permet de rediriger vers la liste de toutes les offres ou bien la liste des offres d'une entreprise
         return static::addOrUpdate($offer, $request, $session, $isAllOffer);
     }
 
     /**
      * This controller delete offer
-     * @param Offer|null $offer
+     * @param Offer $offer
      * @param Request $request
      * @param SessionInterface $session
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @return RedirectResponse
      */
     #[Route('/{offer}/delete', name: 'delete', methods: ['POST'])]
-    public function delete(Offer $offer = null,  Request $request, SessionInterface $session)
+    public function delete(Offer $offer,  Request $request, SessionInterface $session, UserPasswordHasherInterface $hasher): RedirectResponse
     {
-        $OffersCountPage = intval($request->query->get('count')); //Nombres d'offres sur la page courante moins l'offre à supprimer
-        $page = intval(htmlspecialchars($session->get('page'))); //numéro de la page courante
-        $isAllOffer = boolval($request->get('isAllOffer')) ; //Boolean permet de rediriger vers la liste de toutes les offres ou bien la liste des offres d'une entreprise
+        $OffersCountPage = (int)$request->query->get('count'); //Nombres d'offres sur la page courante moins l'offre à supprimer
+        $page = (int)htmlspecialchars($session->get('page')); //numéro de la page courante
+        $isAllOffer = (bool)$request->get('isAllOffer'); //Boolean permet de rediriger vers la liste de toutes les offres ou bien la liste des offres d'une entreprise
+        $passwordAndTokenValid = $hasher->isPasswordValid($this->getUser(), $request->request->get('_password')) && $this->isCsrfTokenValid('delete' . $offer->getId(), $request->request->get('_token')); //user password and token valids
 
-        if ($offer && $this->isCsrfTokenValid('delete'.$offer->getId(), $request->request->get('_token'))) {
+        if ($passwordAndTokenValid) {
             $this->offerRepository->remove($offer, true);
-            $this->addFlash( type :'success', message :'L\' offre à été supprimer avec succès.');
+            $this->addFlash(type: 'success', message: 'L\' offre à été supprimer avec succès.');
             $OffersCountPage--;
-        }else{
-            $this->addFlash( type: 'warning', message :'L\'offre demander n\'a pas pu être supprimé.');
+        } else {
+            $this->addFlash(type: 'warning', message: 'Mot de passe et ou token invalide.');
         }
 
-        if($isAllOffer){
+        if ($isAllOffer) {
             return $this->redirectToRoute('admin.offer.index', [
                 'page'  => ($OffersCountPage > 0 && $page >= 2) || $page === 1 ?  $page  : $page - 1
             ]);
@@ -118,7 +128,7 @@ class OfferCrudController extends AbstractController
 
         return $this->redirectToRoute('admin.society.show', [
             'name'  => $offer->getCompany()->getName(),
-            'id'    => intval($request->query->get('idCompany')),
+            'id'    => (int)$request->query->get('idCompany'),
             'page'  => ($OffersCountPage > 0 && $page >= 2) || $page === 1 ?  $page  : $page - 1
         ]);
     }
@@ -129,9 +139,9 @@ class OfferCrudController extends AbstractController
      * @param Request $request
      * @param SessionInterface $session
      * @param bool|null $isAllOffer
-     * @return Response|\Symfony\Component\HttpFoundation\RedirectResponse
+     * @return Response|RedirectResponse
      */
-    private function addOrUpdate(Offer $offer, Request $request, SessionInterface $session, ?bool $isAllOffer = false)
+    private function addOrUpdate(Offer $offer, Request $request, SessionInterface $session, ?bool $isAllOffer = false) : Response|RedirectResponse
     {
         $form = $this->createForm(OfferType::class, $offer);
         $form->handleRequest($request);
@@ -151,17 +161,17 @@ class OfferCrudController extends AbstractController
                 }
 
                 // GESTION DE LA PAGINATION:
-                $offersTotalCount = isset($_GET['count']) ? intval($request->get('count')) + 1 : null; //Nombres de recettes sur la page courante
+                $offersTotalCount = isset($_GET['count']) ? (int)$request->get('count') + 1 : null; //Nombres de recettes sur la page courante
 
                 $this->addFlash(
-                    type    : 'success',
-                    message : $offer->getId() ? 'L\' offre à été éditer avec succès!' : 'L\' offre à été créer avec succès!',
+                    type: 'success',
+                    message: $offer->getId() ? 'L\' offre à été éditer avec succès!' : 'L\' offre à été créer avec succès!',
                 );
 
                 $this->offerRepository->save($offer, true);
 
                 // CAS DE REDIRECTION VERS LA LISTE DE TOUTES LES OFFRES
-                if($isAllOffer){
+                if ($isAllOffer) {
                     return $this->redirectToRoute('admin.offer.index', [
                         'page'  => !$offersTotalCount ?  $session->get('page') : ceil($offersTotalCount / 10)
                     ]);
@@ -174,8 +184,8 @@ class OfferCrudController extends AbstractController
             }
 
             $this->addFlash(
-                type    : 'warning',
-                message : 'Veuillez bien saisir tous les champs!'
+                type: 'warning',
+                message: 'Veuillez bien saisir tous les champs!'
             );
         }
 

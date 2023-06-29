@@ -1,0 +1,29 @@
+<table class="table table-hover">
+	<thead>
+		<tr>
+			<th scope="col" class="text-center">Nom</th>
+			<th scope="col" class="text-center">Prénom</th>
+			<th scope="col" class="text-center">email</th>
+			<th scope="col" class="text-center">Detail</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for candidate in candidates  %}
+			<tr class="table-primary">
+				<td scope="row" class="text-center">{{candidate.firstname}}</td>
+				<td scope="row" class="text-center">{{candidate.lastname}}</td>
+				<td scope="row" class="text-center">{{candidate.email}}</td>
+				<td scope="row" class="text-center">
+					<a href="{{path( ('ROLE_ADMIN' in app.user.roles ) ? 'admin.candidate.show' :'candidate.show' , { candidate: candidate.id, count : candidates|length, page: candidates.getCurrentPageNumber, redirect: app.request.attributes.get('_route') })}}" class="btn btn-success">
+						<i class="fa-solid fa-magnifying-glass"></i>
+					</a>
+				</td>
+			</tr>
+		{% endfor %}
+	</tbody>
+</table>
+
+{# display navigation #}
+<div class="navigation d-flex justify-content-center mt-4">
+	{{ knp_pagination_render(candidates) }}
+</div>

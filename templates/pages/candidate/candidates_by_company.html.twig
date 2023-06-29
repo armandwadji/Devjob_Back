@@ -1,11 +1,16 @@
 {% extends "base.html.twig" %}
 
-
-{% block title %}Candidatures{% endblock %}
+{% block title %}Candidatures
+{% endblock %}
 
 {% block body %}
 
-	<main class="container mt-4">
+	<main
+		class="container mt-4">
+
+		{# flash messages #}
+		{% include 'partials/_flash.html.twig' %}
+
 		<section>
 			<h2 class="blog-post-title mb-1 text-capitalize">Candidatures</h2>
 
@@ -13,45 +18,9 @@
 				<h4 class='mt-4'>Vous n'avez pas encore reçus de candidatures.</h4>
 			{% else %}
 
-				<div class="count mt-4">
-					<h5>Vous avez {{ candidates.getTotalItemCount}} candidats au total</h5>
-				</div>
+				<h5 class="count mt-4">Vous avez {{ candidates.getTotalItemCount}} candidats au total</h5>
 
-				<table class="table table-hover">
-					<thead>
-						<tr>
-							<th scope="col" class="text-center">Nom</th>
-							<th scope="col" class="text-center">Prénom</th>
-							<th scope="col" class="text-center">email</th>
-							<th scope="col" class="text-center">Detail</th>
-							<th scope="col" class="text-center">CV</th>
-						</tr>
-					</thead>
-					<tbody>
-						{% for candidate in candidates  %}
-							<tr class="table-primary">
-								<td scope="row" class="text-center">{{candidate.firstname}}</td>
-								<td scope="row" class="text-center">{{candidate.lastname}}</td>
-								<td scope="row" class="text-center">{{candidate.email}}</td>
-								<td scope="row" class="text-center">
-									<a href="{{path('candidate.show', {candidate: candidate.id, offer: offer.id, candidates : 1, page: 1 })}}" class="btn btn-success">
-										<i class="fa-solid fa-magnifying-glass"></i>
-									</a>
-								</td>
-								<td scope="row" class="text-center">
-									<a href="{{ vich_uploader_asset(candidate, 'imageFile') }}" download class="btn btn-info delete-confirm">
-										<i class="fa-solid fa-download"></i>
-									</a>
-								</td>
-							</tr>
-						{% endfor %}
-					</tbody>
-				</table>
-
-				{# display navigation #}
-				<div class="navigation d-flex justify-content-center mt-4">
-					{{ knp_pagination_render(candidates) }}
-				</div>
+				{% include "partials/admin/_candidates_table_offer.html.twig"  with {candidates}%}
 
 			{% endif %}
 

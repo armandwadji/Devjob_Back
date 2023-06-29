@@ -57,6 +57,10 @@ class MailerEventSubscriber implements EventSubscriberInterface
 
         $email = (new TemplatedEmail())->from(new Address('admin@devjobs.wadji.cefim.o2switch.site', 'Devjob'));
 
+        if (count($offer->getCandidates()) === 0) {
+            return;
+        }
+
         foreach ($offer->getCandidates() as $candidate) {
             $email->addBcc($candidate->getEmail());
         }

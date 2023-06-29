@@ -1,11 +1,14 @@
-<h3>Bonjour M, Mme {{candidate.firstname ~  ' ' ~ candidate.lastname}},</h3>
+<h3>Bonjour {{candidate.firstname}},</h3>
 <p>
+	Nous avons examiné avec attention votre candidature pour l'offre <strong>{{candidate.offer.name}}</strong>.<br><br>
 
-	Notre campagne de recrutement pour <strong>{{candidate.offer.name}}</strong> est maintenant terminée. <br><br>
-	Si vous n'avez pas été recontacté par <strong>{{candidate.offer.company.name}}</strong> c'est que nous n'avons pas retenu votre candidature. <br><br>
+	Malgré toutes les qualités qu’elle présente, elle ne correspond pas totalement à nos attentes pour ce poste. Nous savons que postuler prend du temps et de l’énergie, alors nous tenons à vous remercier pour l’intérêt que vous nous avez témoigné.<br><br>
+
+	Et parce qu’un « non » n’est jamais définitif et que votre profil pourrait correspondre à d’autres opportunités, nous conservons votre CV pendant 24 mois, sauf opposition de votre part.<br><br>
+	
 	Nous vous remercions de l'intérêt porté à <strong>{{candidate.offer.company.name}}</strong> et espérons pouvoir vous proposer un poste plus approprié prochainement.<br><br>
 
-	Cordialement, <strong>{{candidate.offer.company.user.firstname ~  ' ' ~ candidate.offer.company.user.lastname}}</strong>  <br><br>
+	Cordialement, <strong>{{candidate.offer.company.name}}</strong>  <br><br>
 
 	<strong>Ceci est un mail automatique, merci de ne pas y repondre.</strong><br><br>
 
