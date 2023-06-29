@@ -34,7 +34,6 @@ class CandidateCrudController extends AbstractController
     #[Route('/new?{offer}', name: 'new', methods: ['GET', 'POST'])]
     public function add(Offer $offer,  Request $request): Response
     {
-        dd($offer);
         $candidate = new Candidate();
         $candidate->setOffer($offer);
         return static::addOrUpdate( $candidate,  $request);
