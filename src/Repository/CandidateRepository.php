@@ -42,7 +42,7 @@ class CandidateRepository extends ServiceEntityRepository
 
     /**
      * This method return all candidates and or by company
-     * @param int|null $companyId
+     * @param Company|null $companyId
      * @return array
      */
     public function findCandidatesGroupByEmail(?Company $company = null): array
