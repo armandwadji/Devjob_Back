@@ -5,7 +5,10 @@
         <h6 class="card-subtitle mb-2 text-muted">
             Société : {{offer.company.name | capitalize }}
         </h6>
-        <img style="width: 4.5rem; height: 4.5rem; right: 10%; background-color:{{offer.company.color}}"  class="img-thumbnail position-absolute top-50 rounded-circle"  alt='Logo de {{offer.company.name}}'  src="{% if vich_uploader_asset(offer.company, 'imageFile') %} {{vich_uploader_asset(offer.company, 'imageFile')}} {% else %} https://picsum.photos/id/{{offer.company.id}}/250/250 {% endif %}">
+        <figure class="position-absolute top-50 rounded-circle rounded-circle p-1" style=" width: 4.5rem; height: 4.5rem; right: 10%; background-color:{{offer.company.color}}">
+            <img class='rounded-circle' style="width: 100%; height: 100%; max-height: 250px; max-width: 250px; object-fit: contain" alt="Logo de {{offer.company.name}}" src="{% if vich_uploader_asset(offer.company, 'imageFile') %} {{vich_uploader_asset(offer.company, 'imageFile')}} {% else %} https://picsum.photos/id/{{offer.company.id}}/250/250 {% endif %}" >
+        </figure>
+        {# <img style="width: 4.5rem; height: 4.5rem; right: 10%; background-color:{{offer.company.color}}"  class="img-thumbnail position-absolute top-50 rounded-circle"  alt='Logo de {{offer.company.name}}'  src="{% if vich_uploader_asset(offer.company, 'imageFile') %} {{vich_uploader_asset(offer.company, 'imageFile')}} {% else %} https://picsum.photos/id/{{offer.company.id}}/250/250 {% endif %}"> #}
         <a href=" {{path('offer.show', {offer: offer.id})}} " class="card-link btn btn-primary p-1 mt-1">Détail</a>
     </div>
 </div>
