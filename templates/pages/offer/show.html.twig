@@ -6,7 +6,7 @@
 
 	<main class="container mt-4">
 		<section class="">
-			<div class="d-flex flex-row justify-content-between align-items-center">
+			<div class="d-flex flex-sm-row flex-column-reverse justify-content-between align-items-center">
 				<div>
 					<h2 class="blog-post-title mb-1 text-capitalize">{{offer.name}}</h2>
 					<p class="blog-post-meta">Créer le :{{offer.createdAt|date('d/m/y')}}</p>
@@ -20,7 +20,6 @@
 						{{offer.description}}
 					</p>
 				</div>
-
 				<img class='rounded-circle mx-4 img-thumbnail' style="height: 200px; width: 200px; object-fit: contain; background-color:{{offer.company.color}}" src=" {% if vich_uploader_asset(offer.company, 'imageFile') %} {{vich_uploader_asset(offer.company, 'imageFile')}} {% else %} https://picsum.photos/id/{{offer.company.id}}/250/250 {% endif %}" alt="Logo de {{offer.company.name}}">
 			</div>
 			<hr>
