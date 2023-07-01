@@ -25,22 +25,22 @@
 						<i class="fa-solid fa-pencil"></i>
 					</a>
 				</td>
-				<td scope="row" class="d-flex justify-content-center">
+				<td scope="row" class="text-center">
 					<button class="btn btn-danger delete-confirm" data-bs-toggle="modal" data-bs-target="#modalWindow{{user.company.id}}">
 						<i class="fa-solid fa-trash"></i>
 					</button>
-					{% include "partials/_modal.html.twig" with 
-                            {
-                                id: user.company.id,
-                                link: 'admin.society.delete', 
-                                query: {
-                                          name: user.company.name, 
-                                          count: users|length
-                                        }, 
-                            } 
-                        %}
 				</td>
 			</tr>
+			{% include "partials/_modal.html.twig" with 
+				{
+					id: user.company.id,
+					link: 'admin.society.delete', 
+					query: {
+								name: user.company.name, 
+								count: users|length
+							}, 
+				} 
+			%}
 		{% endfor %}
 	</tbody>
 </table>

@@ -66,9 +66,15 @@ class CompanyCrudController extends  AbstractController
      * @return Response
      */
     #[Route('/society/{name}', name: 'show', methods: ['GET'])]
-    public function show(Company $company): Response
+    public function show(Company $company, PaginatorInterface $paginator, Request $request): Response
     {
-        return $this->render('pages/user/account.html.twig', ['user' => $company->getUser()]);
+        $offers = $paginator->paginate(
+            target  : $company->getOffer(), //Méthode permétant d'aller récupérer tous les users qui sont pas administrateurs
+            page    : $request->query->getInt('page', 1),
+            limit   : 10
+        );
+
+        return $this->render('pages/user/account.html.twig', ['user' => $company->getUser(), 'offers' => $offers]);
     }
 
     /**

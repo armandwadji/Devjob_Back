@@ -1,10 +1,13 @@
+{% set routeName = app.request.attributes.get('_route') %}
+{% set isAllOffer = routeName in 'admin.offer.index' %}
+
 <table class="table table-hover">
 	<thead>
 		<tr>
 			<th scope="col" class="text-center">Offre</th>
 			<th scope="col" class="text-center">contrat</th>
 			<th scope="col" class="text-center">Posté Le</th>
-			{% if  'ROLE_ADMIN' in app.user.roles %}
+			{% if  ('ROLE_ADMIN' in app.user.roles) and (routeName in 'admin.offer.index') %}
 				<th scope="col" class="text-center">Société</th>
 			{% endif %}
 			<th scope="col" class="text-center">Candidats</th>
@@ -29,24 +32,27 @@
 							<i class="fa-solid fa-pencil"></i>
 						</a>
 					</td>
-					<td scope="row" class="d-flex justify-content-center">
+					<td scope="row" class="text-center">
 						<button class="btn btn-danger delete-confirm" data-bs-toggle="modal" data-bs-target="#modalWindow{{offer.id}}">
 							<i class="fa-solid fa-trash"></i>
 						</button>
-						{% include 'partials/_modal.html.twig' with 
-                            { 
-                                link: 'offer.delete',
-                                query: { 
-                                            offer: offer.id, 
-                                            count: offers|length, 
-                                            idCompany : company.id 
-                                        },
-                                id: offer.id
-                            }  
-                        %}
 					</td>
+					{% include 'partials/_modal.html.twig' with 
+						{ 
+							link: 'offer.delete',
+							query: { 
+										offer: offer.id, 
+										count: offers|length, 
+										idCompany : company.id 
+									},
+							id: offer.id
+						}  
+					%}
 				{% else %}
-					<td scope="row" class="text-center">{{offer.company.name|capitalize}}</td>
+					{% if routeName in 'admin.offer.index' %}
+						<td scope="row" class="text-center">{{offer.company.name|capitalize}}</td>
+					{% endif %}
+					
 					<td scope="row" class="text-center">
 						<a href="{{(offer.candidates|length == 0 and 'ROLE_ADMIN' not in app.user.roles ) ? "#" : path('admin.offer.show', {offer: offer.id})}}" class="btn {{offer.candidates|length == 0 ? 'btn-secondary': 'btn-success'}} ">
 							{{offer.candidates|length}}
@@ -57,23 +63,23 @@
 							<i class="fa-solid fa-pencil"></i>
 						</a>
 					</td>
-					<td scope="row" class="d-flex justify-content-center">
+					<td scope="row" class="text-center">
 						<button class="btn btn-danger delete-confirm" data-bs-toggle="modal" data-bs-target="#modalWindow{{offer.id}}">
 							<i class="fa-solid fa-trash"></i>
 						</button>
-						{% include "partials/_modal.html.twig" with 
-                            {
-                                id: offer.id,
-                                link: 'admin.offer.delete', 
-                                query: { 
-                                            offer: offer.id, 
-                                            count: offers|length, 
-                                            idCompany : offer.company.id, 
-                                            isAllOffer : 1 
-                                        }
-                            } 
-                        %}
 					</td>
+					{% include "partials/_modal.html.twig" with 
+						{
+							id: offer.id,
+							link: 'admin.offer.delete', 
+							query: { 
+										offer: offer.id, 
+										count: offers|length, 
+										idCompany : offer.company.id, 
+										isAllOffer : isAllOffer
+									}
+						} 
+					%}
 				{% endif %}
 			</tr>
 		{% endfor %}

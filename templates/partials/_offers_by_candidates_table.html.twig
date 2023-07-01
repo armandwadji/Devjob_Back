@@ -33,40 +33,40 @@
 				{% endif %}
 
 
-				<td scope="row" class="d-flex justify-content-center">
+				<td scope="row" class="text-center">
 					<button class="btn btn-danger delete-confirm" data-bs-toggle="modal" data-bs-target="#modalWindow{{candidate.id}}">
 						<i class="fa-solid fa-trash"></i>
 					</button>
 
-					{% if 'ROLE_ADMIN' in app.user.roles %}
-						{% include "partials/_modal.html.twig" with 
-                            {
-                                id: candidate.id,
-                                link: 'admin.candidate.delete', 
-                                query: { 
-                                            page: page, 
-                                            candidate: candidate.id, 
-                                            redirect: redirect, 
-                                            count: candidates|length, 
-                                            paginationCount:count 
-                                        }, 
-                            } 
-                        %}
-					{% else %}
-						{% include 'partials/_modal.html.twig' with 
-                            { 
-                                id: candidate.id,
-                                link: 'candidate.delete',
-                                query: { 
-                                            page: page,  
-                                            candidate: candidate.id, 
-                                            redirect: redirect , 
-                                            count: count
-                                        },
-                            }  
-                        %}
-					{% endif %}
 				</td>
+				{% if 'ROLE_ADMIN' in app.user.roles %}
+					{% include "partials/_modal.html.twig" with 
+						{
+							id: candidate.id,
+							link: 'admin.candidate.delete', 
+							query: { 
+										page: page, 
+										candidate: candidate.id, 
+										redirect: redirect, 
+										count: candidates|length, 
+										paginationCount:count 
+									}, 
+						} 
+					%}
+				{% else %}
+					{% include 'partials/_modal.html.twig' with 
+						{ 
+							id: candidate.id,
+							link: 'candidate.delete',
+							query: { 
+										page: page,  
+										candidate: candidate.id, 
+										redirect: redirect , 
+										count: count
+									},
+						}  
+					%}
+				{% endif %}
 			</tr>
 		{% endfor %}
 	</tbody>

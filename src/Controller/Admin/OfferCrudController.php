@@ -107,8 +107,8 @@ class OfferCrudController extends AbstractController
     #[Route('/{offer}/delete', name: 'delete', methods: ['POST'])]
     public function delete(Offer $offer,  Request $request, SessionInterface $session, UserPasswordHasherInterface $hasher): RedirectResponse
     {
-        $OffersCountPage = (int)$request->query->get('count'); //Nombres d'offres sur la page courante moins l'offre à supprimer
         $page = (int)htmlspecialchars($session->get('page')); //numéro de la page courante
+        $OffersCountPage = (int)$request->query->get('count'); //Nombres d'offres sur la page courante moins l'offre à supprimer
         $isAllOffer = (bool)$request->get('isAllOffer'); //Boolean permet de rediriger vers la liste de toutes les offres ou bien la liste des offres d'une entreprise
         $passwordAndTokenValid = $hasher->isPasswordValid($this->getUser(), $request->request->get('_password')) && $this->isCsrfTokenValid('delete' . $offer->getId(), $request->request->get('_token')); //user password and token valids
 

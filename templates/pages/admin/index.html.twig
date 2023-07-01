@@ -14,14 +14,12 @@
 		{% include 'partials/_flash.html.twig' %}
 
 		{% if users.items is  same as ([]) %}
-			<h4 class='mt-4'>Aucunes entreprises diponibles.</h4>
+			<h4 class='mt-4'>Aucunes entreprises disponibles.</h4>
 		{% else %}
 
 			{# total items count #}
 			<div class="count mt-4">
-				<h5>
-					{{ users.getTotalItemCount }}
-					entreprise(s) disponibles(s)</h5>
+				<h5> {{ users.getTotalItemCount }} entreprise(s) disponibles(s)</h5>
 			</div>
 
 			{% include "partials/admin/_companies_table.html.twig" with (users) %}
