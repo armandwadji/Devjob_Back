@@ -46,10 +46,11 @@
 							link: 'admin.candidate.delete', 
 							query: { 
 										page: page, 
-										candidate: candidate.id, 
+										count: count,
 										redirect: redirect, 
-										count: candidates|length, 
-										paginationCount:count 
+										paginationCount:count ,
+										candidate: candidate.id, 
+										offersOfThisCandidate: candidates|length,
 									}, 
 						} 
 					%}
@@ -60,9 +61,11 @@
 							link: 'candidate.delete',
 							query: { 
 										page: page,  
-										candidate: candidate.id, 
+										count: count,
 										redirect: redirect , 
-										count: count
+										candidate: candidate.id, 
+										paginationCount:count ,
+										offersOfThisCandidate: candidates|length,
 									},
 						}  
 					%}

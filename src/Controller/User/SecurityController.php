@@ -50,10 +50,13 @@ class SecurityController extends AbstractController
 
                 // USER TOKEN REGISTRATION
                 $user->setTokenRegistration($tokenGeneratorInterface->generateToken());
+
                 $user->countryDecode();
 
                 $this->userRepository->save($user, true);
+
                 $this->eventDispatcher->dispatch(new UserTokenRegistrationEvent($user));
+                
                 $this->addFlash(type: 'success', message: 'Votre compte à bien été créer. veuillez vérifiez votre email pour l\'activé.');
 
                 $user->getCompany()->setImageFile(null);
@@ -97,7 +100,9 @@ class SecurityController extends AbstractController
         }
 
         $user->setIsVerified(true)->setTokenRegistration(null);
+
         $this->userRepository->save($user, true);
+        
         $this->addFlash(type: 'success', message: 'Votre compte à bien été activé. vous pouvez maintenant vous connecté.');
 
         return $this->redirectToRoute('security.login');
@@ -118,8 +123,10 @@ class SecurityController extends AbstractController
             $emailIsValid = filter_var($request->get('email'), FILTER_VALIDATE_EMAIL);
 
             if (!$emailIsValid) {
+
                 $this->addFlash(type: 'warning', message: 'Veuillez saisir un email valide.');
-            } else {
+            }
+            else {
 
                 $user = $userRepository->findOneBy(['email' => $emailIsValid]);
 
@@ -131,7 +138,9 @@ class SecurityController extends AbstractController
                     $user->setTokenRegistration($tokenGeneratorInterface->generateToken());
 
                     $this->userRepository->save($user, true);
+
                     $this->eventDispatcher->dispatch(new UserForgetPasswordEvent($user));
+                    
                     $this->addFlash(type: 'success', message: 'Un email de réinitialisation de mots de passe vous à été envoyé. veuillez cliqué sur le lien pour changer votre mots de passe.');
 
                     return $this->redirectToRoute('security.login');

@@ -2,6 +2,7 @@
 
 namespace App\Controller\Admin;
 
+use App\Controller\GlobalController;
 use App\Entity\Offer;
 use App\Entity\Candidate;
 use App\Form\CandidateAdminType;
@@ -12,13 +13,11 @@ use Symfony\Component\HttpFoundation\Response;
 
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 
 #[Route('admin/applicants', name: 'admin.candidate.')]
-class CandidateCrudController extends AbstractController
+class CandidateCrudController extends GlobalController
 {
     public function __construct(
         private CandidateRepository $candidateRepository,
@@ -36,72 +35,62 @@ class CandidateCrudController extends AbstractController
     {
         $candidate = new Candidate();
         $candidate->setOffer($offer);
-        return static::addOrUpdate( $candidate,  $request);
+        return static::addOrUpdate($candidate,  $request);
     }
 
     /**
      * This controller update candidate
      * @param Candidate $candidate
-     * @param Offer $offer
      * @param Request $request
      * @return Response
      */
     #[Route('/{candidate}/update', name: 'edit', methods: ['GET', 'POST'])]
     public function edit(Candidate $candidate, Request $request): Response
     {
-        return static::addOrUpdate( $candidate,  $request);
+        return static::addOrUpdate($candidate,  $request);
     }
 
     /**
      * This controller delete candidate
      * @param Candidate $candidate
-     * @param Offer $offer
      * @param Request $request
-     * @param SessionInterface $session
+     * @param UserPasswordHasherInterface $hasher
      * @return RedirectResponse
      */
     #[Route('/{candidate}/delete', name: 'delete', methods: ['POST'])]
     public function delete(Candidate $candidate, Request $request, UserPasswordHasherInterface $hasher): RedirectResponse
     {
-        $count = (int)$request->query->get('count'); //Nombres de candidats sur la page courante
-        $page = (int)$request->query->get('page'); //page courante
-        $paginationCount = (int)$request->query->get('paginationCount'); //Nombres de candidats de la page de pagination
-        $redirect = htmlspecialchars($request->query->get('redirect'));
+        // GESTION DE LA PAGINATION:
+        static::pagination($request);
 
-        $passwordAndTokenValid = $hasher->isPasswordValid($this->getUser(), $request->request->get('_password')) && $this->isCsrfTokenValid('delete' . $candidate->getId(), $request->request->get('_token')); //user password and token valids
+        $offersOfThisCandidate = (int)$request->query->get('offersOfThisCandidate'); //Nombres de candidats de la page de pagination
 
-        if ($passwordAndTokenValid) {
+        if (static::isPassWordValid($hasher, $request, $candidate)) {
 
             $this->candidateRepository->remove($candidate, true);
-            $count--; //Nombres de candidats sur la page courante moins le candidat supprimer
-            $paginationCount--; //Nombres de candidats sur la page de pagination moins le candidat supprimer
+            
+            $offersOfThisCandidate--; //Nombres de candidatures sur la page courante moins la candidature supprimer
+            
+            $this->setCount($this->getCount() - 1); //Nombres de candidats sur la page de pagination moins le candidat supprimer
+            
             $this->addFlash(type: 'success', message: 'Le candidat à été supprimer avec succès.');
 
-            if ($count > 0) {
-                return $this->redirectToRoute('admin.candidate.show', [
-                    'page'      => $page,
-                    'redirect'  => $redirect,
-                    'count'     => $paginationCount,
-                    'candidate' => $candidate->getId(),
+            if ($offersOfThisCandidate === 0) {
+
+                return $this->redirectToRoute($this->getRedirect() ?: 'admin.offer.show', [
+                    'offer' => $candidate->getOffer()->getId(),
+                    'id'    => $candidate->getOffer()->getCompany()->getId(),
+                    'page'  => $this->showDeletePage(),
                 ]);
             }
-
-            return $this->redirectToRoute($redirect, [
-                'offer' => $candidate->getOffer()->getId(),
-                'id'    => $candidate->getOffer()->getCompany()->getId(),
-                'page'  => ($paginationCount > 0 && $page >= 2) || $page === 1 ? $page : $page - 1
-            ]);
-        } else {
-
-            $this->addFlash(type: 'warning', message: 'Mot de passe et ou token invalide.');
-
-            return $this->redirectToRoute('admin.candidate.show', [
-                'page'      => $page,
-                'redirect'  => $redirect,
-                'count'     => $paginationCount,
-                'candidate' => $candidate->getId(),
-            ]);
         }
+
+        return $this->redirectToRoute('admin.candidate.show', [
+            'page'      => $this->getPage(),
+            'redirect'  => $this->getRedirect(),
+            'count'     => $this->getCount(),
+            'candidate' => $candidate->getId(),
+        ]);
     }
 
     /**
@@ -121,6 +110,12 @@ class CandidateCrudController extends AbstractController
         ]);
     }
 
+    /**
+     * This controller show all candidatures of one candidate
+     * @param PaginatorInterface $paginator
+     * @param Request $request
+     * @return Response
+     */
     #[Route('/', name: 'all', methods: ['GET'])]
     public function all(PaginatorInterface $paginator, Request $request): Response
     {
@@ -137,7 +132,6 @@ class CandidateCrudController extends AbstractController
 
     /**
      * This controller ad or edit candidate
-     * @param Offer $offer
      * @param Candidate $candidate
      * @param Request $request
      * @return Response
@@ -158,8 +152,8 @@ class CandidateCrudController extends AbstractController
                     message: $candidate->getId() ? "La candidature à été modifer avec succès" : "La candidature à été ajouter avec succès !"
                 );
 
-                return $this->redirectToRoute('admin.offer.show', [
-                    'offer' => $candidate->getOffer()->getId(),
+                return $this->redirectToRoute('admin.candidate.show', [
+                    'candidate' => $candidate->getId(),
                 ]);
             }
 
@@ -171,8 +165,7 @@ class CandidateCrudController extends AbstractController
 
         return $this->render('pages/candidate/apply.html.twig', [
             'form'      => $form->createView(),
-            'offer'     => $candidate->getOffer(),
-            'imageName' => $candidate->getImageName(),
+            'candidate' => $candidate,
         ]);
     }
 }

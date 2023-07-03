@@ -1,0 +1,35 @@
+{% extends "base.html.twig" %}
+
+{% block title %} {{offer.name}} {% endblock %}
+
+{% block body %}
+
+	<main class="container mt-4">
+		
+		<section>
+			    {% include "partials/offer/_offer_detail.html.twig" %}
+				<hr>
+                
+				<h2 class="blog-post-title mb-1 text-capitalize">Candidatures</h2>
+				<section>
+				
+					{# MESSAGE FLASH #}
+					{% include 'partials/_flash.html.twig' %}
+
+					<a href="{{path('admin.candidate.new', {'offer':offer.id } )}}" class="btn btn-primary mt-4">Ajouter une candidat</a>
+
+					{% if offer.candidates|length == 0 %}
+						<h4 class='mt-4'>Cette offre n'a pas encore de candidatures.</h4>
+					{% else %}
+						<h5 class="count mt-4">Cette offre à {{ offer.candidates|length }} candidatures au total</h5>
+						
+						{% include "partials/admin/_candidates_table_offer.html.twig"  with {candidates}%}
+
+					{% endif %}
+				</section>
+
+		</section>
+
+	</main>
+
+{% endblock %}

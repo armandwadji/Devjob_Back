@@ -56,14 +56,18 @@ class UserController extends AbstractController
             if (!$imageIsInvalid) {
 
                 $choosenUser->countryDecode(); //Convertis les initiales du pays en son nom complet.
+
                 $this->userRepository->save($choosenUser, true);
+
                 $choosenUser->getCompany()->setImageFile(null);
+
                 $this->addFlash(type: 'success', message: 'Les informations de votre compte ont bien été modifiées.');
 
                 return $this->redirectToRoute('offer.index', ['company' => $choosenUser->getCompany()->getId()]);
             } 
 
             $this->addFlash(type: 'warning', message: 'Veuillez choisir une image.');
+
             $form->getData()->getCompany()->setImageFile(null);
         }
 
@@ -86,8 +90,11 @@ class UserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
             $choosenUser->setIsDeleted(!$choosenUser->isIsDeleted());
+
             $choosenUser->setDescription($choosenUser->isIsDeleted() ? $choosenUser->getDescription() : null);
+            
             $choosenUser->countryDecode(); //Convertis les initiales du pays en son nom complet.
 
             if ($choosenUser->isIsDeleted()) $this->eventDispatcher->dispatch(new UserDeleteEvent($choosenUser));

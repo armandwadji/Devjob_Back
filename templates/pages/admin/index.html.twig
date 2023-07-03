@@ -8,7 +8,7 @@
 	<main class="container mt-4">
 		<h1>Les entreprises</h1>
 
-		<a href="{{path('admin.society.new' )}}" class="btn btn-primary mt-4">Ajouter une entreprise</a>
+		<a href="{{path('admin.society.new', {count: users.getTotalItemCount } )}}" class="btn btn-primary mt-4">Ajouter une entreprise</a>
 
 		{# flash messages #}
 		{% include 'partials/_flash.html.twig' %}

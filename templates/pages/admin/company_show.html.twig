@@ -1,0 +1,31 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Les sociétés{% endblock %}
+
+{% set routeName = app.request.attributes.get('_route') %}
+
+{% block body %}
+
+	<main class="container mt-5">
+
+		{% include "partials/company/_company_detail.html.twig"  %}
+		<hr>
+		<section>
+			{% include 'partials/_flash.html.twig' %}
+			<a href="{{path('admin.offer.new', {'id': user.company.id , redirect: routeName, count: offers.getTotalItemCount  } )}}" class="btn btn-primary mt-4">Ajouter une offre</a>
+
+			{% if user.company.offer|length == 0 %}
+				<h4 class='mt-4'>Cette entreprise n'a pas encore d'annonces.</h4>
+			{% else %}
+				{# total items count #}
+				<div class="count mt-4">
+					<h5>Cette entreprise à {{offers.getTotalItemCount }} annonces au total</h5>
+				</div>
+
+				{% include "partials/offer/_offers_table.html.twig" with ({offers, routeName}) %}
+
+			{% endif %}
+		</section>
+
+	</main>
+{% endblock %}

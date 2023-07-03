@@ -2,6 +2,7 @@
 
 namespace App\Controller\User;
 
+use App\Controller\GlobalController;
 use App\Entity\Offer;
 use App\Entity\Company;
 use App\Entity\Candidate;
@@ -15,11 +16,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
-class CandidateController extends AbstractController
+class CandidateController extends GlobalController
 {
 
     public function __construct(
@@ -40,9 +40,9 @@ class CandidateController extends AbstractController
     public function candidatesByOffer(Offer $offer, PaginatorInterface $paginator, Request $request): Response
     {
         $candidates = $paginator->paginate(
-            target: $offer->getCandidates(),
-            page: $request->query->getInt('page', 1),
-            limit: 5
+            target  : $offer->getCandidates(),
+            page    : $request->query->getInt('page', 1),
+            limit   : 5
         );
 
         return $this->render('pages/candidate/candidates_by_offer.html.twig', ['candidates' => $candidates]);
@@ -61,9 +61,9 @@ class CandidateController extends AbstractController
     {
 
         $candidates = $paginator->paginate(
-            target: $this->candidateRepository->findCandidatesGroupByEmail($company),
-            page: $request->query->getInt('page', 1),
-            limit: 5
+            target  : $this->candidateRepository->findCandidatesGroupByEmail($company),
+            page    : $request->query->getInt('page', 1),
+            limit   : 5
         );
 
         return $this->render('pages/candidate/candidates_by_company.html.twig', ['candidates' => $candidates]);
@@ -82,8 +82,8 @@ class CandidateController extends AbstractController
         return $this->render('pages/candidate/show.html.twig', [
             'page'          => intval($request->query->get('page')),
             'count'         => intval($request->query->get('count')),
-            'redirect'      => htmlspecialchars($request->query->get('redirect')) ,
-            'candidates'    => $this->candidateRepository->findBy( ['email'=> $candidate->getEmail()] ),
+            'redirect'      => htmlspecialchars($request->query->get('redirect')),
+            'candidates'    => $this->candidateRepository->findBy(['email' => $candidate->getEmail()]),
         ]);
     }
 
@@ -99,38 +99,35 @@ class CandidateController extends AbstractController
     #[Route('/my-applicants/{candidate}/delete', name: 'candidate.delete', methods: ['POST'])]
     public function delete(Candidate $candidate = null, Request $request, UserPasswordHasherInterface $hasher): RedirectResponse
     {
-        $count = intval($request->query->get('count')); //Nombres de candidats sur la page courante
-        $page = intval($request->query->get('page')); //numéro de la page courante
-        $redirect = htmlspecialchars($request->query->get('redirect')); //route de redirection
-        
-        $passwordAndTokenValid = $hasher->isPasswordValid($candidate->getOffer()->getCompany()->getUser(), $request->request->get('_password')) && $this->isCsrfTokenValid('delete' . $candidate->getId(), $request->request->get('_token')); //user password and token valids
+        static::pagination($request);
 
-        if ($passwordAndTokenValid) {
+        $offersOfThisCandidate = (int)$request->query->get('offersOfThisCandidate'); //Nombres de candidats de la page de pagination
+
+        if (static::isPassWordValid($hasher, $request, $candidate)) {
+
+            $this->candidateRepository->remove($candidate, true);
 
             $this->eventDispatcher->dispatch(new CandidateDeleteEvent($candidate));
-            $this->candidateRepository->remove($candidate, true);
-            $count--; //Nombres de candidats sur la page courante moins le candidat supprimer
+
+            $offersOfThisCandidate--; //Nombres de candidatures sur la page courante moins la candidature supprimer
+
+            $this->setCount($this->getCount() - 1); //Nombres de candidats sur la page de pagination moins le candidat supprimer
 
             $this->addFlash(type: 'success', message: 'Le candidat à été supprimer avec succès!');
 
-            if ($count === 0 && $page === 1) return $this->redirectToRoute('offer.index', ['company' => $candidate->getOffer()->getCompany()->getId()]);
-        } else {
-
-            $this->addFlash(type: 'warning', message: 'Mots de passe et ou token invalide.');
-
-            return $this->redirectToRoute('candidate.show', [
-                'page'          => $page,
-                'count'         => $count,
-                'candidate'     => $candidate->getId(),
-                'redirect'      => htmlspecialchars($request->query->get('redirect')),
+            if ($offersOfThisCandidate === 0) return $this->redirectToRoute($this->getRedirect(), [
+                'company' => $candidate->getOffer()->getCompany()->getId(),
+                'offer' => $candidate->getOffer()->getId(),
             ]);
         }
 
-        return $this->redirectToRoute($redirect, [
-            'offer'     => $candidate->getOffer()->getId(),
-            'company'   => $candidate->getOffer()->getCompany()->getId(),
-            'page'      => (($count > 0 && $page >= 2) || $page === 1 || $page === 0) ?  $page  : $page - 1
+        return $this->redirectToRoute('candidate.show', [
+            'page'          => $this->getPage(),
+            'count'         => $this->getCount(),
+            'candidate'     => $candidate->getId(),
+            'redirect'      => $this->getRedirect(),
         ]);
+
     }
 
     /**

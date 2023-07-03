@@ -1,55 +1,10 @@
 {% extends "base.html.twig" %}
 
-{% block title %}Mon compte
-{% endblock %}
+{% block title %}Mon compte{% endblock %}
+
 
 {% block body %}
 	<main class="container mt-5">
-		<section class="d-flex flex-sm-row flex-column-reverse justify-content-between align-items-center">
-			<div class="py-4 align-self-start">
-				<h3 class="mb-0 text-capitalize">Société :
-					{{user.company.name}}</h3>
-				<span class="d-inline-block">Localisation :
-					<strong class="text-primary">{{user.company.country|country_name}}</strong>
-				</span><br>
-
-				<span class="card-text mb-auto">Color :
-					<strong>{{user.company.color}}</strong>
-				</span>
-				<span class='rounded-circle overflow-hidden p-1' style="background-color:{{user.company.color}}; color: {{user.company.color}}">sss</span>
-
-				<h4 class="card-text mb-auto">Contact :</h4>
-				<span class="ms-3">nom : {{user.firstname ~  ' ' ~ user.lastname}}</span><br>
-				<span class="ms-3">email :</span>
-				<a href="#">{{user.email}}</a>
-			</div>
-			<div class="col-auto d-lg-block rounded-circle p-2" style="background-color:{{user.company.color}}">
-				<img class='rounded-circle' style="width: 100%; height: 100%; height: 250px; width: 250px; object-fit: contain " src="{% if vich_uploader_asset(user.company, 'imageFile') %} {{vich_uploader_asset(user.company, 'imageFile')}} {% else %} https://picsum.photos/id/{{user.company.id}}/250/250 {% endif %}" alt="Logo de {{user.company.name}}">
-			</div>
-		</section>
-		<hr>
-
-		{% if app.user and 'ROLE_ADMIN' in app.user.roles %}
-			<section>
-
-				{% include 'partials/_flash.html.twig' %}
-				<a href="{{path('admin.offer.new', {'id': user.company.id , } )}}" class="btn btn-primary mt-4">Ajouter une offre</a>
-
-				{% if user.company.offer|length == 0 %}
-					<h4 class='mt-4'>Cette entreprise n'a pas encore d'annonces.</h4>
-				{% else %}
-					{# total items count #}
-					<div class="count mt-4">
-						<h5>Cette entreprise à
-							{{ user.company.offer|length }}
-							annonces au total</h5>
-					</div>
-
-					{% include "partials/_offers_table.html.twig" with (offers) %}
-
-				{% endif %}
-			</section>
-		{% endif %}
-
+		{% include "partials/company/_company_detail.html.twig" %}
 	</main>
 {% endblock %}

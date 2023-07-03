@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% set company = app.request.get('company') %}
+{% set routeName = app.request.attributes.get('_route') %}
 
 {% block title %}offres{% endblock %}
 
@@ -11,7 +11,7 @@
 		</h1>
 
 		{% if  'ROLE_ADMIN' not in app.user.roles %}
-			<a href="{{path('offer.new', {'company': company.id , 'count' : offers.getTotalItemCount } )}}" class="btn btn-primary mt-4">Ajouter une offre</a>
+			<a href="{{path('offer.new', {'company': app.user.company.id , 'count' : offers.getTotalItemCount } )}}" class="btn btn-primary mt-4">Ajouter une offre</a>
 		{% endif %}
 
 		{# flash messages #}
@@ -25,7 +25,7 @@
 				<h5>Vous avez {{ offers.getTotalItemCount }} offres au total</h5>
 			</div>
 
-			{% include "partials/_offers_table.html.twig" with (offers) %}
+			{% include "partials/offer/_offers_table.html.twig" with ({offers, routeName}) %}
 
 		{% endif %}
 

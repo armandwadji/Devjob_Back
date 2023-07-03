@@ -7,6 +7,7 @@ use App\Entity\Company;
 
 use App\Form\RegistrationType;
 use App\Repository\UserRepository;
+use App\Controller\GlobalController;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -14,11 +15,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 #[Route('/admin', name: 'admin.society.')]
-class CompanyCrudController extends  AbstractController
+class CompanyCrudController extends  GlobalController
 {
 
     public function __construct(
@@ -50,19 +50,20 @@ class CompanyCrudController extends  AbstractController
     /**
      * This coontroller add company
      * @param Request $request
-     * @param SessionInterface $session
      * @return Response
      */
     #[Route('/society/new', name: 'new', methods: ['GET', 'POST'])]
-    public function add(Request $request, SessionInterface $session): Response
+    public function add(Request $request): Response
     {
         $user = new User();
-        return static::addOrUpdate($user, $request, $session);
+        return static::addOrUpdate($user, $request);
     }
 
     /**
      * This controller show company detail
      * @param Company $company
+     * @param PaginatorInterface $paginator
+     * @param  Request $request
      * @return Response
      */
     #[Route('/society/{name}', name: 'show', methods: ['GET'])]
@@ -74,61 +75,53 @@ class CompanyCrudController extends  AbstractController
             limit   : 10
         );
 
-        return $this->render('pages/user/account.html.twig', ['user' => $company->getUser(), 'offers' => $offers]);
+        return $this->render('pages/admin/company_show.html.twig', ['user' => $company->getUser(), 'offers' => $offers]);
     }
 
     /**
      * This controller edit company
      * @param Company $company
      * @param Request $request
-     * @param SessionInterface $session
      * @return Response
      */
     #[Route('/society/{name}/update/', name: 'edit', methods: ['GET', 'POST'])]
-    public function edit(Company $company, Request $request, SessionInterface $session): Response
+    public function edit(Company $company, Request $request): Response
     {
         $user = $company->getUser();
-        return static::addOrUpdate($user, $request, $session);
+        return static::addOrUpdate($user, $request);
     }
 
     /**
      * This controller delete company
      * @param Company $company
      * @param Request $request
-     * @param SessionInterface $session
      * @param UserPasswordHasherInterface $hasher
      * @return Response
      */
     #[Route('/society/{name}/delete/', name: 'delete', methods: ['POST'])]
-    public function delete(Company $company, Request $request, SessionInterface $session, UserPasswordHasherInterface $hasher): Response
+    public function delete(Company $company, Request $request, UserPasswordHasherInterface $hasher): Response
     {
-        $companyCountPage = (int)$request->query->get('count'); //Nombres d'entreprises sur la page courante
-        $page = (int)htmlspecialchars($session->get('page')); //numéro de la page courante
-        $passwordAndTokenValid = $company->getUser() && $hasher->isPasswordValid($this->getUser(), $request->request->get('_password')) && $this->isCsrfTokenValid('delete' . $company->getId(), $request->request->get('_token')); //user password and token valids
+        static::pagination($request);
 
-        if ($passwordAndTokenValid) {
+        if (static::isPassWordValid($hasher, $request, $company)) {
 
             $this->userRepository->remove($company->getUser(), true);
-            $companyCountPage--; //Nombres d'entreprises sur la page courante moins l'entreprise supprimer
+
+            $this->setCount($this->getCount() - 1); //Nombres d'entreprises sur la page courante moins l'entreprise supprimer
+
             $this->addFlash( type: 'success', message : 'La société ' . strtoupper($company->getName()) . ' à été supprimer avec succès.');
-
-        }else{
-
-            $this->addFlash( type: 'warning', message : 'La société ' . strtoupper($company->getName()) . ' n\'à pas pu être supprimer. Mot de passe ou token invalid');
-        
         }
 
-        return $this->redirectToRoute('admin.society.index', ['page' => ($companyCountPage > 0 && $page >= 2) || $page === 1 ? $page : $page - 1]);
+        return $this->redirectToRoute('admin.society.index', ['page' => $this->showDeletePage()]);
     }
 
     /**
      * This method add or update company
      * @param User $user
      * @param Request $request
-     * @param SessionInterface $session
      * @return Response
      */
-    private function addOrUpdate(User $user, Request $request, SessionInterface $session): Response|RedirectResponse
+    private function addOrUpdate(User $user, Request $request): Response|RedirectResponse
     {
         // GESTION DES CODES ISO POUR LA CONFORMITE DU FORMULAIRE
         if($user->getCompany() !== null){
@@ -146,20 +139,22 @@ class CompanyCrudController extends  AbstractController
             if (!$imageIsInvalid) {
 
                 $user->countryDecode(); //Convertis les initiales du pays en son nom complet.
-
+                
                 $this->userRepository->save($user, true);
+
                 $user->getCompany()->setImageFile(null);
+                
+                // GESTION DE LA PAGINATION:
+                static::pagination($request);
+                if ($this->getCount()) $this->setCount($this->getCount() + 1); //On Ajoute une entreprise                
 
                 $this->addFlash(
                     type    : 'success',
                     message : 'L\'entreprise ' . strtoupper($user->getCompany()->getName()) . ' à bien été' . ($user->getId() ? ' éditer.' : ' créer.')
                 );
 
-                // GESTION DE LA PAGINATION:
-                $offersTotalCount = isset($_GET['count']) ? (int)$request->get('count') + 1 : null; //Nombres d'offer sur la page courante
-
                 return $this->redirectToRoute('admin.society.index', [
-                    'page'  => !$offersTotalCount ?  $session->get('page') : ceil($offersTotalCount / 10)
+                    'page'  => $this->showAddEditPage(),
                 ]);
             } 
 
@@ -169,7 +164,6 @@ class CompanyCrudController extends  AbstractController
 
         return $this->render('pages/security/registration.html.twig', [
             'form'      => $form->createView(),
-            'editMode'  => $user->getId(),
         ]);
     }
 

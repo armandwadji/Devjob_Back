@@ -21,7 +21,7 @@
 					</a>
 				</td>
 				<td scope="row" class="text-center">
-					<a href="{{ path('admin.society.edit', { name: user.company.name}) }}" class="btn btn-info">
+					<a href="{{ path('admin.society.edit', { name: user.company.name, page: users.getCurrentPageNumber }) }}" class="btn btn-info">
 						<i class="fa-solid fa-pencil"></i>
 					</a>
 				</td>
@@ -36,8 +36,9 @@
 					id: user.company.id,
 					link: 'admin.society.delete', 
 					query: {
+								count: users|length,
 								name: user.company.name, 
-								count: users|length
+								page: users.getCurrentPageNumber,
 							}, 
 				} 
 			%}

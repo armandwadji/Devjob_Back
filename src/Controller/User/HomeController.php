@@ -22,9 +22,9 @@ class HomeController extends AbstractController
     public function index(OfferRepository $repository, PaginatorInterface $paginator, Request $request): Response
     {
         $offers = $paginator->paginate(
-            $repository->findOfferOrderDesc(),
-            $request->query->getInt('page', 1),
-            12,
+            target  :$repository->findOfferOrderDesc(),
+            page    :$request->query->getInt('page', 1),
+            limit   :12,
         );
 
         return $this->render('pages/home.html.twig', ['offers' => $offers]);

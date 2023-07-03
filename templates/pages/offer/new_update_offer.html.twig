@@ -2,6 +2,9 @@
 
 {% block title %} {{editMode ? "Edition" : "Nouvelle"}} offre {% endblock %}
 
+{% set routeName = app.request.attributes.get('_route') %}
+{% set editMode = 'edit' in routeName %}
+
 {% block body %}
 	<main class="container">
 

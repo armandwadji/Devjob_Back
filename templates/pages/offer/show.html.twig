@@ -6,75 +6,12 @@
 
 	<main class="container mt-4">
 		<section>
-			<div class="d-flex flex-sm-row flex-column-reverse justify-content-between align-items-center">
-				<div>
-					<h2 class="blog-post-title mb-1 text-capitalize">{{offer.name}}</h2>
-					<span class="blog-post-meta mb-1">Créer le : <strong>{{offer.createdAt|date('d/m/y')}}</strong></span><br>
-					<span class="blog-post-meta">Website :
-						<a href="{{offer.url}}" target='_blank' class='' style="color : {{offer.company.color}};">
-							{{offer.url}}
-						</a>
-					</span>
-					<h3 class="text-capitalize mt-2">Description :</h3>
-					<p>{{offer.description}}</p>
-				</div>
-				<img class='rounded-circle mx-4 mb-4 mb-sm-0 img-thumbnail' style="height: 200px; width: 200px; object-fit: contain; background-color:{{offer.company.color}}" src=" {% if vich_uploader_asset(offer.company, 'imageFile') %} {{vich_uploader_asset(offer.company, 'imageFile')}} {% else %} https://picsum.photos/id/{{offer.company.id}}/250/250 {% endif %}" alt="Logo de {{offer.company.name}}">
-			</div>
-			<hr>
 
-			{# PREREQUIS #}
-			<h3 class='text-capitalize'>préréquis</h3>
-			<p>
-				{{offer.requirement.content}}
-			</p>
-			<ul>
-				{% for requirementItems in offer.requirement.requirementItems %}
-					<li class="text-text-capitalize">
-						{{requirementItems}}
-					</li>
-				{% endfor %}
-			</ul>
-
-			{# ROLES #}
-			<h3 class='text-capitalize'>Roles</h3>
-			<p>
-				{{offer.role.content}}
-			</p>
-			<ol>
-				{% for roleItem in offer.role.roleItems %}
-					<li>
-						{{roleItem}}
-					</li>
-				{% endfor %}
-			</ol>
-
-			{% if not ( app.user )   %}
-				<a class="btn btn-primary btn-lg" href="{{path('candidate.apply', {offer: offer.id } )}}" role="button">Candidater</a>
-			{% endif %}
-
-			{% if (app.user and 'ROLE_ADMIN' in app.user.roles )  %}
-				<hr>
-				<h2 class="blog-post-title mb-1 text-capitalize">Candidatures</h2>
-				<section>
-				
-					{# MESSAGE FLASH #}
-					{% include 'partials/_flash.html.twig' %}
-
-					<a href="{{path('admin.candidate.new', {'offer':offer.id , } )}}" class="btn btn-primary mt-4">Ajouter une candidat</a>
-
-					{% if offer.candidates|length == 0 %}
-						<h4 class='mt-4'>Cette offre n'a pas encore de candidatures.</h4>
-					{% else %}
-						<h5 class="count mt-4">Cette offre à {{ offer.candidates|length }} candidatures au total</h5>
-						
-						{% include "partials/admin/_candidates_table_offer.html.twig"  with {candidates}%}
-
-					{% endif %}
-				</section>
-
-			{% endif %}
-
+			{% include "partials/offer/_offer_detail.html.twig" %}
+			<a class="btn btn-primary btn-lg" href="{{path('candidate.apply', {offer: offer.id } )}}" role="button">Candidater</a>
+			
 		</section>
+
 	</main>
 
 {% endblock %}

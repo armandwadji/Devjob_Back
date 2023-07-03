@@ -2,6 +2,7 @@
 
 namespace App\Controller\User;
 
+use App\Controller\GlobalController;
 use App\Entity\Offer;
 use App\Entity\Company;
 use App\Form\OfferType;
@@ -19,7 +20,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 #[Route('/my-offers', name: 'offer.')]
-class OfferController extends AbstractController
+class OfferController extends GlobalController
 {
     public function __construct(
         private OfferRepository $offerRepository,
@@ -54,16 +55,15 @@ class OfferController extends AbstractController
      * This controller create offer
      * @param Company $company
      * @param Request $request
-     * @param SessionInterface $session
      * @return Response
      */
     #[Security("is_granted('ROLE_USER') and user=== company.getUser()")]
     #[Route('/new?{company}', name: 'new', methods: ['GET', 'POST'])]
-    public function new(Company $company, Request $request, SessionInterface $session): Response
+    public function new(Company $company, Request $request): Response
     {
         $offer = new Offer();
         $offer->setCompany($company);
-        return static::newUpdate($offer, $request, $session);
+        return static::newUpdate($offer, $request);
     }
 
     /**
@@ -75,42 +75,39 @@ class OfferController extends AbstractController
      */
     #[Security("is_granted('ROLE_USER') and user=== offer.getCompany().getUser()")]
     #[Route('/{offer}/update', name: 'edit', methods: ['GET', 'POST'])]
-    public function update(Offer $offer, Request $request, SessionInterface $session): Response
+    public function update(Offer $offer, Request $request): Response
     {
-        return static::newUpdate($offer, $request, $session);
+        return static::newUpdate($offer, $request);
     }
 
     /**
      * This controller delete offer
      * @param Offer|null $offer
      * @param Request $request
-     * @param SessionInterface $session
      * @param UserPasswordHasherInterface $hasher
      * @return Response
      */
     #[Security("is_granted('ROLE_USER') and user=== offer.getCompany().getUser()")]
     #[Route('/{offer}/delete', name: 'delete', methods: ['POST'])]
-    public function delete(Offer $offer = null,  Request $request, SessionInterface $session,  UserPasswordHasherInterface $hasher): Response
+    public function delete(Offer $offer = null,  Request $request,  UserPasswordHasherInterface $hasher): Response
     {
-        $OffersCountPage = intval($request->query->get('count')); //Nombres d'offres sur la page courante 
-        $page = intval(htmlspecialchars($session->get('page'))); //Numéro de la page courante
-        $passwordAndTokenValid = $hasher->isPasswordValid($offer->getCompany()->getUser(), $request->request->get('_password')) && $this->isCsrfTokenValid('delete' . $offer->getId(), $request->request->get('_token'));
+        static::pagination($request);
 
-        if ($passwordAndTokenValid) {
+        if (static::isPassWordValid($hasher, $request, $offer)) {
 
             $this->offerRepository->remove($offer, true);
+
             $this->eventDispatcher->dispatch(new OfferDeleteEvent($offer));
+
+            $this->setCount($this->getCount() - 1); //Nombres d'offres sur la page courante moins l'offre supprimer
+
             $this->addFlash(type: 'success', message: 'Votre offre à été supprimer avec succès!');
-            $OffersCountPage--; //Nombres d'offres sur la page courante moins l'offre à supprimer
 
-        } else {
-
-            $this->addFlash(type: 'warning', message: 'Mots de passe et ou token invalide.');
-        }
+        } 
 
         return $this->redirectToRoute('offer.index', [
             'company'   => intval($request->query->get('idCompany')),
-            'page'      => ($OffersCountPage > 0 && $page >= 2) || $page === 1 ?  $page  : $page - 1
+            'page'      => $this->showDeletePage(),
         ]);
     }
 
@@ -129,10 +126,9 @@ class OfferController extends AbstractController
      * This controller create or update offer
      * @param Offer $offer
      * @param Request $request
-     * @param SessionInterface $session
      * @return Response
      */
-    private function newUpdate(Offer $offer, Request $request, SessionInterface $session): Response
+    private function newUpdate(Offer $offer, Request $request): Response
     {
         $form = $this->createForm(OfferType::class, $offer);
         $form->handleRequest($request);
@@ -152,18 +148,20 @@ class OfferController extends AbstractController
                 }
 
                 // GESTION DE LA PAGINATION:
-                $offersTotalCount = isset($_GET['count']) ? (int) htmlspecialchars($_GET['count']) + 1 : null; //Nombres d'offres sur la page courante
+                static::pagination($request);
+
+                $this->offerRepository->save($offer, true);
+                
+                if ($this->getCount()) $this->setCount($this->getCount() + 1); //On Ajoute une offre
 
                 $this->addFlash(
                     type: 'success',
                     message: $offer->getId() ? "Votre offre à été éditer avec succès!" : 'Votre offre à été créer avec succès!',
                 );
 
-                $this->offerRepository->save($offer, true);
-
                 return $this->redirectToRoute('offer.index', [
                     'company'   => $offer->getCompany()->getId(),
-                    'page'      => !$offersTotalCount ?  $session->get('page') : ceil($offersTotalCount / 10)
+                    'page'      => $this->showAddEditPage(),
                 ]);
             }
 

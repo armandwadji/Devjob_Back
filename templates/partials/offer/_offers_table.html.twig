@@ -1,4 +1,3 @@
-{% set routeName = app.request.attributes.get('_route') %}
 {% set isAllOffer = routeName in 'admin.offer.index' %}
 
 <table class="table table-hover">
@@ -28,7 +27,7 @@
 						</a>
 					</td>
 					<td scope="row" class="text-center">
-						<a href="{{path('offer.edit', {offer: offer.id})}}" class="btn btn-info">
+						<a href="{{path('offer.edit', {offer: offer.id, page: offers.getCurrentPageNumber})}}" class="btn btn-info">
 							<i class="fa-solid fa-pencil"></i>
 						</a>
 					</td>
@@ -39,13 +38,14 @@
 					</td>
 					{% include 'partials/_modal.html.twig' with 
 						{ 
+							id: offer.id,
 							link: 'offer.delete',
 							query: { 
 										offer: offer.id, 
 										count: offers|length, 
-										idCompany : company.id 
+										idCompany : offer.company.id ,
+										page: offers.getCurrentPageNumber,
 									},
-							id: offer.id
 						}  
 					%}
 				{% else %}
@@ -59,7 +59,7 @@
 						</a>
 					</td>
 					<td scope="row" class="text-center">
-						<a href="{{path( 'admin.offer.update', {offer: offer.id, isAllOffer : 1} )}}" class="btn btn-info">
+						<a href="{{path( 'admin.offer.edit', {offer: offer.id, redirect: routeName, page: offers.getCurrentPageNumber } )}}" class="btn btn-info">
 							<i class="fa-solid fa-pencil"></i>
 						</a>
 					</td>
@@ -75,8 +75,9 @@
 							query: { 
 										offer: offer.id, 
 										count: offers|length, 
+										redirect : routeName,
 										idCompany : offer.company.id, 
-										isAllOffer : isAllOffer
+										page: offers.getCurrentPageNumber,
 									}
 						} 
 					%}

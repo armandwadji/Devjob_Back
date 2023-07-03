@@ -11,7 +11,7 @@
 		{% include 'partials/_flash.html.twig' %}
 
 		<h1 class="mt-4 mx-4">Candidature pour le poste :
-			{{offer.name|capitalize}}
+			{{candidate.offer.name|capitalize}}
 		</h1>
 
 		{{ form_start(form) }}
@@ -36,7 +36,7 @@
 			{{ form_widget(form.telephone, {'attr': {'placeholder': "00000000",   }}) }}
 		</div>
 
-		{% if not (app.user and 'ROLE_ADMIN' in app.user.roles) or not imageName %}
+		{% if not (app.user and 'ROLE_ADMIN' in app.user.roles) or not candidate.imageName %}
 			<div class="form-group mt-4 px-4">
 				{{form_label(form.imageFile, ' CV *', {'label_attr': { 'class': 'form-label'} } )}}
 				{{ form_widget(form.imageFile, { 'attr': { 'class': 'd-flex'  } } ) }}
