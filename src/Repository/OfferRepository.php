@@ -129,7 +129,7 @@ class OfferRepository extends ServiceEntityRepository
 
         if ($text) {
             $query
-                ->andWhere('c.name = :name')
+                ->andWhere('c.name LIKE :name')
                 ->setParameter('name', $text);
         }
 
