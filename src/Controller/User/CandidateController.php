@@ -40,9 +40,9 @@ class CandidateController extends GlobalController
     public function candidatesByOffer(Offer $offer, PaginatorInterface $paginator, Request $request): Response
     {
         $candidates = $paginator->paginate(
-            target  : $offer->getCandidates(),
-            page    : $request->query->getInt('page', 1),
-            limit   : 5
+            target: $offer->getCandidates(),
+            page: $request->query->getInt('page', 1),
+            limit: 5
         );
 
         return $this->render('pages/candidate/candidates_by_offer.html.twig', ['candidates' => $candidates]);
@@ -61,9 +61,9 @@ class CandidateController extends GlobalController
     {
 
         $candidates = $paginator->paginate(
-            target  : $this->candidateRepository->findCandidatesGroupByEmail($company),
-            page    : $request->query->getInt('page', 1),
-            limit   : 5
+            target: $this->candidateRepository->findCandidatesGroupByEmail($company),
+            page: $request->query->getInt('page', 1),
+            limit: 5
         );
 
         return $this->render('pages/candidate/candidates_by_company.html.twig', ['candidates' => $candidates]);
@@ -115,7 +115,7 @@ class CandidateController extends GlobalController
 
             $this->addFlash(type: 'success', message: 'Le candidat à été supprimer avec succès!');
 
-            if ($offersOfThisCandidate === 0) return $this->redirectToRoute($this->getRedirect(), [
+            return $this->redirectToRoute($this->getRedirect(), [
                 'company' => $candidate->getOffer()->getCompany()->getId(),
                 'offer' => $candidate->getOffer()->getId(),
             ]);
@@ -127,7 +127,6 @@ class CandidateController extends GlobalController
             'candidate'     => $candidate->getId(),
             'redirect'      => $this->getRedirect(),
         ]);
-
     }
 
     /**
@@ -148,7 +147,7 @@ class CandidateController extends GlobalController
         if ($form->isSubmitted()) {
 
             if ($form->isValid() && $candidate->getImageFile()) {
-                
+
                 $this->candidateRepository->save($candidate, true);
 
                 $this->addFlash(type: 'success', message: "Votre candidature à été envoyer avec succès !");
