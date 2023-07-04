@@ -140,14 +140,15 @@ class CandidateController extends GlobalController
     public function apply(Offer $offer, Request $request): Response
     {
         $candidate = new Candidate();
+        $candidate->setOffer($offer);
+
         $form = $this->createForm(CandidateType::class, $candidate);
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
 
             if ($form->isValid() && $candidate->getImageFile()) {
-
-                $candidate->setOffer($offer);
+                
                 $this->candidateRepository->save($candidate, true);
 
                 $this->addFlash(type: 'success', message: "Votre candidature à été envoyer avec succès !");
@@ -160,7 +161,7 @@ class CandidateController extends GlobalController
 
         return $this->render('pages/candidate/apply.html.twig', [
             'form'  => $form->createView(),
-            'offer' => $offer
+            'candidate' => $candidate
         ]);
     }
 }

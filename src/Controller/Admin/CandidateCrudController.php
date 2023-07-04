@@ -134,7 +134,7 @@ class CandidateCrudController extends GlobalController
      * This controller ad or edit candidate
      * @param Candidate $candidate
      * @param Request $request
-     * @return Response
+     * @return Response|RedirectResponse
      */
     private function addOrUpdate(Candidate $candidate, Request $request): Response|RedirectResponse
     {
