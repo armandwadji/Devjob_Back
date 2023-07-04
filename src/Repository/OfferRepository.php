@@ -130,7 +130,7 @@ class OfferRepository extends ServiceEntityRepository
         if ($text) {
             $query
                 ->andWhere('c.name LIKE :name')
-                ->setParameter('name', $text);
+                ->setParameter('name', '%' . $text . '%');
         }
 
         return $query->orderBy('o.createdAt', 'DESC')
