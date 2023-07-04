@@ -47,11 +47,11 @@ class CandidateRepository extends ServiceEntityRepository
      */
     public function findCandidatesGroupByEmail(?Company $company = null): array
     {
-        // SELECT * FROM `offer`
-        // INNER JOIN `candidate` ON `candidate`.`offer_id` = `offer`.`id`
+        // SELECT * FROM `candidate`
+        // INNER JOIN `offer` ON `candidate`.`offer_id` = `offer`.`id`
         // INNER JOIN `company` ON `company`.`id` = `offer`.`company_id`
         // WHERE `company`.`id` = 127
-        // AND `candidate`.`email` LIKE 'anastasie99@bodin.com';
+        // GROUP BY `candidate`.`email`;
 
         $query = $this->createQueryBuilder('ca')
             ->join('ca.offer', 'o')
@@ -67,24 +67,23 @@ class CandidateRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function findCandidatesForOneOffer(Candidate $candidate)
+    public function findCandidatesForOneCompany(Candidate $candidate)
     {
 
-        // SELECT * FROM `offer`
-        // INNER JOIN `candidate` ON `candidate`.`offer_id` = `offer`.`id`
+        // SELECT * FROM `candidate`
+        // INNER JOIN `offer` ON `candidate`.`offer_id` = `offer`.`id`
         // INNER JOIN `company` ON `company`.`id` = `offer`.`company_id`
         // WHERE `company`.`id` = 127
         // AND `candidate`.`email` LIKE 'anastasie99@bodin.com';
 
-        $query = $this->createQueryBuilder('ca')
-            ->join('ca.offer', 'ca')
-            ->join('o.company', 'co')
-            ->Where('co.id = :id')
-            ->andWhere('ca.email = :email')
-            ->setParameter('id', $candidate->getOffer()->getCompany()->getId())
-            ->setParameter('email', $candidate->getEmail());
-
-        return $query->getQuery()
-            ->getResult();
+        return $this->createQueryBuilder('ca')
+        ->join('ca.offer', 'o')
+        ->join('o.company', 'co')
+        ->Where('co.id = :id')
+        ->andWhere('ca.email = :email')
+        ->setParameter('id', $candidate->getOffer()->getCompany()->getId())
+        ->setParameter('email', $candidate->getEmail())
+        ->getQuery()
+        ->getResult();
     }
 }

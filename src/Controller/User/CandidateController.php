@@ -83,7 +83,7 @@ class CandidateController extends GlobalController
             'page'          => intval($request->query->get('page')),
             'count'         => intval($request->query->get('count')),
             'redirect'      => htmlspecialchars($request->query->get('redirect')),
-            'candidates'    => $this->candidateRepository->findBy(['email' => $candidate->getEmail()]),
+            'candidates'    => $this->candidateRepository->findCandidatesForOneCompany($candidate),
         ]);
     }
 
