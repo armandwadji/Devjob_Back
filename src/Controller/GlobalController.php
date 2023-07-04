@@ -41,7 +41,7 @@ abstract class GlobalController extends AbstractController
 
     public function showDeletePage():int
     {
-        return ($this->count > 0 && $this->page >= 2) || $this->page === 1 ?  $this->page  : $this->page - 1;
+        return ($this->getCount() > 0 && $this->getPage() >= 2) || $this->getPage() === 1 ?  $this->getPage()  : $this->getPage() - 1;
     }
 
     public function showAddEditPage ():int
