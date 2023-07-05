@@ -1,5 +1,17 @@
 {% set route_name = app.request.attributes.get('_route') %}
 
+{% set adminCompaniesRoutesCollection = ['admin.society.index', 'admin.society.new', 'admin.society.show', 'admin.society.edit'] %}
+
+{% set adminOffersRoutesCollection = ['admin.offer.index', 'admin.offer.show', 'admin.offer.new', 'admin.offer.update'] %}
+
+{% set adminCandidatesRoutesCollection = ['admin.candidate.all', 'admin.candidate.show', 'admin.candidate.new', 'admin.candidate.edit'] %}
+
+{% set offersRoutesCollection = ['offer.index', 'offer.candidates.show', 'offer.new', 'offer.edit'] %}
+
+{% set candidatesRoutesCollection = ['offer.all.candidates.show', 'candidate.show'] %}
+
+{% set usersRoutesCollection = ['user.index', 'user.edit', 'user.delete'] %}
+
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
 	<div class="container-fluid container">
 
@@ -15,17 +27,17 @@
 					{% if 'ROLE_ADMIN' in app.user.roles %}
 
 						<li class="nav-item">
-							<a class="nav-link {% if route_name in ['admin.society.index', 'admin.society.new', 'admin.society.show', 'admin.society.edit'] %} active {% endif %}" href="{{path('admin.society.index' )}}">Entreprises
+							<a class="nav-link {% if route_name in adminCompaniesRoutesCollection %} active {% endif %}" href="{{path('admin.society.index' )}}">Entreprises
 								<span class="visually-hidden">(current)</span>
 							</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link {% if route_name in ['admin.offer.index', 'admin.offer.show', 'admin.offer.new', 'admin.offer.update'] %} active {% endif %}" href="{{path('admin.offer.index' )}}">Offres
+							<a class="nav-link {% if route_name in adminOffersRoutesCollection %} active {% endif %}" href="{{path('admin.offer.index' )}}">Offres
 								<span class="visually-hidden">(current)</span>
 							</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link {% if route_name in ['admin.candidate.all', 'admin.candidate.show', 'admin.candidate.new', 'admin.candidate.edit'] %} active {% endif %}" href=" {{path('admin.candidate.all')}} ">Candidats
+							<a class="nav-link {% if route_name in adminCandidatesRoutesCollection %} active {% endif %}" href=" {{path('admin.candidate.all')}} ">Candidats
 								<span class="visually-hidden">(current)</span>
 							</a>
 						</li>
@@ -33,14 +45,14 @@
 					{% else %}
 
 						<li class="nav-item">
-							<a class="nav-link {% if route_name in ['offer.index', 'offer.candidates.show', 'offer.new', 'offer.edit'] %} active {% endif %}" href="{{path('offer.index', {company: app.user.company.id } )}}">Offres
+							<a class="nav-link {% if route_name in offersRoutesCollection %} active {% endif %}" href="{{path('offer.index', {company: app.user.company.id } )}}">Offres
 								<span class="visually-hidden">(current)</span>
 							</a>
 						</li>
 
 						{% if app.user.company.offer|length > 0 %}
 							<li class="nav-item">
-								<a class="nav-link {% if route_name in ['offer.all.candidates.show', 'candidate.show'] %} active {% endif %}" href="{{path('offer.all.candidates.show', {company: app.user.company.id } )}}">Candidats
+								<a class="nav-link {% if route_name in candidatesRoutesCollection %} active {% endif %}" href="{{path('offer.all.candidates.show', {company: app.user.company.id } )}}">Candidats
 									<span class="visually-hidden">(current)</span>
 								</a>
 							</li>
@@ -63,7 +75,7 @@
 									<img class='rounded-circle img-thumbnail' style="width: 2.5rem; height: 2.5rem; background-color:{{app.user.company.color}}" src="{{ vich_uploader_asset(app.user.company, 'imageFile') }}">
 								</a>
 							{% else %}
-								<a class="nav-link dropdown-toggle {% if route_name in ['user.index', 'user.edit', 'user.delete' ]  %} active {% endif %}" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+								<a class="nav-link dropdown-toggle {% if route_name in usersRoutesCollection  %} active {% endif %}" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
 									{{app.user.firstname ~  " " ~  app.user.lastname}}
 								</a>
 							{% endif %}
