@@ -1,5 +1,7 @@
 {% set route_name = app.request.attributes.get('_route') %}
 
+{% set homeRoutesCollection = ['home.index', 'offer.show', 'candidate.apply'] %}
+
 {% set adminCompaniesRoutesCollection = ['admin.society.index', 'admin.society.new', 'admin.society.show', 'admin.society.edit'] %}
 
 {% set adminOffersRoutesCollection = ['admin.offer.index', 'admin.offer.show', 'admin.offer.new', 'admin.offer.update'] %}
@@ -15,7 +17,7 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
 	<div class="container-fluid container">
 
-		<a class="navbar-brand" href="{{path('home.index')}}" style='{% if route_name in ['home.index', 'offer.show', 'candidate.apply'] %} opacity: 1 {% else %} opacity: 0.5  {% endif %}'>Devjob</a>
+		<a class="navbar-brand" href="{{path('home.index')}}" style='{% if route_name in homeRoutesCollection %} opacity: 1 {% else %} opacity: 0.5  {% endif %}'>Devjob</a>
 		<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
 			<span class="navbar-toggler-icon"></span>
 		</button>
