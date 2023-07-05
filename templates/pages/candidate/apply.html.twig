@@ -1,11 +1,11 @@
 {% extends "base.html.twig" %}
 
+{% set routeName = app.request.attributes.get('_route') %}
 
 {% block title %}Candidaté{% endblock %}
 
 {% block body %}
-	<div
-		class="container">
+	<div class="container">
 
 		{# flash messages #}	
 		{% include 'partials/_flash.html.twig' %}
@@ -48,8 +48,8 @@
 			{{ form_widget(form.description, {'attr': {'placeholder': "Quels sont vos motivations",   }}) }}
 		</div>
 
-		{% if app.user and 'ROLE_ADMIN' in app.user.roles %}
-			<div class="form-group mt-4 mx-4">
+		{% if app.user and ('ROLE_ADMIN' in app.user.roles) %}
+			<div class="form-group mt-4 mx-4" style="display:{{routeName in 'admin.candidate.new' ? 'none' : 'block' }}">
 				{{form_label(form.offer, 'Offres', {'label_attr': { 'class': 'form-label '} } )}}
 				<div class="border d-flex flex-wrap p-2">
 					{% for field in form.offer %}
@@ -66,6 +66,6 @@
 		{# Jeton CSRF #}
     	{{ form_row(form._token) }}
 
-		{{ form_end(form, {render_rest: app.user and 'ROLE_ADMIN' in app.user.roles ? false : true } ) }}
+		{{ form_end(form, {render_rest: app.user and ('ROLE_ADMIN' in app.user.roles) ? false : true } ) }}
 	</div>
 {% endblock %}

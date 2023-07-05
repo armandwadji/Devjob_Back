@@ -42,14 +42,14 @@ class OfferRepository extends ServiceEntityRepository
     }
 
     /**
-     * This function return offer order by desc
+     * This function return offer for company don't delete subscribe, order by desc
      * @return array
      */
     public function findOfferOrderDesc(): array
     {
         // SELECT * FROM `offer` 
         // JOIN `user`
-        // WHERE user.is_deleted = true
+        // WHERE user.is_deleted = false
         // ORDER BY `offer`.created_At DESC;
 
         return $this->createQueryBuilder('o')
