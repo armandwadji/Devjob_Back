@@ -23,8 +23,8 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 class OfferController extends GlobalController
 {
     public function __construct(
-        private OfferRepository $offerRepository,
-        private EventDispatcherInterface $eventDispatcher
+        private readonly OfferRepository $offerRepository,
+        private readonly EventDispatcherInterface $eventDispatcher
     ) {
     }
 
@@ -40,7 +40,7 @@ class OfferController extends GlobalController
     #[Route('?{company}', name: 'index', methods: ['GET', 'POST'])]
     public function index(Company $company, PaginatorInterface $paginator, Request $request,  SessionInterface $session): Response
     {
-        $session->set('page', isset($_GET['page']) ? intval($request->get('page')) : 1);
+        $session->set('page', isset($_GET['page']) ? (int)$request->get('page') : 1);
 
         $offers = $paginator->paginate(
             target  : $company->getOffer(),
@@ -70,7 +70,6 @@ class OfferController extends GlobalController
      * This controller update offer
      * @param Offer $offer
      * @param Request $request
-     * @param SessionInterface $session
      * @return Response
      */
     #[Security("is_granted('ROLE_USER') and user=== offer.getCompany().getUser()")]
@@ -82,14 +81,14 @@ class OfferController extends GlobalController
 
     /**
      * This controller delete offer
-     * @param Offer|null $offer
+     * @param Offer $offer
      * @param Request $request
      * @param UserPasswordHasherInterface $hasher
      * @return Response
      */
     #[Security("is_granted('ROLE_USER') and user=== offer.getCompany().getUser()")]
     #[Route('/{offer}/delete', name: 'delete', methods: ['POST'])]
-    public function delete(Offer $offer = null,  Request $request,  UserPasswordHasherInterface $hasher): Response
+    public function delete(Offer $offer,  Request $request,  UserPasswordHasherInterface $hasher): Response
     {
         static::pagination($request);
 
@@ -106,7 +105,7 @@ class OfferController extends GlobalController
         } 
 
         return $this->redirectToRoute('offer.index', [
-            'company'   => intval($request->query->get('idCompany')),
+            'company'   => (int)$request->query->get('idCompany'),
             'page'      => $this->showDeletePage(),
         ]);
     }

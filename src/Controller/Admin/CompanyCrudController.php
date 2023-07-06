@@ -22,7 +22,7 @@ class CompanyCrudController extends  GlobalController
 {
 
     public function __construct(
-        private UserRepository $userRepository,
+        private readonly UserRepository $userRepository,
     ) {
     }
 
@@ -119,7 +119,7 @@ class CompanyCrudController extends  GlobalController
      * This method add or update company
      * @param User $user
      * @param Request $request
-     * @return Response
+     * @return Response|RedirectResponse
      */
     private function addOrUpdate(User $user, Request $request): Response|RedirectResponse
     {

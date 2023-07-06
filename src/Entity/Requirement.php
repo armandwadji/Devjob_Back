@@ -2,13 +2,13 @@
 
 namespace App\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
 use App\Repository\RequirementRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Doctrine\DBAL\Types\Types;
 
-use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: RequirementRepository::class)]
 class Requirement
@@ -26,7 +26,7 @@ class Requirement
     #[ORM\JoinColumn(nullable: false)]
     private ?Offer $offer = null;
 
-    #[ORM\OneToMany(mappedBy: 'requirement', targetEntity: RequirementItem::class, orphanRemoval: true, cascade: ['persist'])]
+    #[ORM\OneToMany(mappedBy: 'requirement', targetEntity: RequirementItem::class, cascade: ['persist'], orphanRemoval: true)]
     #[Groups('offer:read')]
     private Collection $requirementItems;
 

@@ -20,7 +20,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 class CandidateCrudController extends GlobalController
 {
     public function __construct(
-        private CandidateRepository $candidateRepository,
+        private readonly CandidateRepository $candidateRepository,
     ) {
     }
 

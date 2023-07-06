@@ -20,8 +20,8 @@ class RequirementItemType extends AbstractType
                     new Assert\NotBlank(['message' => 'Le résumé des prérequis d\'une offre est requise.']),
                     new Assert\Length([
                         'min' => 5,
-                        'minMessage'=> 'La description d\'un prérequis doit contenir au moins 2 caractères',
                         'max' => 255,
+                        'minMessage'=> 'La description d\'un prérequis doit contenir au moins 2 caractères',
                         'maxMessage'=> 'La description d\'un prérequis doit contenir maximum 255 caractères',
                     ]),
                 ],

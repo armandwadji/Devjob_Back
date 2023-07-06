@@ -2,11 +2,11 @@
 
 namespace App\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
 use App\Repository\RoleRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
-use Doctrine\ORM\Mapping as ORM;
 
 use Symfony\Component\Serializer\Annotation\Groups;
 #[ORM\Entity(repositoryClass: RoleRepository::class)]
@@ -25,7 +25,7 @@ class Role
     #[ORM\JoinColumn(nullable: false)]
     private ?Offer $offer = null;
 
-    #[ORM\OneToMany(mappedBy: 'role', targetEntity: RoleItem::class, orphanRemoval: true, cascade: ['persist'] )]
+    #[ORM\OneToMany(mappedBy: 'role', targetEntity: RoleItem::class, cascade: ['persist'], orphanRemoval: true)]
     #[Groups('offer:read')]
     private Collection $roleItems;
 

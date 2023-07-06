@@ -38,6 +38,9 @@ class AppFixtures extends Fixture
         $this->faker = Factory::create('fr_FR');
     }
 
+    /**
+     * @throws \Exception
+     */
     public function load(ObjectManager $manager): void
     {
         // ADMINISTRATEUR
@@ -89,9 +92,7 @@ class AppFixtures extends Fixture
             $companies[] = $company;
             $manager->persist($company);
         }
-
-
-
+        
         // TABLEAUX REQUIREMENTS AND ROLES
         $requirements = [];
         $roles = [];
@@ -101,8 +102,8 @@ class AppFixtures extends Fixture
             $offer->setName($this->faker->word())
                 ->setDescription($this->faker->text(300))
                 ->setUrl($this->faker->url())
-                ->setContract($contracts[mt_rand(0, count($contracts) - 1)])
-                ->setCompany($companies[mt_rand(0, count($companies) - 1)]);
+                ->setContract($contracts[random_int(0, count($contracts) - 1)])
+                ->setCompany($companies[random_int(0, count($companies) - 1)]);
 
             $offers[] = $offer;
             $manager->persist($offer);
@@ -128,7 +129,7 @@ class AppFixtures extends Fixture
         for ($j = 0; $j < 50; $j++) {
             $requirementItem = new RequirementItem();
             $requirementItem->setName($this->faker->text(100))
-                            ->setRequirement($requirements[mt_rand(0, count($requirements) - 1)]);
+                            ->setRequirement($requirements[random_int(0, count($requirements) - 1)]);
 
             $manager->persist($requirementItem);
         }
@@ -137,7 +138,7 @@ class AppFixtures extends Fixture
         for ($j = 0; $j < 50; $j++) {
             $roleItem = new RoleItem();
             $roleItem->setName($this->faker->text(100))
-                    ->setRole($roles[mt_rand(0, count($roles) - 1)]);
+                    ->setRole($roles[random_int(0, count($roles) - 1)]);
 
             $manager->persist($roleItem);
         }
@@ -150,7 +151,7 @@ class AppFixtures extends Fixture
                     ->setEmail($this->faker->email())
                     ->setTelephone($this->faker->creditCardNumber())
                     ->setDescription($this->faker->text(300))
-                    ->setOffer($offers[mt_rand(0, count($offers) - 1)]);
+                    ->setOffer($offers[random_int(0, count($offers) - 1)]);
 
             $manager->persist($candidate);
         }

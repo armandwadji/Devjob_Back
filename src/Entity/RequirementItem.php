@@ -2,10 +2,10 @@
 
 namespace App\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
 use App\Repository\RequirementItemRepository;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
-use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: RequirementItemRepository::class)]
 class RequirementItem
@@ -61,6 +61,6 @@ class RequirementItem
 
     public function __toString()
     {
-        return $this->name;
+        return $this->name?:'';
     }
 }

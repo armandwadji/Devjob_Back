@@ -13,19 +13,17 @@ use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
-use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
 
 
 class MailerEventSubscriber implements EventSubscriberInterface
 {
     public function __construct(
-        private MailerInterface $mailerInterface,
-        private MailerService $mailerService,
-        private TokenGeneratorInterface $tokenGeneratorInterface
+        private readonly MailerService   $mailerService,
+        private readonly MailerInterface $mailerInterface,
     ) {
     }
 
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             OfferDeleteEvent::class => [
@@ -48,8 +46,9 @@ class MailerEventSubscriber implements EventSubscriberInterface
 
     /**
      * This controller sends an email to all candidates who have applied for the offer delete
-     * @param \App\Event\OfferDeleteEvent $offerDeleteEvent
+     * @param OfferDeleteEvent $offerDeleteEvent
      * @return void
+     * @throws TransportExceptionInterface
      */
     public function onOfferDelete(OfferDeleteEvent $offerDeleteEvent): void
     {
@@ -73,17 +72,14 @@ class MailerEventSubscriber implements EventSubscriberInterface
                 'contact' => $offer->getCompany()->getUser()
             ]);
 
-        try {
-            $this->mailerInterface->send($email);
-        } catch (TransportExceptionInterface $transportException) {
-            throw $transportException;
-        }
+        $this->mailerInterface->send($email);
     }
 
     /**
      * This controller sends an email to a candidate when his application is deleted
-     * @param \App\Event\CandidateDeleteEvent $candidateDeleteEvent
+     * @param CandidateDeleteEvent $candidateDeleteEvent
      * @return void
+     * @throws TransportExceptionInterface
      */
     public function onCandidateDelete(CandidateDeleteEvent $candidateDeleteEvent): void
     {
@@ -99,8 +95,9 @@ class MailerEventSubscriber implements EventSubscriberInterface
 
     /**
      * This controller sends an email to the company and to the administrator when requesting the deletion of the account of the company which requests it
-     * @param \App\Event\UserDeleteEvent $userDeleteEvent
+     * @param UserDeleteEvent $userDeleteEvent
      * @return void
+     * @throws TransportExceptionInterface
      */
     public function onUserDelete(UserDeleteEvent $userDeleteEvent): Void
     {
@@ -125,8 +122,9 @@ class MailerEventSubscriber implements EventSubscriberInterface
 
     /**
      * This controller sends an email to a user for the confirmation of his account
-     * @param \App\Event\UserTokenRegistrationEvent $userTokenRegistration
+     * @param UserTokenRegistrationEvent $userTokenRegistration
      * @return void
+     * @throws TransportExceptionInterface
      */
     public function onTokenRegistration(UserTokenRegistrationEvent $userTokenRegistration): void
     {
@@ -146,8 +144,9 @@ class MailerEventSubscriber implements EventSubscriberInterface
 
     /**
      * This controller sends an email to a user to reset his password
-     * @param \App\Event\UserForgetPasswordEvent $userForgetPasswordEvent
+     * @param UserForgetPasswordEvent $userForgetPasswordEvent
      * @return void
+     * @throws TransportExceptionInterface
      */
     public function onUserForgetPassword(UserForgetPasswordEvent $userForgetPasswordEvent): void
     {
@@ -156,7 +155,7 @@ class MailerEventSubscriber implements EventSubscriberInterface
 
         $this->mailerService->send(
             to              : $user->getEmail(),
-            subject         : 'Modiffication mots de passe utilisateur',
+            subject         : 'Modification mots de passe utilisateur',
             templateTwig    : 'change_password_email.html.twig',
             context         : [
                                 'user'  => $user,

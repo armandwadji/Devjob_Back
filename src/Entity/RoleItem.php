@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-use App\Entity\Role;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\RoleItemRepository;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -60,6 +59,6 @@ class RoleItem
 
     public function __toString()
     {
-        return $this->name;
+        return $this->name?:'';
     }
 }

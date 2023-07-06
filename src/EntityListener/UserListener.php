@@ -12,18 +12,18 @@ class UserListener
      * Summary of hasher
      * @param UserPasswordHasherInterface $hasher
      */
-    public function __construct(private UserPasswordHasherInterface $hasher)
+    public function __construct(private readonly UserPasswordHasherInterface $hasher)
     {
     }
 
-    //Encode le password avant de le persister
-    public function prePersist(User $user)
+    //Encode password before persisted
+    public function prePersist(User $user): void
     {
         $this->encodePassword($user);
     }
 
-    // Encode le nouveau password lorsqu' on va le modifier
-    public function preUpdate(User $user)
+    // Encode new password before updated
+    public function preUpdate(User $user): void
     {
         $this->encodePassword($user);
     }

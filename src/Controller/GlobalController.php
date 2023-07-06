@@ -12,8 +12,7 @@ abstract class GlobalController extends AbstractController
         private int $page,
         private int|null $count,
         private string|null $redirect,
-    )
-    {}
+    ){}
 
     public function isPassWordValid(UserPasswordHasherInterface $hasher, Request $request, mixed $entity): bool
     {

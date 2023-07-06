@@ -100,7 +100,16 @@ class OfferRepository extends ServiceEntityRepository
     }
 
     // ************ API REQUEST *************
-    public function offersApi(int $offset, int $limit, ?string $location = null, ?bool $fulltime = false, ?string $text = null)
+    /**
+     * This method show all offers by different filters
+     * @param int $offset
+     * @param int $limit
+     * @param string|null $location
+     * @param bool|null $fulltime
+     * @param string|null $text
+     * @return array
+     */
+    public function offersApi(int $offset, int $limit, ?string $location = null, ?bool $fulltime = false, ?string $text = null): array
     {
         //SELECT * FROM `offer` 
         // JOIN `company`
@@ -122,14 +131,12 @@ class OfferRepository extends ServiceEntityRepository
         }
 
         if ($fulltime) {
-            $query
-                ->andWhere('ct.name = :contract')
+            $query->andWhere('ct.name = :contract')
                 ->setParameter('contract', 'CDI');
         }
 
         if ($text) {
-            $query
-                ->andWhere('c.name LIKE :name')
+            $query->andWhere('c.name LIKE :name')
                 ->setParameter('name', '%' . $text . '%');
         }
 

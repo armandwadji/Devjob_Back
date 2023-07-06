@@ -2,10 +2,10 @@
 
 namespace App\Service;
 
-use Symfony\Bridge\Twig\Mime\TemplatedEmail;
-use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
-use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 
 /**
  * Service permettant de générer un email
@@ -13,7 +13,7 @@ use Symfony\Component\Mime\Address;
 class MailerService
 {
 
-    public function __construct(private MailerInterface $mailerInterface)
+    public function __construct(private readonly MailerInterface $mailerInterface)
     {
     }
 
@@ -24,6 +24,7 @@ class MailerService
      * @param string $templateTwig
      * @param array $context
      * @return void
+     * @throws TransportExceptionInterface
      */
     public function send(string $to, string $subject, string $templateTwig, array $context): void
     {
@@ -34,10 +35,6 @@ class MailerService
             ->htmlTemplate('emails/' . $templateTwig)
             ->context($context);
 
-        try {
-            $this->mailerInterface->send($email);
-        } catch (TransportExceptionInterface $transportException) {
-            throw $transportException;
-        }
+        $this->mailerInterface->send($email);
     }
 }

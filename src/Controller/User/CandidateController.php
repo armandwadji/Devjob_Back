@@ -23,8 +23,8 @@ class CandidateController extends GlobalController
 {
 
     public function __construct(
-        private CandidateRepository $candidateRepository,
-        private EventDispatcherInterface $eventDispatcher
+        private readonly CandidateRepository $candidateRepository,
+        private readonly EventDispatcherInterface $eventDispatcher,
     ) {
     }
 
@@ -80,8 +80,8 @@ class CandidateController extends GlobalController
     public function candidat(Candidate $candidate, Request $request): Response
     {
         return $this->render('pages/candidate/show.html.twig', [
-            'page'          => intval($request->query->get('page')),
-            'count'         => intval($request->query->get('count')),
+            'page'          => (int)$request->query->get('page'),
+            'count'         => (int)$request->query->get('count'),
             'redirect'      => htmlspecialchars($request->query->get('redirect')),
             'candidates'    => $this->candidateRepository->findCandidatesForOneCompany($candidate),
         ]);
@@ -90,26 +90,22 @@ class CandidateController extends GlobalController
 
     /**
      * This controller delete candidat
-     * @param Candidate|null $candidate
+     * @param Candidate $candidate
      * @param Request $request
      * @param UserPasswordHasherInterface $hasher
      * @return RedirectResponse
      */
     #[Security("is_granted('ROLE_USER') and user=== candidate.getOffer().getCompany().getUser()")]
     #[Route('/my-applicants/{candidate}/delete', name: 'candidate.delete', methods: ['POST'])]
-    public function delete(Candidate $candidate = null, Request $request, UserPasswordHasherInterface $hasher): RedirectResponse
+    public function delete(Candidate $candidate, Request $request, UserPasswordHasherInterface $hasher): RedirectResponse
     {
         static::pagination($request);
-
-        $offersOfThisCandidate = (int)$request->query->get('offersOfThisCandidate'); //Nombres de candidats de la page de pagination
 
         if (static::isPassWordValid($hasher, $request, $candidate)) {
 
             $this->candidateRepository->remove($candidate, true);
 
             $this->eventDispatcher->dispatch(new CandidateDeleteEvent($candidate));
-
-            $offersOfThisCandidate--; //Nombres de candidatures sur la page courante moins la candidature supprimer
 
             $this->setCount($this->getCount() - 1); //Nombres de candidats sur la page de pagination moins le candidat supprimer
 

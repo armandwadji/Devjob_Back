@@ -166,7 +166,7 @@ class Company
      * must be able to accept an instance of 'File' as the bundle will inject one here
      * during Doctrine hydration.
      *
-     * @param File|\Symfony\Component\HttpFoundation\File\UploadedFile|null $imageFile
+     * @param File|null $imageFile
      */
     public function setImageFile(?File $imageFile = null): void
     {
@@ -208,6 +208,6 @@ class Company
 
     public function __toString()
     {
-        return $this->name;
+        return $this->name ?: '';
     }
 }

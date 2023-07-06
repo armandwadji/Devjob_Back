@@ -60,36 +60,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private array $roles = [];
 
     /**
-     * @var string The hashed password
+     * @var string|null The hashed password
      */
     #[ORM\Column]
     private ?string $password = null;
 
     #[Assert\Regex(
         pattern: '/^.{8,}$/',
-        match: true,
         message: 'Le mot de passe doit contenir minimum 8 un caratères.',
+        match: true,
     )]
 
     #[Assert\Regex(
         pattern: '/^(?=.*?[A-Z])/',
-        match: true,
         message: 'Le mot de passe doit contenir au moins une lettre majuscule.',
+        match: true,
     )]
     #[Assert\Regex(
         pattern: '/^(?=.*?[a-z])/',
-        match: true,
         message: 'Le mot de passe doit contenir au moins une lettre minuscule.',
+        match: true,
     )]
     #[Assert\Regex(
         pattern: '/^(?=.*?[0-9]).{2,}$/',
-        match: true,
         message: 'Le mot de passe doit contenir au moins un chiffre.',
+        match: true,
     )]
     #[Assert\Regex(
         pattern: '/^(?=.*?[#?!@$%^&*-]).{2,}$/',
-        match: true,
         message: 'Le mot de passe doit contenir au moins un caratère spécial.( #?!@$%&*- )',
+        match: true,
     )]
     private ?string $plainPassword = null;
 
@@ -330,7 +330,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function isExpired()
+    public function isExpired(): bool
     {
         return new \DateTimeImmutable('now') > $this->tokenRegistrationLifeTime && !$this->isVerified;
     }
@@ -339,7 +339,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * This method Encode country name in isoCode 3
      * @return void
      */
-    public function countryEncode()
+    public function countryEncode(): void
     {
         $isoCode2 = array_search($this->getCompany()->getCountry(), Countries::getNames(), true);
         $isoCode3 = Countries::getAlpha3Code($isoCode2);
@@ -350,7 +350,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * This method Decode country name in string
      * @return void
      */
-    public function countryDecode()
+    public function countryDecode(): void
     {
         $this->getCompany()->setCountry(Countries::getAlpha3Name($this->getCompany()->getCountry()));
     }

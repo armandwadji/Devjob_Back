@@ -13,13 +13,13 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 #[Route('/api', name: 'api.')]
 class OfferApiController extends AbstractController
 {
-    const HEADER = [
+    private const HEADER = [
         'Access-Control-Allow-Origin' => '*', 
         'Content-Type' => 'application/json'
     ];
 
     public function __construct(
-        private OfferRepository $offerRepository,
+        private readonly OfferRepository $offerRepository,
     ) {
     }
 
@@ -32,8 +32,8 @@ class OfferApiController extends AbstractController
     public function offers(Request $request): Response
     {
 
-        $offset = intval($request->query->get('offset'));
-        $limit = intval($request->get('limit')) ?: 12;
+        $offset = (int)$request->query->get('offset');
+        $limit = (int)$request->get('limit') ?: 12;
         return $this->json(
             data    : [
                         'jobs'  => static::offersFormat($this->offerRepository->offersApi(offset: $offset, limit: $limit), $request),
@@ -53,7 +53,7 @@ class OfferApiController extends AbstractController
     #[Route('/job/{id}', name: 'offer', methods: ['GET'])]
     public function offer(Request $request): Response
     {
-        $id = intval($request->get('id', 0));
+        $id = (int)$request->get('id', 0);
         $offer = $this->offerRepository->find(['id' => $id]);
 
         if (!$offer) {
@@ -75,15 +75,15 @@ class OfferApiController extends AbstractController
     #[Route('/jobs/search', name: 'search', methods: ['GET'])]
     public function search(Request $request): Response
     {
-        $offset = intval($request->query->get('offset'));
-        $limit = intval($request->query->get('limit')) ?: 12;
-        $location = strval($request->query->get('location', null));
+        $offset = (int)$request->query->get('offset');
+        $limit = (int)$request->query->get('limit') ?: 12;
+        $location = (string)$request->query->get('location', null);
 
         $fulltime = $request->query->get('fulltime') ?: 0;
         if ($fulltime !== 0 && $fulltime !== '1') return $this->json(['error' => 'fulltime must take the values 0 or 1'], 400);
         
 
-        $text = strval($request->query->get('text', null));
+        $text = (string)$request->query->get('text', null);
 
         return $this->json(
             data    : [
@@ -108,6 +108,7 @@ class OfferApiController extends AbstractController
     /**
      * This method return offers with the correct format
      * @param array $offers
+     * @param Request $request
      * @return array
      */
     private function offersFormat(array $offers, Request $request): array
@@ -122,7 +123,7 @@ class OfferApiController extends AbstractController
                 'logo'              => $offer->getCompany()->getImageName() ? $request->server->get('BASE_URL') . '/images/company/' . $offer->getCompany()->getImageName() : 'https://picsum.photos/id/' . $offer->getCompany()->getId() . '/250/250',
                 'logoBackground'    => $offer->getCompany()->getColor(),
                 'position'          => $offer->getName(),
-                'postedAt'          => intval($offer->getCreatedAt()->format('Uv')),
+                'postedAt'          => (int)$offer->getCreatedAt()->format('Uv'),
             ];
 
             $offersFormat[] = $offerFormat;
@@ -134,6 +135,7 @@ class OfferApiController extends AbstractController
     /**
      * This method convert offer with the correct format
      * @param Offer $offer
+     * @param Request $request
      * @return array
      */
     private function offerFormat(Offer $offer, Request $request): array
@@ -150,7 +152,7 @@ class OfferApiController extends AbstractController
             $roleItems[] = $item->getName();
         }
 
-        $offerFormat = [
+        return [
             'apply'             => $request->server->get('BASE_URL') . '/' . 'offers/' . $offer->getId() . '/apply',
             'company'           => $offer->getCompany()->getName(),
             'contract'          => $offer->getContract()->getName(),
@@ -160,13 +162,11 @@ class OfferApiController extends AbstractController
             'logo'              => $offer->getCompany()->getImageName() ? $request->server->get('BASE_URL') . '/images/company/' . $offer->getCompany()->getImageName() : 'https://picsum.photos/id/' . $offer->getCompany()->getId() . '/250/250',
             'logoBackground'    => $offer->getCompany()->getColor(),
             'position'          => $offer->getName(),
-            'postedAt'          => intval($offer->getCreatedAt()->format('Uv')),
+            'postedAt'          => (int)$offer->getCreatedAt()->format('Uv'),
             'requirements'      => ['content' => $offer->getRequirement()->getContent(), 'items' => $requirementItems,],
             'role'              => ['content' => $offer->getRole()->getContent(), 'items' => $roleItems,],
             'website'           => $offer->getUrl(),
 
         ];
-
-        return $offerFormat;
     }
 }

@@ -23,9 +23,9 @@ class SecurityController extends AbstractController
 {
 
     public function __construct(
-        private UserRepository $userRepository,
-        private MailerService $mailerService,
-        private EventDispatcherInterface $eventDispatcher
+        private readonly MailerService   $mailerService,
+        private readonly UserRepository  $userRepository,
+        private readonly EventDispatcherInterface $eventDispatcher
     ) {
     }
 
@@ -75,13 +75,13 @@ class SecurityController extends AbstractController
     }
 
     /**
-     * This controller check if user is verify
+     * This controller check if user is verified
      * @param string $token
      * @param User $user
      * @throws AccessDeniedException
      * @return Response
      */
-    #[Route('/verify/{token}/{id}', requirements: ['id' => '\d+'], name: 'verify', methods: ['GET'])]
+    #[Route('/verify/{token}/{id}', name: 'verify', requirements: ['id' => '\d+'], methods: ['GET'])]
     public function emailVerify(string $token, User $user): Response
     {
         // IF TOKEN USER IS NOT SAME PASS IN PARAMETER
@@ -159,7 +159,7 @@ class SecurityController extends AbstractController
      * @throws AccessDeniedException
      * @return Response
      */
-    #[Route('/change/{token}/{id}', requirements: ['id' => '\d+'], name: 'password.change', methods: ['GET', 'POST'])]
+    #[Route('/change/{token}/{id}', name: 'password.change', requirements: ['id' => '\d+'], methods: ['GET', 'POST'])]
     public function changePassword(string $token, User $user, Request $request): Response
     {
         if ($user->getTokenRegistration() !== $token) {

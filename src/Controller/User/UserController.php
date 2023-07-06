@@ -14,56 +14,56 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[Route('/my-account', name: 'user.', requirements: ['id' => '\d+'])]
-#[Security("is_granted('ROLE_USER') and user === choosenUser")]
+#[Security("is_granted('ROLE_USER') and user === chosenUser")]
 class UserController extends AbstractController
 {
     public function __construct(
-        private UserRepository $userRepository,
-        private EventDispatcherInterface $eventDispatcher
+        private readonly UserRepository  $userRepository,
+        private readonly EventDispatcherInterface $eventDispatcher
     ) {
     }
 
     /**
      * This controller display detail of company
-     * @param User|null $choosenUser
+     * @param User $chosenUser
      * @return Response
      */
     #[Route('/{id}', name: 'index', methods: ['GET'])]
-    public function home(User $choosenUser): Response
+    public function home(User $chosenUser): Response
     {
-        return $this->render('pages/user/account.html.twig', ['user' => $choosenUser]);
+        return $this->render('pages/user/account.html.twig', ['user' => $chosenUser]);
     }
 
     /**
      * This controller edit companu profil
-     * @param User|null $choosenUser
+     * @param User|null $chosenUser
      * @param Request $request
      * @return Response
      */
     #[Route('/update/{id}', name: 'edit', methods: ['GET', 'POST'])]
-    public function edit(User $choosenUser = null, Request $request): Response
+    public function edit(User $chosenUser, Request $request): Response
     {
         // GESTION DES CODES ISO POUR LA CONFOMITE DU FORMULAIRE
-        $choosenUser->countryEncode();
+        $chosenUser->countryEncode();
 
-        $form = $this->createForm(UserType::class, $choosenUser);
+        $form = $this->createForm(UserType::class, $chosenUser);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $imageIsInvalid = $choosenUser->getCompany()->getImageFile() && !(bool) stristr($choosenUser->getCompany()->getImageFile()->getmimeType(), "image");
+            $imageIsInvalid = $chosenUser->getCompany()->getImageFile() && !(bool) stristr($chosenUser->getCompany()->getImageFile()->getmimeType(), "image");
 
             if (!$imageIsInvalid) {
 
-                $choosenUser->countryDecode(); //Convertis les initiales du pays en son nom complet.
+                $chosenUser->countryDecode(); //Convertis les initiales du pays en son nom complet.
 
-                $this->userRepository->save($choosenUser, true);
+                $this->userRepository->save($chosenUser, true);
 
-                $choosenUser->getCompany()->setImageFile(null);
+                $chosenUser->getCompany()->setImageFile(null);
 
                 $this->addFlash(type: 'success', message: 'Les informations de votre compte ont bien été modifiées.');
 
-                return $this->redirectToRoute('offer.index', ['company' => $choosenUser->getCompany()->getId()]);
+                return $this->redirectToRoute('offer.index', ['company' => $chosenUser->getCompany()->getId()]);
             } 
 
             $this->addFlash(type: 'warning', message: 'Veuillez choisir une image.');
@@ -76,37 +76,37 @@ class UserController extends AbstractController
 
     /**
      * This controller makes a request to delete a user account 
-     * @param User $choosenUser
+     * @param User $chosenUser
      * @param Request $request
      * @return Response
      */
     #[Route('/delete/{id}', name: 'delete', methods: ['GET', 'POST'])]
-    public function deleteAccount(User $choosenUser, Request $request): Response
+    public function deleteAccount(User $chosenUser, Request $request): Response
     {
         // GESTION DES CODES ISO POUR LA CONFOMITE DU FORMULAIRE
-        $choosenUser->countryEncode();
+        $chosenUser->countryEncode();
 
-        $form = $this->createForm(UserType::class, $choosenUser);
+        $form = $this->createForm(UserType::class, $chosenUser);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $choosenUser->setIsDeleted(!$choosenUser->isIsDeleted());
+            $chosenUser->setIsDeleted(!$chosenUser->isIsDeleted());
 
-            $choosenUser->setDescription($choosenUser->isIsDeleted() ? $choosenUser->getDescription() : null);
+            $chosenUser->setDescription($chosenUser->isIsDeleted() ? $chosenUser->getDescription() : null);
             
-            $choosenUser->countryDecode(); //Convertis les initiales du pays en son nom complet.
+            $chosenUser->countryDecode(); //Convertis les initiales du pays en son nom complet.
 
-            if ($choosenUser->isIsDeleted()) $this->eventDispatcher->dispatch(new UserDeleteEvent($choosenUser));
+            if ($chosenUser->isIsDeleted()) $this->eventDispatcher->dispatch(new UserDeleteEvent($chosenUser));
 
-            $this->userRepository->save($choosenUser, true);
+            $this->userRepository->save($chosenUser, true);
 
             $this->addFlash(
                 type: 'success',
-                message: 'La demande de suppression de votre compte à été ' . ($choosenUser->isIsDeleted() ? 'éffectuer' : 'annuler') . ' avec succes.'
+                message: 'La demande de suppression de votre compte à été ' . ($chosenUser->isIsDeleted() ? 'éffectuer' : 'annuler') . ' avec succes.'
             );
 
-            return $this->redirectToRoute('offer.index', ['company' => $choosenUser->getCompany()->getId()]);
+            return $this->redirectToRoute('offer.index', ['company' => $chosenUser->getCompany()->getId()]);
         }
 
         return $this->render('pages/user/delete_account.html.twig', ['form' => $form]);

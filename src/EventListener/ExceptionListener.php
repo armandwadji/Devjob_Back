@@ -7,17 +7,25 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
 
 class ExceptionListener
 {
     public function __construct(
-        private Environment $twig
+        private readonly Environment $twig
     ) {
     }
+
+    /**
+     * @throws SyntaxError
+     * @throws RuntimeError
+     * @throws LoaderError
+     */
     public function onKernelException(ExceptionEvent $exceptionEvent): void
     {
         $exception = $exceptionEvent->getThrowable();
-        $message = '';
 
         if ($exception instanceof NotFoundHttpException) $message = 'Page non trouvée.';
 

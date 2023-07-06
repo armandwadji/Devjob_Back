@@ -21,7 +21,7 @@ class OfferCrudController extends GlobalController
 {
 
     public function __construct(
-        private OfferRepository $offerRepository,
+        private readonly OfferRepository $offerRepository,
     ) {
     }
 
@@ -35,7 +35,7 @@ class OfferCrudController extends GlobalController
     #[Route('/', name: 'index', methods: ['GET'])]
     public function offers(PaginatorInterface $paginator, Request $request, SessionInterface $session): Response
     {
-        $session->set('page', isset($_GET['page']) ? intval($request->get('page'))  : 1);
+        $session->set('page', isset($_GET['page']) ? (int)$request->get('page') : 1);
 
         $offers = $paginator->paginate(
             target: $this->offerRepository->findAll(),
@@ -52,7 +52,6 @@ class OfferCrudController extends GlobalController
      * This controller add offer
      * @param Company $company
      * @param Request $request
-     * @param SessionInterface $session
      * @return Response
      */
     #[Route('/new?{id}', name: 'new', methods: ['GET', 'POST'])]

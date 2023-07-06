@@ -41,8 +41,8 @@ class CandidateRepository extends ServiceEntityRepository
     }
 
     /**
-     * This method return all candidates and or by company
-     * @param Company|null $companyId
+     * This method return all candidates groups by email and or by company
+     * @param Company|null $company
      * @return array
      */
     public function findCandidatesGroupByEmail(?Company $company = null): array
@@ -67,7 +67,12 @@ class CandidateRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function findCandidatesForOneCompany(Candidate $candidate)
+    /**
+     * This method return all candidates by email and by company
+     * @param Candidate $candidate
+     * @return array
+     */
+    public function findCandidatesForOneCompany(Candidate $candidate): array
     {
 
         // SELECT * FROM `candidate`
