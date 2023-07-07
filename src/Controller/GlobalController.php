@@ -52,7 +52,7 @@ abstract class GlobalController extends AbstractController
     /**
      * Get the value of page
      */
-    public function getPage()
+    public function getPage(): int
     {
             return $this->page;
     }
@@ -70,7 +70,7 @@ abstract class GlobalController extends AbstractController
     /**
      * Get the value of count
      */
-    public function getCount()
+    public function getCount(): ?int
     {
             return $this->count;
     }
@@ -88,7 +88,7 @@ abstract class GlobalController extends AbstractController
     /**
      * Get the value of redirect
      */
-    public function getRedirect()
+    public function getRedirect(): ?string
     {
             return $this->redirect;
     }
