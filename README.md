@@ -42,8 +42,9 @@ npm install -g maildev
 lancer le server SMPT tous simplement avec la commande suivante: 
 
 ```
-maildev
+maildev --hide-extensions STARTTLS
 ```
+Le commutateur n'est en général pas obligatoire, mais sans cela il pourrais y avoir des erreurs avec Symfony. Pour les autres options de configuration de maildev référez-vous à la [documentation][Maildev].
 
 ## .env
 Vous devez créer un fichier à la racine de votre arborescence que vous nommerez **.env.dev.local**.
@@ -166,4 +167,5 @@ RECAPTCHA3_SECRET=XXXXXXXXXXXXXX
 [Lamp]: https://ubuntu.com/server/docs/lamp-applications
 [Mamp]: https://www.mamp.info/en/downloads/
 [Xamp]: https://www.apachefriends.org/fr/download.html
+[Maildev]: https://maildev.github.io/maildev/
 <!-- prettier-ignore-end -->
