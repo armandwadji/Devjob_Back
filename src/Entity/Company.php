@@ -254,7 +254,7 @@ class Company
             '',
             array_map(
                 fn ($letter) => mb_chr(ord($letter) % 32 + 0x1F1E5),
-                str_split(substr($isoCode2, 0, 2))
+                str_split($isoCode2)
             )
         );
     }
