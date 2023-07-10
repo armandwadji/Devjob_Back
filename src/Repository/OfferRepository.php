@@ -62,6 +62,20 @@ class OfferRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    public function search($search)
+    {
+        return $this->createQueryBuilder('o')
+        ->join('o.company', 'c')
+        ->join('c.user', 'u')
+        ->andWhere('o.name LIKE :search')
+        ->orWhere('c.name LIKE :search')
+        ->setParameter('search', '%' . $search . '%')
+        ->orderBy('o.createdAt', 'DESC')
+        ->getQuery()
+        ->getResult();
+
+    }
+
     public function findCandidateGroupByEmail($company): array
     {
         return $this->createQueryBuilder('o')

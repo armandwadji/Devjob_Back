@@ -18,11 +18,12 @@ class HomeController extends AbstractController
      * @param Request $request
      * @return Response
      */
-    #[Route('/', name: 'home.index', methods: ['GET'])]
+    #[Route('/', name: 'home.index', methods: ['GET', 'POST'])]
     public function index(OfferRepository $repository, PaginatorInterface $paginator, Request $request): Response
     {
+        // dd($request->request->get('search'));
         $offers = $paginator->paginate(
-            target  :$repository->findOfferOrderDesc(),
+            target  :$repository->search($request->request->get('search')),
             page    :$request->query->getInt('page', 1),
             limit   :12,
         );
