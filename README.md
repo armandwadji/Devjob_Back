@@ -7,7 +7,7 @@
 
 lien du site : [devjobs-back](https://devjobs.wadji.cefim.o2switch.site/)
 
-<img width="1562" alt="Capture d’écran 2023-04-01 à 16 38 01" src="https://github.com/armandwadji/Devjob_Back/assets/90448006/2a002a9e-4664-4a1e-8f60-0b2b897a76cd">
+<img width="1538" alt="252385046-2a002a9e-4664-4a1e-8f60-0b2b897a76cd" src="https://github.com/armandwadji/Deploy-symfony-project/assets/90448006/3040f8bb-9d41-44d4-8810-8bcf8d29653a">
 
 
 ## Description
