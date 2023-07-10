@@ -119,7 +119,7 @@ class OfferApiController extends AbstractController
                 'company'           => $offer->getCompany()->getName(),
                 'contract'          => $offer->getContract()->getName(),
                 'id'                => $offer->getId(),
-                'location'          => $offer->getCompany()->getCountry() . ' ' . $offer->getCompany()->getUser()->getEmojiCountry() ,
+                'location'          => $offer->getCompany()->getCountry(),
                 'logo'              => $offer->getCompany()->getImageName() ? $request->server->get('BASE_URL') . '/images/company/' . $offer->getCompany()->getImageName() : 'https://picsum.photos/id/' . $offer->getCompany()->getId() . '/250/250',
                 'logoBackground'    => $offer->getCompany()->getColor(),
                 'position'          => $offer->getName(),
