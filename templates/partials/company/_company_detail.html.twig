@@ -2,9 +2,11 @@
     <div class="py-4 align-self-start">
         <h3 class="mb-0 text-capitalize">Société :
             {{user.company.name}}</h3>
-        <span class="d-inline-block">Localisation :
-            <strong class="text-primary">{{user.company.country|country_name}}</strong>
-        </span><br>
+        <span class="d-inline-block d-flex align-items-center">
+            Localisation :
+            <strong class="text-primary ms-1">{{user.company.country|country_name}}</strong> 
+            <strong class='ms-2' style='font-size: 1.5rem;'>{{user.emojiCountry}}</strong> 
+        </span>
 
         <span class="card-text mb-auto">Color :
             <strong>{{user.company.color}}</strong>

@@ -93,6 +93,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     )]
     private ?string $plainPassword = null;
 
+    private ?string $emojiCountry = null;
+
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $tokenRegistration = null;
 
@@ -346,6 +348,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->getCompany()->setCountry($isoCode3);
     }
 
+    private function isoToEmoji()
+    {
+        $isoCode2 = array_search($this->getCompany()->getCountry(), Countries::getNames(), true);
+
+        return implode(
+            '',
+            array_map(
+                fn ($letter) => mb_chr(ord($letter) % 32 + 0x1F1E5),
+                str_split(substr($isoCode2, 0, 2))
+            )
+        );
+    }
+
     /**
      * This method Decode country name in string
      * @return void
@@ -353,5 +368,23 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function countryDecode(): void
     {
         $this->getCompany()->setCountry(Countries::getAlpha3Name($this->getCompany()->getCountry()));
+    }
+
+    /**
+     * Get the value of emojiCountry
+     *
+     * @return ?string
+     */
+    public function getEmojiCountry(): ?string
+    {
+        $isoCode2 = array_search($this->getCompany()->getCountry(), Countries::getNames(), true);
+
+        return implode(
+            '',
+            array_map(
+                fn ($letter) => mb_chr(ord($letter) % 32 + 0x1F1E5),
+                str_split(substr($isoCode2, 0, 2))
+            )
+        );
     }
 }
