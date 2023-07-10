@@ -6,7 +6,6 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UserRepository;
 use App\EntityListener\UserListener;
-use Symfony\Component\Intl\Countries;
 use Symfony\Component\Validator\Constraints as Assert;
 
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -92,8 +91,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         match: true,
     )]
     private ?string $plainPassword = null;
-
-    private ?string $emojiCountry = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $tokenRegistration = null;
@@ -337,54 +334,4 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return new \DateTimeImmutable('now') > $this->tokenRegistrationLifeTime && !$this->isVerified;
     }
 
-    /**
-     * This method Encode country name in isoCode 3
-     * @return void
-     */
-    public function countryEncode(): void
-    {
-        $isoCode2 = array_search($this->getCompany()->getCountry(), Countries::getNames(), true);
-        $isoCode3 = Countries::getAlpha3Code($isoCode2);
-        $this->getCompany()->setCountry($isoCode3);
-    }
-
-    private function isoToEmoji()
-    {
-        $isoCode2 = array_search($this->getCompany()->getCountry(), Countries::getNames(), true);
-
-        return implode(
-            '',
-            array_map(
-                fn ($letter) => mb_chr(ord($letter) % 32 + 0x1F1E5),
-                str_split(substr($isoCode2, 0, 2))
-            )
-        );
-    }
-
-    /**
-     * This method Decode country name in string
-     * @return void
-     */
-    public function countryDecode(): void
-    {
-        $this->getCompany()->setCountry(Countries::getAlpha3Name($this->getCompany()->getCountry()));
-    }
-
-    /**
-     * Get the value of emojiCountry
-     *
-     * @return ?string
-     */
-    public function getEmojiCountry(): ?string
-    {
-        $isoCode2 = array_search($this->getCompany()->getCountry(), Countries::getNames(), true);
-
-        return implode(
-            '',
-            array_map(
-                fn ($letter) => mb_chr(ord($letter) % 32 + 0x1F1E5),
-                str_split(substr($isoCode2, 0, 2))
-            )
-        );
-    }
 }

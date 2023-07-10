@@ -124,9 +124,7 @@ class CompanyCrudController extends  GlobalController
     private function addOrUpdate(User $user, Request $request): Response|RedirectResponse
     {
         // GESTION DES CODES ISO POUR LA CONFORMITE DU FORMULAIRE
-        if($user->getCompany() !== null){
-            $user->countryEncode();
-        }
+        $user->getCompany()->countryEncode();
 
         $form = $this->createForm(RegistrationType::class, $user);
         $form->handleRequest($request);
@@ -138,7 +136,7 @@ class CompanyCrudController extends  GlobalController
 
             if (!$imageIsInvalid) {
 
-                $user->countryDecode(); //Convertis les initiales du pays en son nom complet.
+                $user->getCompany()->countryDecode(); //Convertis les initiales du pays en son nom complet.
                 
                 $this->userRepository->save($user, true);
 

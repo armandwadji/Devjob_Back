@@ -7,6 +7,8 @@ use App\Repository\CompanyRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Intl\Countries;
+
 
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\HttpFoundation\File\File;
@@ -70,6 +72,8 @@ class Company
     #[SerializedName('position')]
     #[Groups(['offer:read'])]
     private ?string $country = null;
+
+    private ?string $emojiCountry = null;
 
     public function __construct()
     {
@@ -206,8 +210,59 @@ class Company
         return $this;
     }
 
+    /**
+     * This method Encode country name in isoCode 3
+     * @return void
+     */
+    public function countryEncode(): void
+    {
+        $isoCode2 = array_search($this->country, Countries::getNames(), true);
+        $isoCode3 = Countries::getAlpha3Code($isoCode2);
+        $this->setCountry($isoCode3);
+    }
+
+    /**
+     * This method Decode country name in string
+     * @return void
+     */
+    public function countryDecode(): void
+    {
+        $this->setCountry(Countries::getAlpha3Name($this->country));
+    }
+
+    /**
+     * Set the value of emojiCountry
+     * @param ?string $emojiCountry
+     * @return self
+     */
+    public function setEmojiCountry(?string $emojiCountry): self
+    {
+        $this->emojiCountry = $emojiCountry;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of emojiCountry
+     * @return ?string
+     */
+    public function getEmojiCountry(): ?string
+    {
+        $isoCode2 = array_search($this->getCountry(), Countries::getNames(), true);
+
+        return implode(
+            '',
+            array_map(
+                fn ($letter) => mb_chr(ord($letter) % 32 + 0x1F1E5),
+                str_split(substr($isoCode2, 0, 2))
+            )
+        );
+    }
+
     public function __toString()
     {
         return $this->name ?: '';
     }
+
+
 }

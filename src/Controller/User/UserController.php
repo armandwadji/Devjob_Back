@@ -44,7 +44,7 @@ class UserController extends AbstractController
     public function edit(User $chosenUser, Request $request): Response
     {
         // GESTION DES CODES ISO POUR LA CONFOMITE DU FORMULAIRE
-        $chosenUser->countryEncode();
+        $chosenUser->getCompany()->countryEncode();
 
         $form = $this->createForm(UserType::class, $chosenUser);
         $form->handleRequest($request);
@@ -55,7 +55,7 @@ class UserController extends AbstractController
 
             if (!$imageIsInvalid) {
 
-                $chosenUser->countryDecode(); //Convertis les initiales du pays en son nom complet.
+                $chosenUser->getCompany()->countryDecode(); //Convertis les initiales du pays en son nom complet.
 
                 $this->userRepository->save($chosenUser, true);
 
@@ -84,7 +84,7 @@ class UserController extends AbstractController
     public function deleteAccount(User $chosenUser, Request $request): Response
     {
         // GESTION DES CODES ISO POUR LA CONFOMITE DU FORMULAIRE
-        $chosenUser->countryEncode();
+        $chosenUser->getCompany()->countryEncode();
 
         $form = $this->createForm(UserType::class, $chosenUser);
         $form->handleRequest($request);
@@ -95,7 +95,7 @@ class UserController extends AbstractController
 
             $chosenUser->setDescription($chosenUser->isIsDeleted() ? $chosenUser->getDescription() : null);
             
-            $chosenUser->countryDecode(); //Convertis les initiales du pays en son nom complet.
+            $chosenUser->getCompany()->countryDecode(); //Convertis les initiales du pays en son nom complet.
 
             if ($chosenUser->isIsDeleted()) $this->eventDispatcher->dispatch(new UserDeleteEvent($chosenUser));
 
