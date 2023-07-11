@@ -136,13 +136,13 @@ Puis, vous devez décommenter le code qui se trouve dans les fichiers :
 ```
 src/Form/RegistrationType.php 
 ```
-![RegistrationType](https://github.com/armandwadji/Devjob_Back/assets/90448006/61868316-2485-46a3-aff8-10cc8db62d85)
+<img width="1538" alt="252385046-2a002a9e-4664-4a1e-8f60-0b2b897a76cd" src="https://github.com/armandwadji/Deploy-symfony-project/assets/90448006/0de81074-7890-4885-8ea2-dcb7834ea395">
 
 
 ```
 et templates/pages/security/registration.html.twig
 ```
-![RegistrationHtml](https://github.com/armandwadji/Devjob_Back/assets/90448006/e2ed5f70-51d8-4ddc-bd41-e52c75dc5f31)
+<img width="1538" alt="252385046-2a002a9e-4664-4a1e-8f60-0b2b897a76cd" src="https://github.com/armandwadji/Deploy-symfony-project/assets/90448006/b84a1286-0fa0-4f04-ac41-c4b3e83211ef">
 
 ## .env
 Dans votre fichier .env vous devez rajouter la clé api et la clé secrete de votre recaptcha
