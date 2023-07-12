@@ -8,6 +8,11 @@
                     {{offer.url}}
                 </a>
             </span>
+            <span class="d-inline-block d-flex align-items-center flex-wrap">
+                Localisation :
+                <strong class="text-primary ms-1">{{offer.company.country|country_name}}</strong> 
+                <strong class='ms-2' style='font-size: 1.5rem;'>{{offer.company.emojiCountry}}</strong> 
+            </span>
             <h3 class="text-capitalize mt-2">Description :</h3>
             <p>{{offer.description}}</p>
         </div>
