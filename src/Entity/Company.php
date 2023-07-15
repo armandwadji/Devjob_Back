@@ -14,9 +14,6 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\HttpFoundation\File\File;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
-use Symfony\Component\Serializer\Annotation\SerializedName;
-use Symfony\Component\Serializer\Annotation\Groups;
-
 #[ORM\Entity(repositoryClass: CompanyRepository::class)]
 #[UniqueEntity('name', message: "Ce nom d'entreprise est déja pris.")]
 #[Vich\Uploadable]
@@ -29,8 +26,6 @@ class Company
 
     #[ORM\Column(length: 50)]
     #[Assert\NotBlank(message: 'Une entreprise doit avoir un nom.')]
-
-    #[SerializedName('logo')]
     private ?string $name = null;
 
     #[ORM\Column(length: 50)]
@@ -39,8 +34,6 @@ class Company
         formats: Assert\CssColor::RGB,
         message: 'La couleur doit être en format rgb.'
     )]
-
-    #[SerializedName('logoBackground')]
     private ?string $color = null;
 
     // ************IMAGE ************
@@ -65,9 +58,6 @@ class Company
     private ?\DateTimeImmutable $updatedAt = null;
 
     #[ORM\Column(length: 255)]
-
-    #[SerializedName('position')]
-    #[Groups(['offer:read'])]
     private ?string $country = null;
 
     public function __construct()
