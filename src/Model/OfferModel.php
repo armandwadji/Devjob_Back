@@ -51,7 +51,7 @@ final class OfferModel
     ) {
     }
 
-    public static function fromOfferEntity(Offer $offer)
+    public static function fromOfferEntity(Offer $offer): OfferModel
     {
         return new self(
             apply: $offer->getBaseUrl() . '/' . 'offers/' . $offer->getId() . '/apply',
@@ -107,7 +107,7 @@ final class OfferModel
     /**
      * Get the value of apply
      */
-    public function getApply()
+    public function getApply(): string
     {
         return $this->apply;
     }
@@ -115,7 +115,7 @@ final class OfferModel
     /**
      * Get the value of company
      */
-    public function getCompany()
+    public function getCompany(): string
     {
         return $this->company;
     }
@@ -123,7 +123,7 @@ final class OfferModel
     /**
      * Get the value of contract
      */
-    public function getContract()
+    public function getContract(): string
     {
         return $this->contract;
     }
@@ -131,7 +131,7 @@ final class OfferModel
     /**
      * Get the value of description
      */
-    public function getDescription()
+    public function getDescription(): string
     {
         return $this->description;
     }
@@ -139,7 +139,7 @@ final class OfferModel
     /**
      * Get the value of id
      */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
@@ -147,7 +147,7 @@ final class OfferModel
     /**
      * Get the value of location
      */
-    public function getLocation()
+    public function getLocation(): string
     {
         return $this->location;
     }
@@ -155,7 +155,7 @@ final class OfferModel
     /**
      * Get the value of logo
      */
-    public function getLogo()
+    public function getLogo(): string
     {
         return $this->logo;
     }
@@ -163,7 +163,7 @@ final class OfferModel
     /**
      * Get the value of logoBackground
      */
-    public function getLogoBackground()
+    public function getLogoBackground(): string
     {
         return $this->logoBackground;
     }
@@ -171,7 +171,7 @@ final class OfferModel
     /**
      * Get the value of position
      */
-    public function getPosition()
+    public function getPosition(): string
     {
         return $this->position;
     }
@@ -179,7 +179,7 @@ final class OfferModel
     /**
      * Get the value of postedAt
      */
-    public function getPostedAt()
+    public function getPostedAt(): int
     {
         return $this->postedAt;
     }
@@ -187,7 +187,7 @@ final class OfferModel
     /**
      * Get the value of requirements
      */
-    public function getRequirements()
+    public function getRequirements(): array
     {
         return $this->requirements;
     }
@@ -195,7 +195,7 @@ final class OfferModel
     /**
      * Get the value of role
      */
-    public function getRole()
+    public function getRole(): array
     {
         return $this->role;
     }
@@ -203,7 +203,7 @@ final class OfferModel
     /**
      * Get the value of website
      */
-    public function getWebsite()
+    public function getWebsite(): string
     {
         return $this->website;
     }
