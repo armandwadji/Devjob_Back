@@ -8,7 +8,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 
-use Symfony\Component\Serializer\Annotation\Groups;
 #[ORM\Entity(repositoryClass: RoleRepository::class)]
 class Role
 {
@@ -18,7 +17,6 @@ class Role
     private ?int $id = null;
 
     #[ORM\Column(type: Types::TEXT)]
-    #[Groups('offer:read')]
     private ?string $content = null;
 
     #[ORM\OneToOne(inversedBy: 'role', cascade: ['persist', 'remove'])]
@@ -26,7 +24,6 @@ class Role
     private ?Offer $offer = null;
 
     #[ORM\OneToMany(mappedBy: 'role', targetEntity: RoleItem::class, cascade: ['persist'], orphanRemoval: true)]
-    #[Groups('offer:read')]
     private Collection $roleItems;
 
     public function __construct()

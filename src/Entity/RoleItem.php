@@ -4,7 +4,6 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\RoleItemRepository;
-use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: RoleItemRepository::class)]
@@ -16,7 +15,6 @@ class RoleItem
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups('offer:read')]
     #[Assert\Length(
         min: 2,
         max: 50,

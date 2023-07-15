@@ -31,7 +31,6 @@ class Company
     #[Assert\NotBlank(message: 'Une entreprise doit avoir un nom.')]
 
     #[SerializedName('logo')]
-    #[Groups(['offer:read'])]
     private ?string $name = null;
 
     #[ORM\Column(length: 50)]
@@ -42,7 +41,6 @@ class Company
     )]
 
     #[SerializedName('logoBackground')]
-    #[Groups(['offer:read'])]
     private ?string $color = null;
 
     // ************IMAGE ************
@@ -53,7 +51,6 @@ class Company
     #[Vich\UploadableField(mapping: 'company_images', fileNameProperty: 'imageName')]
     private ?File $imageFile = null;
 
-    #[Groups(['offer:read'])]
     #[ORM\Column(nullable: true)]
     private ?string $imageName = null;
 
@@ -72,8 +69,6 @@ class Company
     #[SerializedName('position')]
     #[Groups(['offer:read'])]
     private ?string $country = null;
-
-    private ?string $emojiCountry = null;
 
     public function __construct()
     {
@@ -228,18 +223,6 @@ class Company
     public function countryDecode(): void
     {
         $this->setCountry(Countries::getAlpha3Name($this->country));
-    }
-
-    /**
-     * Set the value of emojiCountry
-     * @param ?string $emojiCountry
-     * @return self
-     */
-    public function setEmojiCountry(?string $emojiCountry): self
-    {
-        $this->emojiCountry = $emojiCountry;
-
-        return $this;
     }
 
     /**

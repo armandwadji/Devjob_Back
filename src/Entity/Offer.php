@@ -3,16 +3,11 @@
 namespace App\Entity;
 
 use App\Entity\Contract;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
-
-use App\Repository\OfferRepository;
-
-use Symfony\Component\Serializer\Annotation\SerializedName;
-use Symfony\Component\Serializer\Annotation\Groups;
-
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\OfferRepository;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: OfferRepository::class)]
@@ -21,7 +16,6 @@ class Offer
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups('offer:read')]
     private ?int $id = null;
 
     #[ORM\Column(length: 50)]
@@ -33,8 +27,6 @@ class Offer
         maxMessage: 'Le nom d\'une offre doit contenir maximum 50 caractères'
     )]
 
-    #[SerializedName('customer_name')]
-    #[Groups(['offer:detail'])]
     private ?string $name = null;
 
     #[ORM\Column(type: Types::TEXT)]
@@ -43,7 +35,6 @@ class Offer
         min: 10,
         minMessage: 'La description d\'une offre doit contenir au moins 10 caractères',
     )]
-    #[Groups('offer:detail')]
     private ?string $description = null;
 
     #[ORM\Column(length: 255)]
@@ -51,39 +42,33 @@ class Offer
     #[Assert\Url(
         message: 'Le lien {{ value }} n\'est pas un url valide.',
     )]
-    #[Groups('offer:detail')]
     private ?string $url = null;
 
     #[ORM\Column]
     #[Assert\NotNull]
 
-    #[SerializedName('postedAt')]
-    #[Groups('offer:read')]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'offers')]
     #[ORM\JoinColumn(nullable: false)]
 
-    #[SerializedName('contract')]
-    #[Groups('offer:read')]
     private ?Contract $contract = null;
 
     #[ORM\OneToOne(mappedBy: 'offer', cascade: ['persist', 'remove'])]
-    #[Groups('offer:detail')]
     private ?Requirement $requirement = null;
 
     #[ORM\OneToOne(mappedBy: 'offer', cascade: ['persist', 'remove'])]
-    #[Groups('offer:detail')]
     private ?Role $role = null;
 
     #[ORM\ManyToOne(inversedBy: 'offer')]
     #[ORM\JoinColumn(nullable: false)]
 
-    #[Groups(['offer:read'])]
     private ?Company $company = null;
 
     #[ORM\OneToMany(mappedBy: 'offer', targetEntity: Candidate::class, orphanRemoval: true)]
     private Collection $candidates;
+
+    private ?string $baseUrl = null;
 
 
     /**
@@ -241,4 +226,28 @@ class Offer
         return $this->name ?: '';
     }
 
+
+    /**
+     * Get the value of baseUrl
+     *
+     * @return ?string
+     */
+    public function getBaseUrl(): ?string
+    {
+        return $this->baseUrl;
+    }
+
+    /**
+     * Set the value of baseUrl
+     *
+     * @param ?string $baseUrl
+     *
+     * @return self
+     */
+    public function setBaseUrl(?string $baseUrl): self
+    {
+        $this->baseUrl = $baseUrl;
+
+        return $this;
+    }
 }

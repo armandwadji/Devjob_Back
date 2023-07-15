@@ -2,11 +2,10 @@
 
 namespace App\Controller\Api;
 
-use App\Entity\Offer;
+use App\Model\OfferModel;
 use App\Repository\OfferRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
@@ -14,7 +13,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class OfferApiController extends AbstractController
 {
     private const HEADER = [
-        'Access-Control-Allow-Origin' => '*', 
+        'Access-Control-Allow-Origin' => '*',
         'Content-Type' => 'application/json'
     ];
 
@@ -31,17 +30,23 @@ class OfferApiController extends AbstractController
     #[Route('/jobs', name: 'offers', methods: ['GET', 'POST'])]
     public function offers(Request $request): Response
     {
-
         $offset = (int)$request->query->get('offset');
         $limit = (int)$request->get('limit') ?: 12;
+
+        $offers = $this->offerRepository->offersApi(offset: $offset, limit: $limit);
+        
+        foreach ($offers as $offer) {
+            $offer->setBaseUrl($request->server->get('BASE_URL'));
+        }
+        
         return $this->json(
-            data    : [
-                        'jobs'  => static::offersFormat($this->offerRepository->offersApi(offset: $offset, limit: $limit), $request),
-                        'total' => count($this->offerRepository->findAll()),
-                      ],
-            status  : 200,
-            headers : static::HEADER,
-            context : ['groups' => 'offer:read']
+            data: [
+                'jobs'  => OfferModel::fromOfferEntities($offers),
+                'total' => count($this->offerRepository->findAll()),
+            ],
+            status: 200,
+            headers: static::HEADER,
+            context: ['groups' => 'offer:list']
         );
     }
 
@@ -60,11 +65,14 @@ class OfferApiController extends AbstractController
             return $this->json(['error' => 'job not found'], 400);
         }
 
+        $offer->setBaseUrl($request->server->get('BASE_URL'));
+
         return $this->json(
-            data    : static::offerFormat($offer, $request), 
-            status  : 200, 
-            headers : static::HEADER, 
-            context : ['groups' => 'offer:detail']);
+            data: OfferModel::fromOfferEntity($offer),
+            status: 200,
+            headers: static::HEADER,
+            context: ['groups' => 'offer:detail']
+        );
     }
 
     /**
@@ -81,92 +89,24 @@ class OfferApiController extends AbstractController
 
         $fulltime = $request->query->get('fulltime') ?: 0;
         if ($fulltime !== 0 && $fulltime !== '1') return $this->json(['error' => 'fulltime must take the values 0 or 1'], 400);
-        
 
         $text = (string)$request->query->get('text', null);
 
-        return $this->json(
-            data    : [
-                        'jobs' => static::offersFormat(
-                            $this->offerRepository->offersApi(
-                                offset: $offset,
-                                limit: $limit,
-                                location: $location,
-                                fulltime: $fulltime,
-                                text: $text
-                            ),
-                            $request
-                        ),
-                        'total' => count($this->offerRepository->findAll())
-                      ],
-            status  : 200,
-            headers : static::HEADER,
-            context : ['groups' => 'offer:read']
-        );
-    }
+        $offers = $this->offerRepository->offersApi(offset: $offset, limit: $limit, location: $location, fulltime: $fulltime, text: $text);
 
-    /**
-     * This method return offers with the correct format
-     * @param array $offers
-     * @param Request $request
-     * @return array
-     */
-    private function offersFormat(array $offers, Request $request): array
-    {
-        $offersFormat = [];
         foreach ($offers as $offer) {
-            $offerFormat = [
-                'company'           => $offer->getCompany()->getName(),
-                'contract'          => $offer->getContract()->getName(),
-                'id'                => $offer->getId(),
-                'location'          => $offer->getCompany()->getCountry(),
-                'logo'              => $offer->getCompany()->getImageName() ? $request->server->get('BASE_URL') . '/images/company/' . $offer->getCompany()->getImageName() : 'https://picsum.photos/id/' . $offer->getCompany()->getId() . '/250/250',
-                'logoBackground'    => $offer->getCompany()->getColor(),
-                'position'          => $offer->getName(),
-                'postedAt'          => (int)$offer->getCreatedAt()->format('Uv'),
-            ];
-
-            $offersFormat[] = $offerFormat;
+            $offer->setBaseUrl($request->server->get('BASE_URL'));
         }
 
-        return $offersFormat;
-    }
 
-    /**
-     * This method convert offer with the correct format
-     * @param Offer $offer
-     * @param Request $request
-     * @return array
-     */
-    private function offerFormat(Offer $offer, Request $request): array
-    {
-        // REQUIREMENTS ITEMS
-        $requirementItems = [];
-        foreach ($offer->getRequirement()->getRequirementItems() as $item) {
-            $requirementItems[] = $item->getName();
-        }
-
-        // ROLES ITEMS
-        $roleItems = [];
-        foreach ($offer->getRole()->getRoleItems() as $item) {
-            $roleItems[] = $item->getName();
-        }
-
-        return [
-            'apply'             => $request->server->get('BASE_URL') . '/' . 'offers/' . $offer->getId() . '/apply',
-            'company'           => $offer->getCompany()->getName(),
-            'contract'          => $offer->getContract()->getName(),
-            'description'       => $offer->getDescription(),
-            'id'                => $offer->getId(),
-            'location'          => $offer->getCompany()->getCountry(),
-            'logo'              => $offer->getCompany()->getImageName() ? $request->server->get('BASE_URL') . '/images/company/' . $offer->getCompany()->getImageName() : 'https://picsum.photos/id/' . $offer->getCompany()->getId() . '/250/250',
-            'logoBackground'    => $offer->getCompany()->getColor(),
-            'position'          => $offer->getName(),
-            'postedAt'          => (int)$offer->getCreatedAt()->format('Uv'),
-            'requirements'      => ['content' => $offer->getRequirement()->getContent(), 'items' => $requirementItems,],
-            'role'              => ['content' => $offer->getRole()->getContent(), 'items' => $roleItems,],
-            'website'           => $offer->getUrl(),
-
-        ];
+        return $this->json(
+            data: [
+                'jobs' => OfferModel::fromOfferEntities($offers),
+                'total' => count($this->offerRepository->findAll())
+            ],
+            status: 200,
+            headers: static::HEADER,
+            context: ['groups' => 'offer:list']
+        );
     }
 }

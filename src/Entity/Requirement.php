@@ -6,7 +6,6 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Repository\RequirementRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Symfony\Component\Serializer\Annotation\Groups;
 use Doctrine\DBAL\Types\Types;
 
 
@@ -19,7 +18,6 @@ class Requirement
     private ?int $id = null;
 
     #[ORM\Column(type: Types::TEXT)]
-    #[Groups('offer:read')]
     private ?string $content = null;
 
     #[ORM\OneToOne(inversedBy: 'requirement', cascade: ['persist', 'remove'])]
@@ -27,7 +25,6 @@ class Requirement
     private ?Offer $offer = null;
 
     #[ORM\OneToMany(mappedBy: 'requirement', targetEntity: RequirementItem::class, cascade: ['persist'], orphanRemoval: true)]
-    #[Groups('offer:read')]
     private Collection $requirementItems;
 
     public function __construct()
