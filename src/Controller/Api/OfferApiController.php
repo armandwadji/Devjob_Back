@@ -102,7 +102,7 @@ class OfferApiController extends AbstractController
         return $this->json(
             data: [
                 'jobs' => OfferModel::fromOfferEntities($offers),
-                'total' => count($this->offerRepository->findAll())
+                'total' => count($this->offerRepository->offersApi(offset: 0, limit: 100000, location: $location, fulltime: $fulltime, text: $text))
             ],
             status: 200,
             headers: static::HEADER,
