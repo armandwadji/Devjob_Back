@@ -2,7 +2,7 @@
     <div class="d-flex flex-sm-row flex-column-reverse justify-content-between align-items-center">
         <div>
             <h2 class="blog-post-title mb-1 text-capitalize">{{offer.name}}</h2>
-            <span class="blog-post-meta mb-1">Créer le : <strong>{{offer.createdAt|date('d/m/y')}}</strong></span><br>
+            <span class="blog-post-meta mb-1">Créer le : <strong>{{offer.createdAt | date('d/m/Y') }}</strong></span><br>
             <span class="blog-post-meta">Website :
                 <a href="{{offer.url}}" target='_blank' class='' style="color : {{offer.company.color}};">
                     {{offer.url}}
