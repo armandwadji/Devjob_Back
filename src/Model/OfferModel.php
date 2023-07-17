@@ -59,19 +59,19 @@ final class OfferModel
     public static function fromOfferEntity(Offer $offer): OfferModel
     {
         return new self(
-            apply: $offer->getBaseUrl() . '/' . 'offers/' . $offer->getId() . '/apply',
-            company: $offer->getCompany()->getName(),
-            contract: $offer->getContract()->getName(),
-            description: $offer->getDescription(),
-            id: $offer->getId(),
-            location: $offer->getCompany()->getCountry(),
-            logo: $offer->getCompany()->getImageName() ? $offer->getBaseUrl() . '/images/company/' . $offer->getCompany()->getImageName() : 'https://picsum.photos/id/' . $offer->getCompany()->getId() . '/250/250',
-            logoBackground: $offer->getCompany()->getColor(),
-            position: $offer->getName(),
-            postedAt: self::timeStamp($offer->getCreatedAt()),
-            requirements: self::requirements($offer),
-            role: self::roles($offer),
-            website: $offer->getUrl(),
+            apply           : $offer->getBaseUrl() . '/' . 'offers/' . $offer->getId() . '/apply',
+            company         : $offer->getCompany()->getName(),
+            contract        : $offer->getContract()->getName(),
+            description     : $offer->getDescription(),
+            id              : $offer->getId(),
+            location        : $offer->getCompany()->getCountry(),
+            logo            : $offer->getCompany()->getImageName() ? $offer->getBaseUrl() . '/images/company/' . $offer->getCompany()->getImageName() : 'https://picsum.photos/id/' . $offer->getCompany()->getId() . '/250/250',
+            logoBackground  : $offer->getCompany()->getColor(),
+            position        : $offer->getName(),
+            postedAt        : self::timeStamp($offer->getCreatedAt()),
+            requirements    : self::requirements($offer),
+            role            : self::roles($offer),
+            website         : $offer->getUrl(),
         );
     }
 

@@ -41,10 +41,10 @@ class OfferApiController extends AbstractController
         
         return $this->json(
             data: [
-                'jobs'  => OfferModel::fromOfferEntities($offers),
-                'total' => count($this->offerRepository->findAll()),
-            ],
-            status: 200,
+                    'jobs'  => OfferModel::fromOfferEntities($offers),
+                    'total' => count($this->offerRepository->findAll()),
+                  ],
+            status: Response::HTTP_OK,
             headers: static::HEADER,
             context: ['groups' => 'offer:list']
         );
@@ -62,14 +62,18 @@ class OfferApiController extends AbstractController
         $offer = $this->offerRepository->find(['id' => $id]);
 
         if (!$offer) {
-            return $this->json(['error' => 'job not found'], 400);
+            return $this->json(
+                data: ['error' => 'job not found'],
+                status: Response::HTTP_BAD_REQUEST,
+                headers: static::HEADER
+            );
         }
 
         $offer->setBaseUrl($request->server->get('BASE_URL'));
 
         return $this->json(
             data: OfferModel::fromOfferEntity($offer),
-            status: 200,
+            status: Response::HTTP_OK,
             headers: static::HEADER,
             context: ['groups' => 'offer:detail']
         );
@@ -101,10 +105,10 @@ class OfferApiController extends AbstractController
 
         return $this->json(
             data: [
-                'jobs' => OfferModel::fromOfferEntities($offers),
-                'total' => count($this->offerRepository->offersApi(offset: 0, limit: 100000, location: $location, fulltime: $fulltime, text: $text))
-            ],
-            status: 200,
+                    'jobs' => OfferModel::fromOfferEntities($offers),
+                    'total' => count($this->offerRepository->offersApi(offset: 0, limit: 100000, location: $location, fulltime: $fulltime, text: $text))
+                  ],
+            status: Response::HTTP_OK,
             headers: static::HEADER,
             context: ['groups' => 'offer:list']
         );
