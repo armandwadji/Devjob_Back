@@ -51,7 +51,7 @@ class SecurityController extends AbstractController
                 // USER TOKEN REGISTRATION
                 $user->setTokenRegistration($tokenGeneratorInterface->generateToken());
 
-                $user->countryDecode();
+                $user->getCompany()->countryDecode();
 
                 $this->userRepository->save($user, true);
 
