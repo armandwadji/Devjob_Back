@@ -9,44 +9,62 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 final class OfferModel
 {
+    private  const OFFER_DETAIL = 'offer:detail' ;
+    private  const OFFER_LIST = 'offer:list' ;
+    /**
+     * Constructor of offer model
+     * @param string $apply
+     * @param string $company
+     * @param string $contract
+     * @param string $description
+     * @param int $id
+     * @param string $location
+     * @param string $logo
+     * @param string $logoBackground
+     * @param string $position
+     * @param int $postedAt
+     * @param array $requirements
+     * @param array $role
+     * @param string $website
+     */
     public function __construct(
-        #[Groups('offer:detail')]
+        #[Groups(self::OFFER_DETAIL)]
         private readonly string $apply,
 
-        #[Groups(['offer:list', 'offer:detail'])]
+        #[Groups([self::OFFER_LIST, self::OFFER_DETAIL])]
         private readonly string $company,
 
-        #[Groups(['offer:list', 'offer:detail'])]
+        #[Groups([self::OFFER_LIST, self::OFFER_DETAIL])]
         private readonly string $contract,
 
-        #[Groups('offer:detail')]
+        #[Groups(self::OFFER_DETAIL)]
         private readonly string $description,
 
-        #[Groups(['offer:list', 'offer:detail'])]
+        #[Groups([self::OFFER_LIST, self::OFFER_DETAIL])]
         private readonly int $id,
 
-        #[Groups(['offer:list', 'offer:detail'])]
+        #[Groups([self::OFFER_LIST, self::OFFER_DETAIL])]
         private readonly string $location,
 
-        #[Groups(['offer:list', 'offer:detail'])]
+        #[Groups([self::OFFER_LIST, self::OFFER_DETAIL])]
         private readonly string $logo,
 
-        #[Groups(['offer:list', 'offer:detail'])]
+        #[Groups([self::OFFER_LIST, self::OFFER_DETAIL])]
         private readonly string $logoBackground,
 
-        #[Groups(['offer:list', 'offer:detail'])]
+        #[Groups([self::OFFER_LIST, self::OFFER_DETAIL])]
         private readonly string $position,
 
-        #[Groups(['offer:list', 'offer:detail'])]
+        #[Groups([self::OFFER_LIST, self::OFFER_DETAIL])]
         private readonly int $postedAt,
 
-        #[Groups('offer:detail')]
+        #[Groups(self::OFFER_DETAIL)]
         private readonly array $requirements,
 
-        #[Groups('offer:detail')]
+        #[Groups(self::OFFER_DETAIL)]
         private readonly array $role,
 
-        #[Groups('offer:detail')]
+        #[Groups(self::OFFER_DETAIL)]
         private readonly string $website,
     ) {
     }

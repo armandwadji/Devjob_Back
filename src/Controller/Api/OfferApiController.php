@@ -45,7 +45,7 @@ class OfferApiController extends AbstractController
                     'total' => count($this->offerRepository->findAll()),
                   ],
             status: Response::HTTP_OK,
-            headers: static::HEADER,
+            headers: self::HEADER,
             context: ['groups' => 'offer:list']
         );
     }
@@ -65,7 +65,7 @@ class OfferApiController extends AbstractController
             return $this->json(
                 data: ['error' => 'job not found'],
                 status: Response::HTTP_BAD_REQUEST,
-                headers: static::HEADER
+                headers: self::HEADER
             );
         }
 
@@ -109,7 +109,7 @@ class OfferApiController extends AbstractController
                     'total' => count($this->offerRepository->offersApi(offset: 0, limit: 100000, location: $location, fulltime: $fulltime, text: $text))
                   ],
             status: Response::HTTP_OK,
-            headers: static::HEADER,
+            headers: self::HEADER,
             context: ['groups' => 'offer:list']
         );
     }
