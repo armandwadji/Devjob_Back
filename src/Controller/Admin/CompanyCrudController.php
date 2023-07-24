@@ -124,7 +124,9 @@ class CompanyCrudController extends  GlobalController
     private function addOrUpdate(User $user, Request $request): Response|RedirectResponse
     {
         // GESTION DES CODES ISO POUR LA CONFORMITE DU FORMULAIRE
-        $user->getCompany()->countryEncode();
+        if($user->getCompany()){
+            $user->getCompany()->countryEncode();
+        }
 
         $form = $this->createForm(RegistrationType::class, $user);
         $form->handleRequest($request);
