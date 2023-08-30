@@ -27,7 +27,7 @@ class OfferApiController extends AbstractController
      * @param Request $request
      * @return Response
      */
-    #[Route('/jobs', name: 'offers', methods: ['GET', 'POST'])]
+    #[Route('/jobs', name: 'offers', methods: ['GET'])]
     public function offers(Request $request): Response
     {
         $offset = (int)$request->query->get('offset');
