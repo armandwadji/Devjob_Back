@@ -27,15 +27,21 @@ class ExceptionListener
     {
         $exception = $exceptionEvent->getThrowable();
 
-        if ($exception instanceof NotFoundHttpException) $message = 'Page non trouvée.';
+        if ($exception instanceof NotFoundHttpException) {
+            $message = 'Page non trouvée.'; 
+        } 
+        
+        else if ($exception instanceof AccessDeniedHttpException) {
+            $message = 'Vous n\'avez pas les droits d\'accès à cette ressource.';
+        } 
 
-        else if ($exception instanceof AccessDeniedHttpException) $message = 'Vous n\'avez pas les droits d\'accès à cette ressource.';
-
-        else $message = 'Une erreur est survenue, veuillez actualiser la page.';
+        else {
+            $message = 'Une erreur est survenue, veuillez actualiser la page.';
+        }
 
         $content = $this->twig->render(
             name: 'exceptions/not_found.html.twig',
-            context:[ 'message'=> $message, 'detail'=> $exception->getMessage()],
+            context: ['message' => $message, 'detail' => $exception->getMessage()],
         );
 
         $exceptionEvent->setResponse((new Response())->setContent($content));
